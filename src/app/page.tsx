@@ -101,7 +101,7 @@ export default function Home() {
 
             <Card gradient className="group hover:-translate-y-2 hover:translate-x-2 hover:shadow-[-8px_8px_0_0_#00aa00] transition-all bg-card/80">
               <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 rounded-none border-b-4 border-r-4 border-t-2 border-l-2 border-border bg-black/50 text-purple-400 group-hover:text-primary transition-colors">
+                <div className="p-3 rounded-none border-b-4 border-r-4 border-t-2 border-l-2 border-border bg-black/50 text-emerald-400 group-hover:text-primary transition-colors">
                   <Briefcase size={24} />
                 </div>
                 <div>

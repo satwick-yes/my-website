@@ -6,19 +6,19 @@ import { motion } from "framer-motion";
 const AmbientGlows = ({ mousePos }: { mousePos: { x: number, y: number } }) => (
   <>
     <motion.div 
-      className="absolute top-1/4 left-1/4 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-primary/10 rounded-full blur-[100px] md:blur-[140px] transition-transform duration-700 ease-out z-0 pointer-events-none"
+      className="absolute top-1/4 left-1/4 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-green-500/10 rounded-full blur-[100px] md:blur-[140px] transition-transform duration-700 ease-out z-0 pointer-events-none"
       style={{ transform: `translate(${mousePos.x}px, ${mousePos.y}px)` }}
       animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
       transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
     />
     <motion.div 
-      className="absolute bottom-1/4 right-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-purple-500/10 rounded-full blur-[90px] md:blur-[120px] transition-transform duration-700 ease-out z-0 pointer-events-none"
+      className="absolute bottom-1/4 right-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-emerald-500/10 rounded-full blur-[90px] md:blur-[120px] transition-transform duration-700 ease-out z-0 pointer-events-none"
       style={{ transform: `translate(${-mousePos.x * 1.5}px, ${-mousePos.y * 1.5}px)` }}
       animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
       transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
     />
     <motion.div 
-      className="absolute top-3/4 left-1/2 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-cyan-500/10 rounded-full blur-[80px] md:blur-[100px] transition-transform duration-700 ease-out z-0 pointer-events-none"
+      className="absolute top-3/4 left-1/2 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-teal-500/10 rounded-full blur-[80px] md:blur-[100px] transition-transform duration-700 ease-out z-0 pointer-events-none"
       style={{ transform: `translate(${mousePos.x * 2}px, ${mousePos.y * 2}px)` }}
       animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
       transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 5 }}
@@ -31,72 +31,53 @@ class Particle {
   y: number;
   size: number;
   color: string;
-  type: string;
   vx: number;
   vy: number;
-  angle: number;
   speed: number;
-  spinSpeed: number;
 
-  constructor(canvasWidth: number, canvasHeight: number, colors: string[], types: string[]) {
+  constructor(canvasWidth: number, canvasHeight: number, colors: string[]) {
     this.x = Math.random() * canvasWidth;
     this.y = Math.random() * canvasHeight;
-    this.size = Math.random() * 6 + 2;
+    this.size = Math.random() * 2 + 1.5; // Smaller size for nodes
     this.color = colors[Math.floor(Math.random() * colors.length)];
-    this.type = types[Math.floor(Math.random() * types.length)];
-    this.angle = Math.random() * Math.PI * 2;
-    this.speed = Math.random() * 0.5 + 0.1;
-    this.vx = Math.cos(this.angle) * this.speed;
-    this.vy = Math.sin(this.angle) * this.speed;
-    this.spinSpeed = (Math.random() - 0.5) * 0.05;
+    const angle = Math.random() * Math.PI * 2;
+    this.speed = Math.random() * 0.4 + 0.1;
+    this.vx = Math.cos(angle) * this.speed;
+    this.vy = Math.sin(angle) * this.speed;
   }
 
   update(mouse: { x: number, y: number, radius: number }, canvasWidth: number, canvasHeight: number) {
     this.x += this.vx;
     this.y += this.vy;
 
+    // Wrap around screen
     if (this.x < 0) this.x = canvasWidth;
     if (this.x > canvasWidth) this.x = 0;
     if (this.y < 0) this.y = canvasHeight;
     if (this.y > canvasHeight) this.y = 0;
 
     let dx = mouse.x - this.x;
-    let py = mouse.y - this.y;
-    let distance = Math.sqrt(dx * dx + py * py);
+    let dy = mouse.y - this.y;
+    let distance = Math.sqrt(dx * dx + dy * dy);
     
     if (distance < mouse.radius) {
+      // Gentle repulsion
       const forceDirectionX = dx / distance;
-      const forceDirectionY = py / distance;
+      const forceDirectionY = dy / distance;
       const force = (mouse.radius - distance) / mouse.radius;
       
-      this.x -= forceDirectionX * force * 5;
-      this.y -= forceDirectionY * force * 5;
+      this.x -= forceDirectionX * force * 2;
+      this.y -= forceDirectionY * force * 2;
     }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.angle);
-    this.angle += this.spinSpeed;
-
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.fillStyle = this.color;
     ctx.shadowBlur = this.size * 2;
     ctx.shadowColor = this.color;
-    
-    ctx.beginPath();
-    if (this.type === 'dot') {
-      ctx.arc(0, 0, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (this.type === 'square') {
-      ctx.rect(-this.size, -this.size, this.size * 2, this.size * 2);
-      ctx.fill();
-    } else if (this.type === 'rect') {
-      ctx.rect(-this.size * 1.5, -this.size * 0.5, this.size * 3, this.size);
-      ctx.fill();
-    }
-    
-    ctx.restore();
+    ctx.fill();
   }
 }
 
@@ -128,8 +109,7 @@ export default function Particles() {
     if (!ctx) return;
 
     let animationFrameId: number;
-    const colors = ['#a855f7', '#aa00aa', '#55ffff', '#ffff55', '#ff55ff', '#ffffff'];
-    const types = ['square', 'rect', 'dot'];
+    const colors = ['#10b981', '#34d399', '#059669', '#6ee7b7', '#a7f3d0']; // emerald palette
     
     let particles: Particle[] = [];
 
@@ -158,8 +138,8 @@ export default function Particles() {
       
       particles = [];
       const particleCount = Math.floor((canvas.width * canvas.height) / 10000); 
-      for (let i = 0; i < Math.min(particleCount, 150); i++) {
-        particles.push(new Particle(canvas.width, canvas.height, colors, types));
+      for (let i = 0; i < Math.min(particleCount, 120); i++) {
+        particles.push(new Particle(canvas.width, canvas.height, colors));
       }
     };
 
@@ -172,6 +152,38 @@ export default function Particles() {
       for (let i = 0; i < particles.length; i++) {
         particles[i].update(mouse, canvas.width, canvas.height);
         particles[i].draw(ctx);
+
+        // Connect particles
+        for (let j = i; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 120) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(16, 185, 129, ${(1 - distance/120) * 0.6})`; // green line
+            ctx.lineWidth = 0.5 + ((1 - distance/120) * 0.5);
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+
+        // Draw connections to mouse
+        if (mouse.x !== -1000 && mouse.y !== -1000) {
+          const mdx = particles[i].x - mouse.x;
+          const mdy = particles[i].y - mouse.y;
+          const mDistance = Math.sqrt(mdx * mdx + mdy * mdy);
+          
+          if (mDistance < 150) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(52, 211, 153, ${(1 - mDistance/150) * 0.8})`; 
+            ctx.lineWidth = 1;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
       }
       
       animationFrameId = requestAnimationFrame(render);

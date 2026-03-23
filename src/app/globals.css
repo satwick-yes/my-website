@@ -6,9 +6,9 @@
   --card: #121212;
   --card-foreground: #ffffff;
   --border: #333333;
-  --primary: #a855f7;
+  --primary: #10b981;
   --primary-foreground: #000000;
-  --accent: #55ffff;
+  --accent: #34d399;
 }
 
 @theme inline {
@@ -41,5 +41,5 @@ body {
   border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a855f7;
+  background: #10b981;
 }

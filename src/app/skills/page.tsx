@@ -16,7 +16,7 @@ const skillCategories = [
   },
   {
     title: "Data Analysis",
-    icon: <LineChart className="w-6 h-6 text-purple-400" />,
+    icon: <LineChart className="w-6 h-6 text-emerald-400" />,
     skills: [
       { name: "Data Visualization", level: 90 },
       { name: "SQL", level: 85 },
@@ -25,7 +25,7 @@ const skillCategories = [
   },
   {
     title: "Web Development",
-    icon: <Globe className="w-6 h-6 text-cyan-400" />,
+    icon: <Globe className="w-6 h-6 text-emerald-300" />,
     skills: [
       { name: "HTML / CSS", level: 95 },
       { name: "JavaScript / TypeScript", level: 90 },

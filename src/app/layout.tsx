@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} antialiased min-h-screen bg-background text-foreground selection:bg-purple-500/30 overflow-x-hidden flex flex-col relative`} suppressHydrationWarning>
+      <body className={`${inter.variable} antialiased min-h-screen bg-background text-foreground selection:bg-green-500/30 overflow-x-hidden flex flex-col relative`} suppressHydrationWarning>
         <Particles />
         <div className="relative z-10 flex flex-col min-h-screen w-full">
           <Navbar />
