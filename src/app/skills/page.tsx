@@ -25,7 +25,7 @@ const skillCategories = [
   },
   {
     title: "Web Development",
-    icon: <Globe className="w-6 h-6 text-green-400" />,
+    icon: <Globe className="w-6 h-6 text-cyan-400" />,
     skills: [
       { name: "HTML / CSS", level: 95 },
       { name: "JavaScript / TypeScript", level: 90 },
@@ -73,7 +73,7 @@ export default function Skills() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
             >
-              <Card gradient className="h-full border-border hover:border-primary hover:shadow-[4px_4px_0_0_#00aa00] transition-colors bg-card/80 rounded-none">
+              <Card gradient className="h-full border-border hover:border-primary hover:shadow-[4px_4px_0_0_#aa00aa] transition-colors bg-card/80 rounded-none">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-2 bg-black/50 rounded-none border-2 border-border">
                     {category.icon}

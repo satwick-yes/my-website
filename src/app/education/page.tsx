@@ -17,8 +17,8 @@ const educationDetails: EducationDetail[] = [
   },
   {
     institution: "Chandigarh University",
-    degree: "Bachelor of Engineering in Computer Science",
-    description: "Core computer science fundamentals, data structures, algorithms, and system design. Participated in multiple hackathons and tech clubs.",
+    degree: "Bachelor of Engineering in Chemical Engineering",
+    description: "Core chemical engineering fundamentals, thermodynamics, mass and heat transfer, and process control. Participated in various technical clubs and projects.",
   },
   {
     institution: "SKS Institution",

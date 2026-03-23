@@ -19,7 +19,7 @@ const thoughts = [
   },
   {
     title: "The Observer Effect of Debugging",
-    icon: <Glasses className="w-8 h-8 text-green-400" />,
+    icon: <Glasses className="w-8 h-8 text-cyan-400" />,
     content: "Much like in quantum mechanics, the very act of observing a system can change its behavior. Adding console logs, debuggers, or profilers inherently alters the timing and memory footprint of the application, often masking the original bug.",
     theme: "Logic Puzzle",
   },

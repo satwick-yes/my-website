@@ -20,7 +20,7 @@ const achievements = [
   {
     title: "Anchor",
     organization: "Events",
-    icon: <Mic className="w-8 h-8 text-green-400" />,
+    icon: <Mic className="w-8 h-8 text-cyan-400" />,
     description: "Hosted various large-scale events, demonstrating excellent communication and public speaking skills.",
   },
 ];
