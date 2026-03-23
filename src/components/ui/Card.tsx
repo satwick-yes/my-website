@@ -17,7 +17,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
         className={cn(
-          "rounded-none border-2 border-border bg-card p-6 shadow-[6px_6px_0_0_#050505]",
+          "rounded-none border-4 border-[#1e1e1e] bg-card p-6 shadow-[inset_-4px_-4px_0px_rgba(0,0,0,0.5),inset_4px_4px_0px_rgba(255,255,255,0.1),8px_8px_0px_rgba(0,0,0,0.8)] hover:shadow-[inset_-4px_-4px_0px_rgba(0,0,0,0.5),inset_4px_4px_0px_rgba(255,255,255,0.1),12px_12px_0px_rgba(0,0,0,0.8)] transition-shadow duration-300",
           className
         )}
         {...props}

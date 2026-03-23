@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Particles from "@/components/Particles";
 
 export default function RootLayout({
   children,
@@ -22,12 +23,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} antialiased min-h-screen bg-background text-foreground selection:bg-purple-500/30 overflow-x-hidden flex flex-col`} suppressHydrationWarning>
-        <Navbar />
-        <main className="flex-grow pt-20">
-          {children}
-        </main>
-        <Footer />
+      <body className={`${inter.variable} antialiased min-h-screen bg-background text-foreground selection:bg-purple-500/30 overflow-x-hidden flex flex-col relative`} suppressHydrationWarning>
+        <Particles />
+        <div className="relative z-10 flex flex-col min-h-screen w-full">
+          <Navbar />
+          <main className="flex-grow pt-20">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

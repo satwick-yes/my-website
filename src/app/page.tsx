@@ -4,14 +4,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import Particles from "@/components/Particles";
 import Link from "next/link";
 import { Briefcase } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="relative min-h-[calc(100vh-80px)] overflow-hidden">
-      <Particles />
 
       {/* Hero Section */}
       <section className="relative z-10 flex flex-col items-center justify-center min-h-[80vh] px-4 pt-10 text-center">
