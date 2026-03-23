@@ -23,7 +23,7 @@ export default function Home() {
         >
           <div className="w-full h-full rounded-full overflow-hidden bg-black">
             <Image
-              src="/profile.png"
+              src="/image1.jpg"
               alt="Satwick Shaw"
               width={224}
               height={224}

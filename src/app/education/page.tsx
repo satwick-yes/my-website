@@ -2,23 +2,27 @@
 
 import { motion } from "framer-motion";
 
-const educationDetails = [
+type EducationDetail = {
+  institution: string;
+  degree: string;
+  duration?: string;
+  description: string;
+};
+
+const educationDetails: EducationDetail[] = [
   {
     institution: "IIT Madras",
     degree: "Bachelor of Science in Data Science and Applications",
-    duration: "2021 - Present",
     description: "Course Grade Topper. Deep dive into statistical modeling, machine learning, and software engineering. Engaging in cutting-edge research and projects.",
   },
   {
     institution: "Chandigarh University",
     degree: "Bachelor of Engineering in Computer Science",
-    duration: "2020 - 2024",
     description: "Core computer science fundamentals, data structures, algorithms, and system design. Participated in multiple hackathons and tech clubs.",
   },
   {
     institution: "SKS Institution",
     degree: "Higher Secondary Education",
-    duration: "2018 - 2020",
     description: "Focus on Science and Mathematics. Excelled in state-level examinations and national level sports.",
   },
 ];
@@ -51,9 +55,11 @@ export default function Education() {
               
               <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-2 gap-2 md:gap-8">
                 <h3 className="text-2xl font-bold text-white">{edu.institution}</h3>
-                <span className="text-sm font-medium px-3 py-1 bg-white/10 rounded-full text-blue-300 whitespace-nowrap w-fit">
-                  {edu.duration}
-                </span>
+                {edu.duration && (
+                  <span className="text-sm font-medium px-3 py-1 bg-white/10 rounded-full text-blue-300 whitespace-nowrap w-fit">
+                    {edu.duration}
+                  </span>
+                )}
               </div>
               <h4 className="text-xl text-purple-400 mb-4">{edu.degree}</h4>
               <p className="text-gray-400 leading-relaxed max-w-3xl">
