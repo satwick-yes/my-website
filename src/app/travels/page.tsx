@@ -55,7 +55,7 @@ export default function Travels() {
         {/* Second Image added here */}
         <div className="w-full max-w-4xl mx-auto mb-16 rounded-2xl overflow-hidden shadow-[0_0_30px_5px_rgba(59,130,246,0.3)] border border-white/10 relative h-[400px]">
           <Image 
-            src="/image2.jpg" 
+            src="/image2.jpeg" 
             alt="Travels Fog" 
             fill
             className="object-cover"
