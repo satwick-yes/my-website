@@ -19,9 +19,9 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative w-40 h-40 md:w-56 md:h-56 mb-8 rounded-full p-1 bg-gradient-to-r from-blue-500 to-purple-600 shadow-[0_0_40px_10px_rgba(139,92,246,0.2)]"
+          className="relative w-40 h-40 md:w-56 md:h-56 mb-8 rounded-none border-4 border-border shadow-[12px_12px_0_0_#121212] p-2 bg-card"
         >
-          <div className="w-full h-full rounded-full overflow-hidden bg-black">
+          <div className="w-full h-full rounded-none overflow-hidden bg-black border-2 border-border/50">
             <Image
               src="/profile.jpeg"
               alt="Satwick Shaw"
@@ -37,10 +37,10 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-5xl md:text-7xl font-extrabold tracking-tight mb-4"
+          className="text-5xl md:text-7xl font-extrabold tracking-tight mb-4 uppercase drop-shadow-[4px_4px_0_#333]"
         >
           Hi, I am{" "}
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+          <span className="text-primary drop-shadow-[4px_4px_0_#004400]">
             Satwick Shaw
           </span>
         </motion.h1>
@@ -49,9 +49,9 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-xl md:text-3xl font-medium text-gray-400 mb-10"
+          className="text-xl md:text-3xl font-bold text-gray-400 mb-10 tracking-wider"
         >
-          Innovator | Developer | Thinker
+          Innovator <span className="text-primary mx-2">|</span> Developer <span className="text-primary mx-2">|</span> Thinker
         </motion.p>
 
         <motion.div
@@ -86,29 +86,29 @@ export default function Home() {
             Experience
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card gradient className="group hover:border-blue-500/50 transition-colors">
+            <Card gradient className="group hover:-translate-y-2 hover:translate-x-2 hover:shadow-[-8px_8px_0_0_#00aa00] transition-all bg-card/80">
               <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 rounded-xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-500/20 transition-colors">
+                <div className="p-3 rounded-none border-b-4 border-r-4 border-t-2 border-l-2 border-border bg-black/50 text-blue-400 group-hover:text-primary transition-colors">
                   <Briefcase size={24} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">Microsoft</h3>
-                  <p className="text-gray-400">Software Engineering Intern</p>
+                  <h3 className="text-xl font-bold text-white tracking-widest uppercase">Microsoft</h3>
+                  <p className="text-primary font-bold">Software Engineering Intern</p>
                 </div>
               </div>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-300">
                 Worked on cutting-edge technologies, building scalable software solutions and contributing to impactful enterprise projects.
               </p>
             </Card>
 
-            <Card gradient className="group hover:border-purple-500/50 transition-colors">
+            <Card gradient className="group hover:-translate-y-2 hover:translate-x-2 hover:shadow-[-8px_8px_0_0_#00aa00] transition-all bg-card/80">
               <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 rounded-xl bg-purple-500/10 text-purple-400 group-hover:bg-purple-500/20 transition-colors">
+                <div className="p-3 rounded-none border-b-4 border-r-4 border-t-2 border-l-2 border-border bg-black/50 text-purple-400 group-hover:text-primary transition-colors">
                   <Briefcase size={24} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">Wipro</h3>
-                  <p className="text-gray-400">Technical Intern</p>
+                  <h3 className="text-xl font-bold text-white tracking-widest uppercase">Wipro</h3>
+                  <p className="text-primary font-bold">Technical Intern</p>
                 </div>
               </div>
               <p className="text-sm text-gray-400">

@@ -73,12 +73,12 @@ export default function Skills() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
             >
-              <Card gradient className="h-full border-white/10 hover:border-blue-500/30 transition-colors">
+              <Card gradient className="h-full border-border hover:border-primary hover:shadow-[4px_4px_0_0_#00aa00] transition-colors bg-card/80 rounded-none">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+                  <div className="p-2 bg-black/50 rounded-none border-2 border-border">
                     {category.icon}
                   </div>
-                  <h3 className="text-xl font-bold">{category.title}</h3>
+                  <h3 className="text-xl font-bold tracking-widest text-primary uppercase">{category.title}</h3>
                 </div>
                 
                 <div className="space-y-6">
@@ -88,9 +88,9 @@ export default function Skills() {
                         <span className="text-sm font-medium text-gray-300">{skill.name}</span>
                         <span className="text-sm text-gray-500">{skill.level}%</span>
                       </div>
-                      <div className="w-full h-2 bg-black/50 rounded-full overflow-hidden border border-white/5">
+                      <div className="w-full h-4 bg-black/80 rounded-none border-2 border-border p-0.5">
                         <motion.div
-                          className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                          className="h-full bg-primary rounded-none"
                           initial={{ width: 0 }}
                           whileInView={{ width: `${skill.level}%` }}
                           viewport={{ once: true }}

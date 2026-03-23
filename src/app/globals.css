@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050505;
+  --background: #0b0b0b;
   --foreground: #ffffff;
-  --card: #0f0f11;
+  --card: #121212;
   --card-foreground: #ffffff;
-  --border: #1a1a1a;
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-  --accent: #8b5cf6;
+  --border: #333333;
+  --primary: #55ff55;
+  --primary-foreground: #000000;
+  --accent: #55ffff;
 }
 
 @theme inline {
@@ -27,17 +27,19 @@ body {
   font-family: var(--font-sans), sans-serif;
 }
 
-/* Custom scrollbar for dark theme */
+/* Custom blocky scrollbar for Minecraft theme */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
 }
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: #0b0b0b;
+  border-left: 2px solid #333;
 }
 ::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
+  background: #444;
+  border: 2px solid #0b0b0b;
+  border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #55ff55;
 }

@@ -44,13 +44,13 @@ export default function Projects() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="h-full"
             >
-              <Card gradient className="h-full flex flex-col group border-white/10 hover:border-purple-500/50 transition-colors">
-                <h3 className="text-2xl font-bold mb-3">{project.title}</h3>
+              <Card gradient className="h-full flex flex-col group border-border hover:border-primary hover:shadow-[-8px_8px_0_0_#00aa00] transition-colors bg-card/80">
+                <h3 className="text-2xl font-bold mb-3 tracking-widest text-white uppercase">{project.title}</h3>
                 <p className="text-gray-400 mb-6 flex-grow">{project.description}</p>
                 
                 <div className="flex flex-wrap gap-2 mb-8">
                   {project.tech.map((t) => (
-                    <span key={t} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm text-blue-300">
+                    <span key={t} className="px-3 py-1 bg-black/50 border-2 border-border rounded-none text-sm text-primary font-bold uppercase tracking-wider">
                       {t}
                     </span>
                   ))}

@@ -51,17 +51,17 @@ export default function Education() {
               className="relative pl-8 md:pl-12"
             >
               {/* Timeline dot */}
-              <div className="absolute -left-[5px] top-1 w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_3px_rgba(59,130,246,0.5)]" />
+              <div className="absolute -left-[5px] top-1 w-3 h-3 rounded-none bg-primary shadow-[2px_2px_0_0_#333333] border border-black" />
               
               <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-2 gap-2 md:gap-8">
                 <h3 className="text-2xl font-bold text-white">{edu.institution}</h3>
                 {edu.duration && (
-                  <span className="text-sm font-medium px-3 py-1 bg-white/10 rounded-full text-blue-300 whitespace-nowrap w-fit">
+                  <span className="text-sm font-bold px-3 py-1 bg-black border-2 border-border rounded-none text-primary whitespace-nowrap w-fit">
                     {edu.duration}
                   </span>
                 )}
               </div>
-              <h4 className="text-xl text-purple-400 mb-4">{edu.degree}</h4>
+              <h4 className="text-xl text-primary font-bold tracking-widest uppercase mb-4">{edu.degree}</h4>
               <p className="text-gray-400 leading-relaxed max-w-3xl">
                 {edu.description}
               </p>

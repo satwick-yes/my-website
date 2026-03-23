@@ -40,14 +40,14 @@ export default function Navbar() {
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
         isScrolled
-          ? "bg-black/60 backdrop-blur-md border-b border-white/10"
+          ? "bg-background/95 border-b-2 border-border support-backdrop-blur:bg-background/80"
           : "bg-transparent py-2"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="text-2xl font-bold tracking-tighter">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+            <span className="text-primary tracking-widest uppercase">
               Satwick
             </span>
             Shaw
@@ -70,7 +70,7 @@ export default function Navbar() {
                   {isActive && (
                     <motion.div
                       layoutId="navbar-indicator"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-600"
+                      className="absolute bottom-0 left-0 right-0 h-1 bg-primary shadow-[0_2px_0_0_#00aa00]"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.3 }}
@@ -100,7 +100,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-black/95 backdrop-blur-xl border-b border-white/10 overflow-hidden"
+            className="md:hidden bg-card border-b-4 border-border overflow-hidden"
           >
             <div className="px-4 pt-2 pb-6 space-y-1">
               {navLinks.map((link) => (
@@ -109,10 +109,10 @@ export default function Navbar() {
                   href={link.path}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    "block px-3 py-3 text-base font-medium rounded-md",
+                    "block px-3 py-3 text-base font-medium rounded-none transition-colors",
                     pathname === link.path
-                      ? "bg-white/10 text-white"
-                      : "text-gray-300 hover:bg-white/5 hover:text-white"
+                      ? "bg-primary/20 text-primary border-l-4 border-primary"
+                      : "text-foreground hover:bg-border hover:text-white"
                   )}
                 >
                   {link.name}

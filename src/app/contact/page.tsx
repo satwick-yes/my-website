@@ -44,7 +44,7 @@ export default function Contact() {
             <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
             
             <a href="mailto:satwick1234509@gmail.com" className="flex items-center gap-4 group">
-              <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors border border-white/10">
+              <div className="p-4 bg-black/50 rounded-none group-hover:bg-primary/20 group-hover:text-primary transition-colors border-2 border-border group-hover:border-primary">
                 <Mail size={24} />
               </div>
               <div>
@@ -54,7 +54,7 @@ export default function Contact() {
             </a>
 
             <a href="tel:8250297411" className="flex items-center gap-4 group">
-              <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-purple-500/20 group-hover:text-purple-400 transition-colors border border-white/10">
+              <div className="p-4 bg-black/50 rounded-none group-hover:bg-primary/20 group-hover:text-primary transition-colors border-2 border-border group-hover:border-primary">
                 <Phone size={24} />
               </div>
               <div>
@@ -64,7 +64,7 @@ export default function Contact() {
             </a>
 
             <a href="https://www.linkedin.com/in/satwick-shaw-a5b142371/" target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
-              <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-blue-700/20 group-hover:text-blue-500 transition-colors border border-white/10">
+              <div className="p-4 bg-black/50 rounded-none group-hover:bg-primary/20 group-hover:text-primary transition-colors border-2 border-border group-hover:border-primary">
                 <Linkedin size={24} />
               </div>
               <div>
@@ -88,7 +88,7 @@ export default function Contact() {
                     type="text"
                     id="name"
                     required
-                    className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-shadow"
+                    className="w-full bg-black/50 border-2 border-border rounded-none px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary transition-all shadow-[inset_4px_4px_0_0_#050505]"
                     placeholder="John Doe"
                   />
                 </div>
@@ -98,7 +98,7 @@ export default function Contact() {
                     type="email"
                     id="email"
                     required
-                    className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-shadow"
+                    className="w-full bg-black/50 border-2 border-border rounded-none px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary transition-all shadow-[inset_4px_4px_0_0_#050505]"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -108,7 +108,7 @@ export default function Contact() {
                     id="message"
                     required
                     rows={4}
-                    className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-shadow resize-none"
+                    className="w-full bg-black/50 border-2 border-border rounded-none px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary transition-all shadow-[inset_4px_4px_0_0_#050505] resize-none"
                     placeholder="How can I help you?"
                   />
                 </div>

@@ -26,17 +26,19 @@ export default function Particles() {
       {particles.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full bg-blue-500/20 shadow-[0_0_10px_2px_rgba(59,130,246,0.3)]"
+          className="absolute rounded-none shadow-[2px_2px_0_0_rgba(11,11,11,0.8)]"
           style={{
-            width: p.size,
-            height: p.size,
+            width: p.size * 2,
+            height: p.size * 2,
             left: `${p.x}%`,
             top: `${p.y}%`,
+            backgroundColor: Math.random() > 0.5 ? 'var(--primary)' : '#aa00aa',
+            opacity: 0.8,
           }}
           animate={{
-            y: [0, -100, 0],
-            x: [0, Math.random() * 50 - 25, 0],
-            opacity: [0.1, 0.6, 0.1],
+            y: [0, Math.random() > 0.5 ? -150 : 150],
+            x: [0, (Math.random() - 0.5) * 50],
+            rotate: [0, Math.random() > 0.5 ? 90 : -90],
           }}
           transition={{
             duration: p.duration,

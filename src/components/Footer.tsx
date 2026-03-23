@@ -3,12 +3,12 @@ import { Github, Linkedin, Mail } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black/50 py-12 mt-20 relative z-10 w-full">
+    <footer className="border-t-4 border-border bg-card py-12 mt-20 relative z-10 w-full shadow-[0_-4px_0_0_#0b0b0b]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-center md:text-left">
             <Link href="/" className="text-xl font-bold tracking-tighter">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+              <span className="text-primary tracking-widest uppercase">
                 Satwick
               </span>
               Shaw
