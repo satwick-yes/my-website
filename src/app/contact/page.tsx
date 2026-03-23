@@ -1,0 +1,134 @@
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Mail, Phone, Linkedin, Send } from "lucide-react";
+
+export default function Contact() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Simulate form submission
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 3000);
+    }, 1500);
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pb-40">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Contact Me</h1>
+        <p className="text-gray-400 text-lg mb-16 max-w-2xl">
+          Interested in collaborating or have a question? I'd love to hear from you. Fill out the form below or reach out directly.
+        </p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Contact Details */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="space-y-8"
+          >
+            <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
+            
+            <a href="mailto:satwick1234509@gmail.com" className="flex items-center gap-4 group">
+              <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors border border-white/10">
+                <Mail size={24} />
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Email</p>
+                <p className="text-lg font-medium">satwick1234509@gmail.com</p>
+              </div>
+            </a>
+
+            <a href="tel:8250297411" className="flex items-center gap-4 group">
+              <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-purple-500/20 group-hover:text-purple-400 transition-colors border border-white/10">
+                <Phone size={24} />
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Phone</p>
+                <p className="text-lg font-medium">+91 8250297411</p>
+              </div>
+            </a>
+
+            <a href="https://www.linkedin.com/in/satwick-shaw-a5b142371/" target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
+              <div className="p-4 bg-white/5 rounded-2xl group-hover:bg-blue-700/20 group-hover:text-blue-500 transition-colors border border-white/10">
+                <Linkedin size={24} />
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">LinkedIn</p>
+                <p className="text-lg font-medium">Satwick Shaw</p>
+              </div>
+            </a>
+          </motion.div>
+
+          {/* Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <Card gradient className="p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    required
+                    className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-shadow"
+                    placeholder="John Doe"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    required
+                    className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-shadow"
+                    placeholder="john@example.com"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                  <textarea
+                    id="message"
+                    required
+                    rows={4}
+                    className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-shadow resize-none"
+                    placeholder="How can I help you?"
+                  />
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full gap-2" 
+                  disabled={isSubmitting || submitted}
+                >
+                  {isSubmitting ? "Sending..." : submitted ? "Message Sent!" : (
+                    <>
+                      Send Message <Send size={18} />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </Card>
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
