@@ -27,6 +27,7 @@ const maglevComponents = [
 
 export default function MaglevModel() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const explodedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -388,6 +389,96 @@ export default function MaglevModel() {
     };
   }, []);
 
+  // ----------------------------------------------------
+  // SECONDARY SCENE: EXPLODED LAYER BREAKDOWN
+  // ----------------------------------------------------
+  useEffect(() => {
+    if (!explodedRef.current) return;
+    if (explodedRef.current.children.length > 0) return;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color("#0a0f18");
+
+    const camera = new THREE.PerspectiveCamera(40, explodedRef.current.clientWidth / explodedRef.current.clientHeight, 0.1, 1000);
+    camera.position.set(12, 8, 14);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(explodedRef.current.clientWidth, explodedRef.current.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    explodedRef.current.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.dampingFactor = 0.05;
+    controls.autoRotate = true; controls.autoRotateSpeed = 1.2;
+    controls.target.set(0, 0, 0);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); scene.add(ambientLight);
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1.0); mainLight.position.set(10, 20, 15); scene.add(mainLight);
+
+    const group = new THREE.Group();
+
+    // 1. Conductive Shield (Bottom)
+    const shield = new THREE.Mesh(new THREE.BoxGeometry(6, 0.1, 9), new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.9, roughness: 0.2 }));
+    shield.position.y = -2.5; group.add(shield);
+
+    // 2. Ferrite Back-Iron (Middle)
+    const ferrite = new THREE.Mesh(new THREE.BoxGeometry(5.4, 0.3, 8.4), new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.3, roughness: 0.8 }));
+    ferrite.position.y = 0; group.add(ferrite);
+
+    // 3. Copper Coils (Top)
+    const coilsGroup = new THREE.Group();
+    const copperMat = new THREE.MeshStandardMaterial({ color: 0xd48b37, metalness: 0.8, roughness: 0.2 });
+    const numTurns = 5; const turnSpacing = 0.2; const trackWidth = 4.8; const trackLength = 7.8; const wireThickness = 0.15;
+    for (let i = 0; i < numTurns; i++) {
+        const w = trackWidth - (i * turnSpacing * 2); const l = trackLength - (i * turnSpacing * 2);
+        const s1 = new THREE.Mesh(new THREE.BoxGeometry(w, wireThickness, wireThickness), copperMat); s1.position.set(0, 0, l/2);
+        const s2 = new THREE.Mesh(new THREE.BoxGeometry(w, wireThickness, wireThickness), copperMat); s2.position.set(0, 0, -l/2);
+        const e1 = new THREE.Mesh(new THREE.BoxGeometry(wireThickness, wireThickness, l - wireThickness), copperMat); e1.position.set(w/2 - wireThickness/2, 0, 0);
+        const e2 = new THREE.Mesh(new THREE.BoxGeometry(wireThickness, wireThickness, l - wireThickness), copperMat); e2.position.set(-(w/2 - wireThickness/2), 0, 0);
+        coilsGroup.add(s1, s2, e1, e2);
+    }
+    coilsGroup.position.y = 2.5; group.add(coilsGroup);
+
+    // Dashed Guide Lines
+    const lineMat = new THREE.LineDashedMaterial({ color: 0x555555, dashSize: 0.2, gapSize: 0.2 });
+    const createLine = (x:number, z:number) => {
+        const points = [new THREE.Vector3(x, -2.5, z), new THREE.Vector3(x, 2.5, z)];
+        const geo = new THREE.BufferGeometry().setFromPoints(points);
+        const line = new THREE.Line(geo, lineMat); line.computeLineDistances(); return line;
+    };
+    group.add(createLine(2.5, 4)); group.add(createLine(-2.5, 4));
+    group.add(createLine(2.5, -4)); group.add(createLine(-2.5, -4));
+
+    scene.add(group);
+
+    const clock = new THREE.Clock();
+    let animId: number;
+    const animate = () => {
+        animId = requestAnimationFrame(animate); controls.update();
+        const time = clock.getElapsedTime();
+        coilsGroup.position.y = 2.5 + Math.sin(time * 2) * 0.2;
+        ferrite.position.y = Math.sin(time * 2 + 0.5) * 0.1;
+        shield.position.y = -2.5 + Math.sin(time * 2 + 1.0) * 0.05;
+        renderer.render(scene, camera);
+    };
+    animate();
+
+    const handleResize = () => {
+        if (!explodedRef.current) return;
+        camera.aspect = explodedRef.current.clientWidth / explodedRef.current.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(explodedRef.current.clientWidth, explodedRef.current.clientHeight);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+        window.removeEventListener("resize", handleResize);
+        cancelAnimationFrame(animId);
+        if (explodedRef.current && renderer.domElement) explodedRef.current.removeChild(renderer.domElement);
+        renderer.dispose();
+    };
+  }, []);
+
   return (
     <div className="pt-20 min-h-screen bg-[#111827] text-white flex flex-col font-sans">
       
@@ -432,6 +523,36 @@ export default function MaglevModel() {
           <div className="flex items-center gap-2"><div className="w-3 h-3 bg-blue-500 shadow-[0_0_8px_#3b82f6]" /> Levitation Field</div>
           <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#ff9900]" /> Transfer Power</div>
           <div className="flex items-center gap-2"><div className="w-3 h-3 bg-white border border-gray-400" /> EV Body</div>
+        </div>
+      </div>
+
+      {/* Exploded Coil Model */}
+      <div className="w-full bg-[#0a0f18] relative py-12 border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 mb-2 md:mb-6 text-center md:text-left flex flex-col md:flex-row justify-between items-end">
+           <div>
+             <h2 className="text-2xl text-primary font-bold uppercase tracking-widest mb-2">Guideway Coil Breakdown</h2>
+             <p className="text-gray-400 text-sm tracking-wide uppercase">Layer-wise exploded view of the primary stack</p>
+           </div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto relative border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+            <div ref={explodedRef} className="w-full h-[50vh] cursor-grab active:cursor-grabbing"></div>
+            
+            {/* HTML Callouts for the Exploded View */}
+            <div className="absolute top-[10%] left-[5%] pointer-events-none p-4 bg-black/60 backdrop-blur border-l-2 border-[#d48b37]">
+                <h4 className="text-[#d48b37] font-bold tracking-widest uppercase text-sm">Primary Coil Winding</h4>
+                <p className="text-gray-300 text-xs mt-1">Litz-wire dual-frequency loops</p>
+            </div>
+            
+            <div className="absolute top-[45%] left-[5%] pointer-events-none p-4 bg-black/60 backdrop-blur border-l-2 border-gray-400">
+                <h4 className="text-gray-300 font-bold tracking-widest uppercase text-sm">Flux-Guiding Back-Iron</h4>
+                <p className="text-gray-400 text-xs mt-1">Ferrite tiles channeling magnetic flux</p>
+            </div>
+
+            <div className="absolute top-[80%] left-[5%] pointer-events-none p-4 bg-black/60 backdrop-blur border-l-2 border-gray-200">
+                <h4 className="text-white font-bold tracking-widest uppercase text-sm">Conductive Shielding</h4>
+                <p className="text-gray-400 text-xs mt-1">Aluminum plate mitigating stray EMI</p>
+            </div>
         </div>
       </div>
 
