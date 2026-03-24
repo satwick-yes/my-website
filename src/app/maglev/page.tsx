@@ -33,14 +33,13 @@ export default function MaglevModel() {
     if (!containerRef.current) return;
     if (containerRef.current.children.length > 0) return;
 
-    // 1. Scene Setup
+        // 1. Scene Setup - HIGHWAY LANDSCAPE
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#111827"); // Deep moody sky
-    scene.fog = new THREE.FogExp2("#111827", 0.012);
+    scene.background = new THREE.Color("#82a3b8"); // Bright sky
+    scene.fog = new THREE.FogExp2("#82a3b8", 0.015);
 
-    const camera = new THREE.PerspectiveCamera(45, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000);
-    // Positioned similar to the first image (isometric side view)
-    camera.position.set(12, 6, 15);
+    const camera = new THREE.PerspectiveCamera(40, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000);
+    camera.position.set(25, 20, 35);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
@@ -50,342 +49,164 @@ export default function MaglevModel() {
     containerRef.current.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.target.set(0, 1, 0);
-    controls.maxPolarAngle = Math.PI / 2 - 0.05;
+    controls.enableDamping = true; controls.dampingFactor = 0.05;
+    controls.target.set(0, 0, 0);
 
-    // 2. Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-    scene.add(ambientLight);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); scene.add(ambientLight);
+    const sunLight = new THREE.DirectionalLight(0xfffaed, 2.0);
+    sunLight.position.set(40, 50, -20); sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 2048; sunLight.shadow.mapSize.height = 2048;
+    sunLight.shadow.camera.left = -40; sunLight.shadow.camera.right = 40;
+    sunLight.shadow.camera.top = 40; sunLight.shadow.camera.bottom = -40;
+    scene.add(sunLight);
 
-    const moonLight = new THREE.DirectionalLight(0x90b0ff, 0.6);
-    moonLight.position.set(-10, 15, -10);
-    scene.add(moonLight);
-
-    const mainLight = new THREE.DirectionalLight(0xffffff, 0.9);
-    mainLight.position.set(10, 20, 15);
-    mainLight.castShadow = true;
-    mainLight.shadow.mapSize.width = 4096;
-    mainLight.shadow.mapSize.height = 4096;
-    mainLight.shadow.bias = -0.0005;
-    scene.add(mainLight);
-
-    // Spotlight highlighting the active coil segment
-    const spotLight = new THREE.SpotLight(0xffa500, 2.5, 50, Math.PI / 4, 0.8, 1);
-    spotLight.position.set(0, 12, 0);
-    spotLight.castShadow = true;
-    scene.add(spotLight);
-
-    // 3. Materials
-    const roadMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.1 });
-    const dirtMat = new THREE.MeshStandardMaterial({ color: 0x3d3024, roughness: 1.0 }); // Ground cutaway layers
-    const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const ironMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.6, roughness: 0.6 });
-    const coilBaseMat = new THREE.MeshStandardMaterial({ color: 0xff6600, emissive: 0xff3300, emissiveIntensity: 0.8 }); // Glowing bottom
-    const copperMat = new THREE.MeshStandardMaterial({ color: 0xd48b37, metalness: 0.8, roughness: 0.2 });
-    
-    // Sedan Materials
-    const carBodyMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.1 });
-    const carBlackMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.8, roughness: 0.3 });
-    const glassMat = new THREE.MeshStandardMaterial({ color: 0x050510, metalness: 0.9, roughness: 0.0, transparent: true, opacity: 0.85 });
-    const wheelMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.9 });
-    const rimMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.9, roughness: 0.2 });
-
-    const glowBlueMat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
-    const glowOrangeMat = new THREE.MeshBasicMaterial({ color: 0xff9900, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
-
-    // 4. Geometry Construction
-
-    // --- A. The Road & Environment ---
-    const roadGroup = new THREE.Group();
-    const roadLength = 80;
-
-    // Asphalt surface (with a square cutaway in the center)
-    const asphaltShape = new THREE.Shape();
-    asphaltShape.moveTo(-8, roadLength/2);
-    asphaltShape.lineTo(8, roadLength/2);
-    asphaltShape.lineTo(8, -roadLength/2);
-    asphaltShape.lineTo(-8, -roadLength/2);
-    // Hole for primary coil cutaway (x: -2 to 2, z: -3 to 3)
-    const holePath = new THREE.Path();
-    holePath.moveTo(-2.5, 3.5);
-    holePath.lineTo(2.5, 3.5);
-    holePath.lineTo(2.5, -3.5);
-    holePath.lineTo(-2.5, -3.5);
-    asphaltShape.holes.push(holePath);
-
-    const extrudeSettings = { depth: 0.4, bevelEnabled: false };
-    const rdGeo = new THREE.ExtrudeGeometry(asphaltShape, extrudeSettings);
-    rdGeo.rotateX(Math.PI / 2);
-    const roadPavement = new THREE.Mesh(rdGeo, roadMat);
-    roadPavement.position.y = 0;
-    roadPavement.receiveShadow = true;
-    roadGroup.add(roadPavement);
-
-    // Dirt/Sub-layer below the road
-    const dirtBase = new THREE.Mesh(new THREE.BoxGeometry(20, 1.5, roadLength), dirtMat);
-    dirtBase.position.y = -0.95;
-    dirtBase.receiveShadow = true;
-    roadGroup.add(dirtBase);
-
-    // Road side lines
-    const sideLineL = new THREE.Mesh(new THREE.PlaneGeometry(0.15, roadLength), lineMat);
-    sideLineL.rotation.x = -Math.PI/2; sideLineL.position.set(-6, 0.01, 0);
-    roadGroup.add(sideLineL);
-    
-    const sideLineR = new THREE.Mesh(new THREE.PlaneGeometry(0.15, roadLength), lineMat);
-    sideLineR.rotation.x = -Math.PI/2; sideLineR.position.set(6, 0.01, 0);
-    roadGroup.add(sideLineR);
-
-    // Solid median line
-    const medianLine = new THREE.Mesh(new THREE.PlaneGeometry(0.15, roadLength), lineMat);
-    medianLine.rotation.x = -Math.PI/2; medianLine.position.set(0, 0.01, 0);
-    roadGroup.add(medianLine);
-
-    // --- B. The Embedded Primary Coil (Highly Detailed Cutaway) ---
-    const coilCutawayGroup = new THREE.Group();
-    coilCutawayGroup.position.y = -0.3; // Sunk into the cutaway hole
-
-    // Base iron/ferrite tray
-    const ironTray = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.2, 6.6), ironMat);
-    ironTray.receiveShadow = true; ironTray.castShadow = true;
-    coilCutawayGroup.add(ironTray);
-
-    // Glowing orange base (visualizing power/heat)
-    const glowBase = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.05, 6.4), coilBaseMat);
-    glowBase.position.y = 0.12;
-    coilCutawayGroup.add(glowBase);
-
-    // Detailed Concentric Coils (Racetrack)
-    const numTurns = 5;
-    const turnSpacing = 0.12;
-    const trackWidth = 4.0;
-    const trackLength = 6.0;
-    const wireThickness = 0.08;
-
-    for(let i=0; i<numTurns; i++) {
-      const w = trackWidth - (i * turnSpacing * 2);
-      const l = trackLength - (i * turnSpacing * 2);
-      
-      const s1 = new THREE.Mesh(new THREE.BoxGeometry(w, wireThickness, wireThickness), copperMat);
-      s1.position.set(0, 0.2, l/2); s1.castShadow = true;
-      const s2 = new THREE.Mesh(new THREE.BoxGeometry(w, wireThickness, wireThickness), copperMat);
-      s2.position.set(0, 0.2, -l/2); s2.castShadow = true;
-      const e1 = new THREE.Mesh(new THREE.BoxGeometry(wireThickness, wireThickness, l - wireThickness), copperMat);
-      e1.position.set(w/2 - wireThickness/2, 0.2, 0); e1.castShadow = true;
-      const e2 = new THREE.Mesh(new THREE.BoxGeometry(wireThickness, wireThickness, l - wireThickness), copperMat);
-      e2.position.set(-(w/2 - wireThickness/2), 0.2, 0); e2.castShadow = true;
-
-      coilCutawayGroup.add(s1, s2, e1, e2);
-    }
-    
-    // Additional closed coil segments continuing along the road (under the asphalt)
-    // We'll just put simple boxes to simulate hidden coils ahead and behind
-    for(let i = -30; i <= 30; i+=8) {
-        if(Math.abs(i) > 4) { // skip the cutaway area
-            const hiddenIron = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.15, 7.5), ironMat);
-            hiddenIron.position.set(0, -0.3, i);
-            roadGroup.add(hiddenIron);
-        }
-    }
-
-    roadGroup.add(coilCutawayGroup);
-    
-    // --- C. Power Inverter Box & Grid Connection (Side of road) ---
-    const inverterGroup = new THREE.Group();
-    inverterGroup.position.set(-9, 0, 0); // Off the road on the grass/dirt
-    
-    const invBase = new THREE.Mesh(new THREE.BoxGeometry(3, 1.5, 2.5), new THREE.MeshStandardMaterial({ color: 0x999999, metalness: 0.6 }));
-    invBase.position.y = 0.75; invBase.castShadow = true; invBase.receiveShadow = true;
-    inverterGroup.add(invBase);
-
-    // Cooling fans on inverter
-    const fanMat = new THREE.MeshStandardMaterial({ color: 0x050505 });
-    const f1 = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.1, 16), fanMat);
-    f1.rotation.x = Math.PI/2; f1.position.set(-0.8, 0.8, 1.25);
-    const f2 = f1.clone(); f2.position.set(0.8, 0.8, 1.25);
-    inverterGroup.add(f1, f2);
-
-    // Digital screens/lights on inverter
-    const screenMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.4), screenMat);
-    screen.position.set(0, 1.2, 1.26);
-    inverterGroup.add(screen);
-
-    // Cables running to the road
-    const cableCurve = new THREE.QuadraticBezierCurve3(
-        new THREE.Vector3(0, 0.2, 0),
-        new THREE.Vector3(4, 0.2, 0),
-        new THREE.Vector3(6.5, -0.4, 0) // dive under road
-    );
-    const cableGeo = new THREE.TubeGeometry(cableCurve, 20, 0.08, 8, false);
-    const cable = new THREE.Mesh(cableGeo, new THREE.MeshStandardMaterial({ color: 0x111 }));
-    inverterGroup.add(cable);
-
-    scene.add(inverterGroup);
-    scene.add(roadGroup);
-
-    // --- D. Detailed White Sedan (Vehicle Subsystem) ---
-    const vehicleGroup = new THREE.Group();
-    vehicleGroup.position.set(0, 1.8, 0); // Hover height
-
-    // Glowing Receiver Coil on bottom
-    const rxCoil = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.05, 5.0), coilBaseMat);
-    rxCoil.position.y = -0.01;
-    vehicleGroup.add(rxCoil);
-
-    // Sleek Tesla Body Shape
-    const carShape = new THREE.Shape();
-    carShape.moveTo(4.6, 0.3); 
-    carShape.lineTo(-4.4, 0.3); 
-    carShape.bezierCurveTo(-4.8, 0.3, -4.8, 0.8, -4.6, 0.9); 
-    carShape.lineTo(-3.4, 1.3); 
-    carShape.quadraticCurveTo(-1.5, 2.0, -0.5, 2.15); 
-    carShape.lineTo(1.0, 2.15); 
-    carShape.quadraticCurveTo(2.8, 1.5, 3.8, 1.1); 
-    carShape.quadraticCurveTo(4.6, 0.9, 4.8, 0.7); 
-    carShape.quadraticCurveTo(5.0, 0.5, 4.6, 0.3); 
-    
-    const bodyExtrudeSettings = { depth: 4.2, bevelEnabled: true, bevelSegments: 4, steps: 2, bevelSize: 0.15, bevelThickness: 0.15 };
-    const bodyGeo = new THREE.ExtrudeGeometry(carShape, bodyExtrudeSettings);
-    bodyGeo.translate(0, 0, -2.1);
-    const carBody = new THREE.Mesh(bodyGeo, carBodyMat);
-    carBody.rotation.y = -Math.PI / 2; 
-    carBody.castShadow = true; carBody.receiveShadow = true;
-    vehicleGroup.add(carBody);
-
-    // Glass Canopy (Windshield, Roof, Rear)
-    const glassShape = new THREE.Shape();
-    glassShape.moveTo(3.7, 1.1); 
-    glassShape.quadraticCurveTo(2.7, 1.55, 1.0, 2.18); 
-    glassShape.lineTo(-0.5, 2.18); 
-    glassShape.quadraticCurveTo(-1.3, 2.05, -3.3, 1.35); 
-    glassShape.lineTo(3.7, 1.35); 
-    const glassExtrude = { depth: 3.8, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05, bevelSegments: 2 };
-    const glassGeo = new THREE.ExtrudeGeometry(glassShape, glassExtrude);
-    glassGeo.translate(0, 0, -1.9);
-    const glassMesh = new THREE.Mesh(glassGeo, glassMat);
-    glassMesh.rotation.y = -Math.PI / 2;
-    vehicleGroup.add(glassMesh);
-
-    // Side Windows
-    const sideWinGeo = new THREE.PlaneGeometry(3.6, 0.65);
-    const sideWinL = new THREE.Mesh(sideWinGeo, glassMat);
-    sideWinL.rotation.y = Math.PI / 2; sideWinL.position.set(2.11, 1.45, -0.5);
-    const sideWinR = new THREE.Mesh(sideWinGeo, glassMat);
-    sideWinR.rotation.y = -Math.PI / 2; sideWinR.position.set(-2.11, 1.45, -0.5);
-    vehicleGroup.add(sideWinL, sideWinR);
-
-    // Underbelly panel
-    const underbelly = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.1, 9.0), carBlackMat);
-    underbelly.position.y = 0.25; vehicleGroup.add(underbelly);
-
-    // Headlights & Taillights
-    const hlMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const hlLeft = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), hlMat); hlLeft.position.set(1.6, 0.75, 4.81);
-    const hlRight = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), hlMat); hlRight.position.set(-1.6, 0.75, 4.81);
-    const tlMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-    const tlLeft = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), tlMat); tlLeft.position.set(1.6, 0.85, -4.61); tlLeft.rotation.y = Math.PI;
-    const tlRight = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), tlMat); tlRight.position.set(-1.6, 0.85, -4.61); tlRight.rotation.y = Math.PI;
-    vehicleGroup.add(hlLeft, hlRight, tlLeft, tlRight);
-
-    // Wheels
-    const createDetailedWheel = (x: number, z: number) => {
-        const wg = new THREE.Group();
-        const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.6, 32), wheelMat); tire.rotation.z = Math.PI / 2; tire.castShadow = true;
-        const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.62, 16), rimMat); rim.rotation.z = Math.PI / 2;
-        const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.65, 8), carBlackMat); hub.rotation.z = Math.PI / 2;
-        wg.add(tire, rim, hub); wg.position.set(x, 0.4, z); return wg;
+    const makeLabelSprite = (text: string, bgColor: string, textColor: string, w = 512, h = 128, fsNum = 32) => {
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        const ctx = c.getContext('2d')!;
+        ctx.fillStyle = bgColor; ctx.fillRect(0,0,w,h);
+        ctx.strokeStyle = "#444"; ctx.lineWidth = 4; ctx.strokeRect(0,0,w,h);
+        ctx.fillStyle = textColor; ctx.font = "Bold " + fsNum + "px sans-serif";
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(text, w/2, h/2);
+        const tex = new THREE.CanvasTexture(c);
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex }));
+        sprite.scale.set(w/40, h/40, 1);
+        return sprite;
     };
-    vehicleGroup.add(createDetailedWheel(2.1, 3.0)); vehicleGroup.add(createDetailedWheel(-2.1, 3.0));
-    vehicleGroup.add(createDetailedWheel(2.1, -2.8)); vehicleGroup.add(createDetailedWheel(-2.1, -2.8));
 
-    // Hidden Inverter Powertrain Box
-    const inverterBox = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 1.5), new THREE.MeshStandardMaterial({ color: 0x999999, metalness: 0.8 }));
-    inverterBox.position.set(0, 0.45, 0); vehicleGroup.add(inverterBox);
+    const makeDataPanelSprite = () => {
+        const c = document.createElement('canvas'); c.width = 512; c.height = 256;
+        const ctx = c.getContext('2d')!;
+        ctx.fillStyle = "rgba(15, 20, 30, 0.9)"; ctx.fillRect(0,0,512,256);
+        ctx.strokeStyle = "#555"; ctx.lineWidth = 4; ctx.strokeRect(0,0,512,256);
+        ctx.fillStyle = "#ffffff"; ctx.font = "Bold 24px sans-serif";
+        ctx.fillText("Feeder Constraints & Monitoring", 20, 40);
+        ctx.fillStyle = "#bbbbbb"; ctx.font = "20px monospace";
+        ctx.fillText("230 VAC     780 V      [==]", 20, 90);
+        ctx.fillText("50 kW AC    50 kW      [--]", 20, 140);
+        ctx.fillText("47 kW DC    47 kW      [||]", 20, 190);
+        const tex = new THREE.CanvasTexture(c);
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex }));
+        sprite.scale.set(15, 7.5, 1);
+        return sprite;
+    };
 
+    // Terrain
+    const terrain = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshStandardMaterial({color: 0x3d4f30, roughness: 1.0}));
+    terrain.rotation.x = -Math.PI/2; terrain.position.y = -2; terrain.receiveShadow = true; scene.add(terrain);
+
+    // Highway
+    const roadShape = new THREE.Shape();
+    roadShape.moveTo(-10, 100); roadShape.lineTo(10, 100); roadShape.lineTo(10, -100); roadShape.lineTo(-10, -100);
+    const trench = new THREE.Path(); trench.moveTo(-3.5, 30); trench.lineTo(3.5, 30); trench.lineTo(3.5, -5); trench.lineTo(-3.5, -5);
+    roadShape.holes.push(trench);
+    const roadGeom = new THREE.ExtrudeGeometry(roadShape, { depth: 1.5, bevelEnabled: false });
+    const road = new THREE.Mesh(roadGeom, new THREE.MeshStandardMaterial({color: 0x333333, roughness: 0.9}));
+    road.rotation.x = Math.PI/2; road.position.y = -0.5; road.receiveShadow = true; scene.add(road);
+
+    // Highway Lines
+    const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const sideLineL = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 200), lineMat); sideLineL.rotation.x = -Math.PI/2; sideLineL.position.set(-8, 1.01, 0); scene.add(sideLineL);
+    const sideLineR = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 200), lineMat); sideLineR.rotation.x = -Math.PI/2; sideLineR.position.set(8, 1.01, 0); scene.add(sideLineR);
+
+    // Modular Cassettes inside trench
+    const cassetteGrp = new THREE.Group();
+    const cassMat = new THREE.MeshStandardMaterial({ color: 0xffcc00, metalness: 0.1, roughness: 0.3 });
+    const darkMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
+    for(let z = -2; z <= 25; z+=3) {
+        const c1 = new THREE.Mesh(new THREE.BoxGeometry(6.6, 0.6, 2.5), cassMat); c1.position.set(0, -1, z);
+        const strip1 = new THREE.Mesh(new THREE.BoxGeometry(6.8, 0.65, 0.4), darkMat); strip1.position.set(0, -1, z);
+        c1.castShadow = true; c1.receiveShadow = true; cassetteGrp.add(c1, strip1);
+    }
+    scene.add(cassetteGrp);
+
+    // Substation
+    const subGrp = new THREE.Group(); subGrp.position.set(-14, -0.5, 15);
+    const b1 = new THREE.Mesh(new THREE.BoxGeometry(4, 5, 6), new THREE.MeshStandardMaterial({color: 0x888888})); b1.position.y = 2.5; b1.castShadow=true; subGrp.add(b1);
+    const b2 = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshStandardMaterial({color: 0x666666})); b2.position.set(0, 1.5, -5); b2.castShadow=true; subGrp.add(b2);
+    const b3 = new THREE.Mesh(new THREE.BoxGeometry(5, 1, 8), new THREE.MeshStandardMaterial({color: 0x444444})); b3.position.y = 0.5; b3.castShadow=true; subGrp.add(b3);
+    const pPole = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 12), new THREE.MeshStandardMaterial({color: 0x554433})); pPole.position.set(-3, 6, -8); subGrp.add(pPole);
+    scene.add(subGrp);
+
+    // Conduits
+    const createTube = (p1: THREE.Vector3, p2: THREE.Vector3, p3: THREE.Vector3, color: number) => {
+        const curve = new THREE.QuadraticBezierCurve3(p1, p2, p3);
+        const geo = new THREE.TubeGeometry(curve, 20, 0.15, 8, false);
+        return new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color}));
+    };
+    scene.add(createTube(new THREE.Vector3(-12, 0, 18), new THREE.Vector3(-8, -1.05, 18), new THREE.Vector3(-3.5, -1.05, 18), 0xff6600));
+    scene.add(createTube(new THREE.Vector3(-12, 0, 16), new THREE.Vector3(-8, -1.05, 16), new THREE.Vector3(-3.5, -1.05, 16), 0x3b82f6));
+    scene.add(createTube(new THREE.Vector3(-12, 0, 14), new THREE.Vector3(-8, -1.05, 14), new THREE.Vector3(-3.5, -1.05, 14), 0xffcc00));
+
+    // Secondary Box on Right
+    const rxBox = new THREE.Mesh(new THREE.BoxGeometry(3, 2, 4), new THREE.MeshStandardMaterial({color: 0x99aab5}));
+    rxBox.position.set(15, 0, 15); rxBox.castShadow = true; scene.add(rxBox);
+
+    // Sedan Hover Car
+    const vehicleGroup = new THREE.Group();
+    vehicleGroup.position.set(-2, 1.2, -10);
+    const carBodyMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.1, roughness: 0.2 });
+    const carShape = new THREE.Shape();
+    carShape.moveTo(4.6, 0.3); carShape.lineTo(-4.4, 0.3); carShape.bezierCurveTo(-4.8, 0.3, -4.8, 0.8, -4.6, 0.9); 
+    carShape.lineTo(-3.4, 1.3); carShape.quadraticCurveTo(-1.5, 2.0, -0.5, 2.15); carShape.lineTo(1.0, 2.15); 
+    carShape.quadraticCurveTo(2.8, 1.5, 3.8, 1.1); carShape.quadraticCurveTo(4.6, 0.9, 4.8, 0.7); carShape.quadraticCurveTo(5.0, 0.5, 4.6, 0.3); 
+    const bodyGeo = new THREE.ExtrudeGeometry(carShape, { depth: 4.2, bevelEnabled: true, bevelSegments: 4, steps: 2, bevelSize: 0.15, bevelThickness: 0.15 }); 
+    bodyGeo.translate(0, 0, -2.1);
+    const carBody = new THREE.Mesh(bodyGeo, carBodyMat); carBody.rotation.y = -Math.PI / 2; carBody.castShadow = true; carBody.receiveShadow = true; vehicleGroup.add(carBody);
+    
+    // Glass
+    const glassMat = new THREE.MeshStandardMaterial({ color: 0x050510, metalness: 0.9, roughness: 0.0, transparent: true, opacity: 0.85 });
+    const glassShape = new THREE.Shape();
+    glassShape.moveTo(3.7, 1.1); glassShape.quadraticCurveTo(2.7, 1.55, 1.0, 2.18); glassShape.lineTo(-0.5, 2.18); 
+    glassShape.quadraticCurveTo(-1.3, 2.05, -3.3, 1.35); glassShape.lineTo(3.7, 1.35); 
+    const glassGeo = new THREE.ExtrudeGeometry(glassShape, { depth: 3.8, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05, bevelSegments: 2 }); glassGeo.translate(0, 0, -1.9);
+    const glassMesh = new THREE.Mesh(glassGeo, glassMat); glassMesh.rotation.y = -Math.PI / 2; vehicleGroup.add(glassMesh);
     scene.add(vehicleGroup);
 
-    // --- E. Glowing Energy Streams (Levitation + Power) ---
-    const streamsGroup = new THREE.Group();
-    scene.add(streamsGroup);
+    // Glowing energy under car
+    const glowGeo = new THREE.PlaneGeometry(8, 12);
+    const blueGlow = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+    const carGlow = new THREE.Mesh(glowGeo, blueGlow);
+    carGlow.rotation.x = -Math.PI/2; carGlow.position.set(-2, 0.2, -10); scene.add(carGlow);
 
-    const numStreams = 40;
-    const streams: { mesh: THREE.Mesh, speed: number, offset: number, isPower: boolean }[] = [];
+    // Text Sprites
+    const lblGrid = makeLabelSprite("AC Grid Feeder", "rgba(139, 69, 19, 0.8)", "#fff", 350, 100); lblGrid.position.set(-14, 7, 15); scene.add(lblGrid);
+    const lblInv = makeLabelSprite("Heavy Duty Inverter", "rgba(230, 230, 230, 0.9)", "#000", 450, 100); lblInv.position.set(-18, 5, 5); scene.add(lblInv);
+    const lblMux = makeLabelSprite("Multiplexing Control & Scheduling Unit", "rgba(255, 215, 0, 0.9)", "#000", 650, 100); lblMux.position.set(-15, 3, 22); scene.add(lblMux);
+    const pnlConstraints = makeDataPanelSprite(); pnlConstraints.position.set(-14, 0, 26); scene.add(pnlConstraints);
     
-    const streamGeo = new THREE.CylinderGeometry(0.04, 0.04, 2.0, 4);
+    const lblPrimary = makeLabelSprite("Embedded Dual-Use Primary Coil", "rgba(255, 215, 0, 0.9)", "#000", 640, 100); lblPrimary.position.set(0, 3, 22); scene.add(lblPrimary);
+    
+    const lblLF = makeLabelSprite("LF Component (20-40 Hz)", "rgba(40, 40, 40, 0.9)", "#ff3333", 550, 80, 22); lblLF.position.set(-8, 0, 26); scene.add(lblLF);
+    const lblHF = makeLabelSprite("HF Component (85 kHz)", "rgba(40, 40, 40, 0.9)", "#ffcc00", 550, 80, 22); lblHF.position.set(-8, -1.2, 26); scene.add(lblHF);
 
-    for(let i=0; i<numStreams; i++) {
-        const isPower = Math.random() > 0.4; // More orange power streams
-        const m = new THREE.Mesh(streamGeo, isPower ? glowOrangeMat : glowBlueMat);
-        
-        // Randomly place within the coil overlap area
-        const rx = (Math.random() - 0.5) * 3.8;
-        const rz = (Math.random() - 0.5) * 5.0;
-        m.position.set(rx, 1.0, rz);
-        
-        streamsGroup.add(m);
-        streams.push({
-            mesh: m,
-            speed: isPower ? 1.5 + Math.random() : 0.5 + Math.random(), // power pulses faster
-            offset: Math.random() * Math.PI * 2,
-            isPower
-        });
-    }
+    const lblRx1 = makeLabelSprite("Onboard Receiver Coil", "rgba(255, 215, 0, 0.9)", "#000", 450, 100); lblRx1.position.set(0, 10, -25); scene.add(lblRx1);
+    const lblRx2 = makeLabelSprite("Onboard Receiver Coil", "rgba(255, 215, 0, 0.9)", "#000", 450, 100); lblRx2.position.set(15, 4, 15); scene.add(lblRx2);
 
-    // 5. Animation Loop
     const clock = new THREE.Clock();
-    let animationFrameId: number;
-
+    let animId: number;
     const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
-      controls.update();
-
-      const time = clock.getElapsedTime();
-
-      // LF Levitation effect (slow vertical breathing of the car)
-      const levitationHeight = Math.sin(time * 2) * 0.05;
-      vehicleGroup.position.y = 1.8 + levitationHeight;
-      
-      // Update Energy Streams
-      streams.forEach((s) => {
-          // Pulse opacity and scale vertically
-          const pulse = Math.sin(time * s.speed * 5 + s.offset);
-          s.mesh.scale.y = 0.5 + Math.max(0, pulse * 0.5);
-          (s.mesh.material as THREE.Material).opacity = s.isPower 
-            ? 0.4 + pulse * 0.4  // glowing orange power pulses
-            : 0.2 + pulse * 0.3; // subtle blue LF control streams
-            
-          // Stick to the car position
-          s.mesh.position.y = 0.8 + (levitationHeight / 2); // mid-point
-      });
-
-      // Flashing LEDs on Inverter
-      screen.material.opacity = (Math.sin(time * 15) > 0) ? 1 : 0.5;
-
-      // Small lateral trim corrections
-      vehicleGroup.position.x = Math.sin(time * 1.5) * 0.03;
-
-      renderer.render(scene, camera);
+        animId = requestAnimationFrame(animate); controls.update();
+        const time = clock.getElapsedTime();
+        vehicleGroup.position.y = 1.2 + Math.sin(time * 3) * 0.1;
+        carGlow.material.opacity = 0.5 + Math.sin(time * 10) * 0.2;
+        renderer.render(scene, camera);
     };
     animate();
 
     const handleResize = () => {
-      if (!containerRef.current) return;
-      camera.aspect = containerRef.current.clientWidth / containerRef.current.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+        if (!containerRef.current) return;
+        camera.aspect = containerRef.current.clientWidth / containerRef.current.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
     };
     window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animationFrameId);
-      if (containerRef.current && renderer.domElement) {
-        containerRef.current.removeChild(renderer.domElement);
-      }
-      renderer.dispose();
+        window.removeEventListener("resize", handleResize);
+        cancelAnimationFrame(animId);
+        if (containerRef.current && renderer.domElement) containerRef.current.removeChild(renderer.domElement);
+        renderer.dispose();
     };
   }, []);
 
@@ -539,37 +360,8 @@ export default function MaglevModel() {
       {/* 3D Canvas */}
       <div className="w-full bg-black relative border-y border-white/10 shadow-[0_0_30px_rgba(212,175,55,0.05)]">
         <div ref={containerRef} className="w-full h-[65vh] cursor-grab active:cursor-grabbing"></div>
-        
-        {/* Callouts over the canvas replicating the image */}
-        <div className="absolute top-10 left-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-            <h3 className="text-xl font-bold text-white mb-2 text-shadow">Intelligent Controller</h3>
-            <p className="text-blue-400 text-sm tracking-wide border-b border-white/30 pb-1">TDM / FDM Control</p>
-        </div>
-        
-        <div className="absolute top-20 right-20 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-right">
-            <h3 className="text-xl font-bold text-white mb-2 text-shadow">Grid Connection</h3>
-            <div className="w-16 h-px bg-white/50 ml-auto"></div>
-        </div>
-
-        <div className="absolute bottom-24 right-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-right hidden md:block">
-            <p className="text-blue-400 font-bold tracking-wider mb-2 flex items-center justify-end gap-2">
-                Magnetic Levitation (LF) <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-            </p>
-            <p className="text-[#ff6600] font-bold tracking-wider flex items-center justify-end gap-2">
-                Wireless Power Transfer (HF) <span className="w-2 h-2 rounded-full bg-[#ff6600]"></span>
-            </p>
-        </div>
-
-        {/* Legend */}
-        <div className="absolute bottom-4 left-4 flex flex-wrap gap-4 text-xs tracking-wider uppercase opacity-80 bg-black/70 backdrop-blur p-4 border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.8)]">
-          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#1a1a1a] border border-white/20" /> Road</div>
-          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#ff6600] shadow-[0_0_8px_#ff6600]" /> Primary Coils</div>
-          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-blue-500 shadow-[0_0_8px_#3b82f6]" /> Levitation Field</div>
-          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#ff9900]" /> Transfer Power</div>
-          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-white border border-gray-400" /> EV Body</div>
-        </div>
       </div>
-
+        
       {/* Exploded Coil Model */}
       <div className="w-full bg-[#0a0f18] relative py-12 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 mb-2 md:mb-6 text-center md:text-left flex flex-col md:flex-row justify-between items-end">
