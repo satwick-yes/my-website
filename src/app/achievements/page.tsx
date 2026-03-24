@@ -14,13 +14,13 @@ const achievements = [
   {
     title: "National Level Basketball Player",
     organization: "Sports",
-    icon: <Trophy className="w-8 h-8 text-emerald-400" />,
+    icon: <Trophy className="w-8 h-8 text-yellow-500" />,
     description: "Represented at the national level, showcasing teamwork, leadership, and athletic excellence.",
   },
   {
     title: "Anchor",
     organization: "Events",
-    icon: <Mic className="w-8 h-8 text-emerald-400" />,
+    icon: <Mic className="w-8 h-8 text-yellow-500" />,
     description: "Hosted various large-scale events, demonstrating excellent communication and public speaking skills.",
   },
 ];

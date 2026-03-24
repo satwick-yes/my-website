@@ -13,13 +13,13 @@ const thoughts = [
   },
   {
     title: "Quantum Superposition in UI State",
-    icon: <Lightbulb className="w-8 h-8 text-emerald-400" />,
+    icon: <Lightbulb className="w-8 h-8 text-yellow-500" />,
     content: "A UI component facing an asynchronous data request is in a superposition of states: loading, error, and success—all simultaneously possible until the request resolves. We must design for the uncertainty, not just the definitive outcome.",
     theme: "Tech Philosophy",
   },
   {
     title: "The Observer Effect of Debugging",
-    icon: <Glasses className="w-8 h-8 text-emerald-300" />,
+    icon: <Glasses className="w-8 h-8 text-amber-400" />,
     content: "Much like in quantum mechanics, the very act of observing a system can change its behavior. Adding console logs, debuggers, or profilers inherently alters the timing and memory footprint of the application, often masking the original bug.",
     theme: "Logic Puzzle",
   },
@@ -73,7 +73,7 @@ export default function Thinking() {
           transition={{ duration: 1 }}
           className="text-center py-20 border-y border-white/10 relative"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-green-500/5 to-emerald-500/5 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 via-amber-500/5 to-yellow-500/5 pointer-events-none" />
           <h2 className="text-3xl md:text-4xl font-light text-primary uppercase tracking-[0.2em] max-w-3xl mx-auto leading-relaxed drop-shadow-[4px_4px_0_#111]">
             "Innovation is not about creating new elements, but discovering the unseen connections between existing ones."
           </h2>

@@ -6,19 +6,19 @@ import { motion } from "framer-motion";
 const AmbientGlows = ({ mousePos }: { mousePos: { x: number, y: number } }) => (
   <>
     <motion.div 
-      className="absolute top-1/4 left-1/4 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-green-500/10 rounded-full blur-[100px] md:blur-[140px] transition-transform duration-700 ease-out z-0 pointer-events-none"
+      className="absolute top-1/4 left-1/4 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-yellow-500/10 rounded-full blur-[100px] md:blur-[140px] transition-transform duration-700 ease-out z-0 pointer-events-none"
       style={{ transform: `translate(${mousePos.x}px, ${mousePos.y}px)` }}
       animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
       transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
     />
     <motion.div 
-      className="absolute bottom-1/4 right-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-emerald-500/10 rounded-full blur-[90px] md:blur-[120px] transition-transform duration-700 ease-out z-0 pointer-events-none"
+      className="absolute bottom-1/4 right-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-amber-500/10 rounded-full blur-[90px] md:blur-[120px] transition-transform duration-700 ease-out z-0 pointer-events-none"
       style={{ transform: `translate(${-mousePos.x * 1.5}px, ${-mousePos.y * 1.5}px)` }}
       animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
       transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
     />
     <motion.div 
-      className="absolute top-3/4 left-1/2 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-teal-500/10 rounded-full blur-[80px] md:blur-[100px] transition-transform duration-700 ease-out z-0 pointer-events-none"
+      className="absolute top-3/4 left-1/2 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-orange-500/10 rounded-full blur-[80px] md:blur-[100px] transition-transform duration-700 ease-out z-0 pointer-events-none"
       style={{ transform: `translate(${mousePos.x * 2}px, ${mousePos.y * 2}px)` }}
       animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
       transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 5 }}
@@ -109,7 +109,7 @@ export default function Particles() {
     if (!ctx) return;
 
     let animationFrameId: number;
-    const colors = ['#10b981', '#34d399', '#059669', '#6ee7b7', '#a7f3d0']; // emerald palette
+    const colors = ['#d4af37', '#facc15', '#eab308', '#ca8a04', '#a16207']; // gold palette
     
     let particles: Particle[] = [];
 
@@ -161,7 +161,7 @@ export default function Particles() {
           
           if (distance < 120) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(16, 185, 129, ${(1 - distance/120) * 0.6})`; // green line
+            ctx.strokeStyle = `rgba(212, 175, 55, ${(1 - distance/120) * 0.6})`; // gold line
             ctx.lineWidth = 0.5 + ((1 - distance/120) * 0.5);
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -177,7 +177,7 @@ export default function Particles() {
           
           if (mDistance < 150) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(52, 211, 153, ${(1 - mDistance/150) * 0.8})`; 
+            ctx.strokeStyle = `rgba(250, 204, 21, ${(1 - mDistance/150) * 0.8})`; // brighter gold line
             ctx.lineWidth = 1;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(mouse.x, mouse.y);
