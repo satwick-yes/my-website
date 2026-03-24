@@ -3,21 +3,19 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 const projects = [
   {
     title: "Dual Use Coil Project",
     description: "An innovative hardware-software integration project exploring dual-use applications of electromagnetic coils for efficient energy transfer and magnetic levitation.",
     tech: ["C++", "Python", "Hardware Design", "Arduino"],
-    github: "https://github.com/satwickshaw",
     demo: "#",
   },
   {
     title: "Quantum Mechanics Simulator",
     description: "A web-based interactive tool for visualizing quantum mechanical phenomena, including wave-particle duality and probability distributions of electron orbitals.",
     tech: ["React", "Three.js", "TypeScript", "Tailwind CSS"],
-    github: "https://github.com/satwickshaw",
     demo: "#",
   },
 ];
@@ -60,11 +58,6 @@ export default function Projects() {
                   <a href={project.demo} target="_blank" rel="noreferrer">
                     <Button size="sm" className="gap-2">
                       <ExternalLink size={16} /> View Project
-                    </Button>
-                  </a>
-                  <a href={project.github} target="_blank" rel="noreferrer">
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <Github size={16} /> GitHub
                     </Button>
                   </a>
                 </div>

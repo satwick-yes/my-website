@@ -21,9 +21,14 @@ const educationDetails: EducationDetail[] = [
     description: "Core chemical engineering fundamentals, thermodynamics, mass and heat transfer, and process control. Participated in various technical clubs and projects.",
   },
   {
+    institution: "Zoom International",
+    degree: "Higher Secondary Education (12th Grade)",
+    description: "Focus on Science and Mathematics. Excelled in state-level examinations.",
+  },
+  {
     institution: "SKS Institution",
-    degree: "Higher Secondary Education",
-    description: "Focus on Science and Mathematics. Excelled in state-level examinations and national level sports.",
+    degree: "Secondary Education (10th Grade)",
+    description: "Completed up to 10th grade. Active participation in national level sports.",
   },
 ];
 
