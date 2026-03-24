@@ -18,6 +18,7 @@ const navLinks = [
   { name: "Projects", path: "/projects" },
   { name: "Education", path: "/education" },
   { name: "Skills", path: "/skills" },
+  { name: "Maglev 3D", path: "/maglev" },
   { name: "Thinking", path: "/thinking" },
   { name: "Contact", path: "/contact" },
 ];
