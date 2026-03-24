@@ -358,7 +358,7 @@ export default function MaglevModel() {
           // Pulse opacity and scale vertically
           const pulse = Math.sin(time * s.speed * 5 + s.offset);
           s.mesh.scale.y = 0.5 + Math.max(0, pulse * 0.5);
-          s.mesh.material.opacity = s.isPower 
+          (s.mesh.material as THREE.Material).opacity = s.isPower 
             ? 0.4 + pulse * 0.4  // glowing orange power pulses
             : 0.2 + pulse * 0.3; // subtle blue LF control streams
             
