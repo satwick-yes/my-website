@@ -6,27 +6,21 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 const maglevComponents = [
   {
-    category: "Guideway Subsystem",
+    category: "Road / Guideway System",
     items: [
-      { name: "Primary Coil Stack", desc: "A robust Litz-wire winding (0.5–2.0 m length) generating both LF/DC for levitation and 70–200 kHz HF for power transfer." },
-      { name: "Flux-Guiding Stack", desc: "Laminated silicon-steel plates and ferrite tiles channeling magnetic flux to maximize efficiency and reduce stray fields." },
-      { name: "Multi-band Power Stage", desc: "A multi-level inverter capable of sourcing concurrent LF (±300 A) and HF (50–400 Arms) currents." }
+      { name: "AC Grid Feeder & DC Bus", desc: "Medium-voltage step-down and distribution establishing a centralized DC bus for local segments." },
+      { name: "Multiplexing Control Module (μC + Sch.)", desc: "Coordinates LF and HF algorithms, routing precise setpoints to the inverter stage." },
+      { name: "Power Stage", desc: "High-current multi-level inverter delivering up to ± 300 A for LF levitation and resonant HF charging." },
+      { name: "Dual-Use Embedded Primary Coil Stack", desc: "The shared in-road track winding nested over a Flux-Guiding Back-Iron with conductive shielding." }
     ]
   },
   {
-    category: "Vehicle Subsystem",
+    category: "Onboard Vehicle System",
     items: [
-      { name: "Receiver Coil", desc: "A chassis-mounted induction coil with ferrite concentrators designed for a 20–80 mm gap." },
-      { name: "Diplexer / Filter Network", desc: "A passive network that separates the LF and HF magnetic couplings, routing HF to the battery rectifier and LF to the levitation controller." },
-      { name: "Levitation Trim Coils", desc: "Small supplementary coils providing lateral and roll stabilization via active gap sensing." },
-      { name: "Powertrain Interface", desc: "Rectifies HF input to a high-voltage DC link (350–900 V) feeding traction inverters." }
-    ]
-  },
-  {
-    category: "Control System",
-    items: [
-      { name: "Multiplexing Controller", desc: "Alternates or superimposes LF and HF waveforms using Time-Division (TDM) or Frequency-Division (FDM) based on speed, thermal headroom, and charging requests." },
-      { name: "Safety & FOD", desc: "Foreign Object Detection utilizing thermal algorithms and reflected power monitoring to safely mute grid ties upon debris detection." }
+      { name: "Receiver Coil", desc: "Underbelly chassis induction coil that intercepts the combined multiplexed magnetic field." },
+      { name: "Diplexer / Filter Network", desc: "Separates the received signal into the LF Component (levitation) and HF Component (resonant charging)." },
+      { name: "Levitation Control & Trim Coils", desc: "Uses real-time Gap Sensing to feed the Levitation Control Interface, driving active Trim Coils for stability." },
+      { name: "HF Rectifier & HV DC Link", desc: "Converts the 70–200 kHz HF component into stable DC power, feeding the Vehicle Controller, HV Battery, and Traction Inverter." }
     ]
   }
 ];
@@ -235,80 +229,80 @@ export default function MaglevModel() {
     const vehicleGroup = new THREE.Group();
     vehicleGroup.position.set(0, 1.8, 0); // Hover height
 
-    // Underbelly / Receiver Panel
-    const underbelly = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.3, 9.6), carBlackMat);
-    underbelly.position.y = 0.15;
-    underbelly.castShadow = true; underbelly.receiveShadow = true;
-    vehicleGroup.add(underbelly);
-
     // Glowing Receiver Coil on bottom
     const rxCoil = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.05, 5.0), coilBaseMat);
     rxCoil.position.y = -0.01;
     vehicleGroup.add(rxCoil);
 
-    // Lower car chassis (white)
-    const lowerBody = new THREE.Mesh(new THREE.BoxGeometry(5.0, 1.0, 10.0), carBodyMat);
-    lowerBody.position.y = 0.8;
-    lowerBody.castShadow = true; lowerBody.receiveShadow = true;
-    vehicleGroup.add(lowerBody);
-
-    // Front Grille / Bumper
-    const pInverterLabel = new THREE.Mesh(new THREE.BoxGeometry(4.0, 0.6, 0.2), new THREE.MeshStandardMaterial({color: 0x0a0a0a}));
-    pInverterLabel.position.set(0, 0.8, 5.0); // Front face
-    vehicleGroup.add(pInverterLabel);
-    // Glowing lines on grille
-    const grilleGlow = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 0.4), new THREE.MeshBasicMaterial({ color: 0x3b82f6 }));
-    grilleGlow.position.set(0, 0.8, 5.11);
-    vehicleGroup.add(grilleGlow);
-
-    // Cabin / Roof tapering
-    const cabinGeo = new THREE.CylinderGeometry(1.8, 2.5, 5.0, 4);
-    cabinGeo.rotateY(Math.PI/4);
-    cabinGeo.rotateZ(Math.PI/2);
-    cabinGeo.scale(1, 0.6, 1.2);
-    const cabinMesh = new THREE.Mesh(cabinGeo, carBodyMat);
-    cabinMesh.position.set(0, 1.8, -0.5);
-    cabinMesh.castShadow = true; cabinMesh.receiveShadow = true;
-    vehicleGroup.add(cabinMesh);
-
-    // Windshield (Black glass)
-    const wShield = new THREE.Mesh(new THREE.PlaneGeometry(3.5, 2.0), glassMat);
-    wShield.rotation.x = -Math.PI / 3;
-    wShield.position.set(0, 1.7, 2.0);
-    vehicleGroup.add(wShield);
-
-    // Rear window
-    const rShield = new THREE.Mesh(new THREE.PlaneGeometry(3.5, 2.5), glassMat);
-    rShield.rotation.x = Math.PI / 3.5;
-    rShield.position.set(0, 1.6, -3.2);
-    vehicleGroup.add(rShield);
+    // Sleek Tesla Body Shape
+    const carShape = new THREE.Shape();
+    carShape.moveTo(4.6, 0.3); 
+    carShape.lineTo(-4.4, 0.3); 
+    carShape.bezierCurveTo(-4.8, 0.3, -4.8, 0.8, -4.6, 0.9); 
+    carShape.lineTo(-3.4, 1.3); 
+    carShape.quadraticCurveTo(-1.5, 2.0, -0.5, 2.15); 
+    carShape.lineTo(1.0, 2.15); 
+    carShape.quadraticCurveTo(2.8, 1.5, 3.8, 1.1); 
+    carShape.quadraticCurveTo(4.6, 0.9, 4.8, 0.7); 
+    carShape.quadraticCurveTo(5.0, 0.5, 4.6, 0.3); 
     
-    // Headlights
+    const bodyExtrudeSettings = { depth: 4.2, bevelEnabled: true, bevelSegments: 4, steps: 2, bevelSize: 0.15, bevelThickness: 0.15 };
+    const bodyGeo = new THREE.ExtrudeGeometry(carShape, bodyExtrudeSettings);
+    bodyGeo.translate(0, 0, -2.1);
+    const carBody = new THREE.Mesh(bodyGeo, carBodyMat);
+    carBody.rotation.y = -Math.PI / 2; 
+    carBody.castShadow = true; carBody.receiveShadow = true;
+    vehicleGroup.add(carBody);
+
+    // Glass Canopy (Windshield, Roof, Rear)
+    const glassShape = new THREE.Shape();
+    glassShape.moveTo(3.7, 1.1); 
+    glassShape.quadraticCurveTo(2.7, 1.55, 1.0, 2.18); 
+    glassShape.lineTo(-0.5, 2.18); 
+    glassShape.quadraticCurveTo(-1.3, 2.05, -3.3, 1.35); 
+    glassShape.lineTo(3.7, 1.35); 
+    const glassExtrude = { depth: 3.8, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05, bevelSegments: 2 };
+    const glassGeo = new THREE.ExtrudeGeometry(glassShape, glassExtrude);
+    glassGeo.translate(0, 0, -1.9);
+    const glassMesh = new THREE.Mesh(glassGeo, glassMat);
+    glassMesh.rotation.y = -Math.PI / 2;
+    vehicleGroup.add(glassMesh);
+
+    // Side Windows
+    const sideWinGeo = new THREE.PlaneGeometry(3.6, 0.65);
+    const sideWinL = new THREE.Mesh(sideWinGeo, glassMat);
+    sideWinL.rotation.y = Math.PI / 2; sideWinL.position.set(2.11, 1.45, -0.5);
+    const sideWinR = new THREE.Mesh(sideWinGeo, glassMat);
+    sideWinR.rotation.y = -Math.PI / 2; sideWinR.position.set(-2.11, 1.45, -0.5);
+    vehicleGroup.add(sideWinL, sideWinR);
+
+    // Underbelly panel
+    const underbelly = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.1, 9.0), carBlackMat);
+    underbelly.position.y = 0.25; vehicleGroup.add(underbelly);
+
+    // Headlights & Taillights
     const hlMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const hlLeft = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.2), hlMat);
-    hlLeft.position.set(1.8, 1.1, 5.01);
-    const hlRight = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.2), hlMat);
-    hlRight.position.set(-1.8, 1.1, 5.01);
-    vehicleGroup.add(hlLeft, hlRight);
+    const hlLeft = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), hlMat); hlLeft.position.set(1.6, 0.75, 4.81);
+    const hlRight = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), hlMat); hlRight.position.set(-1.6, 0.75, 4.81);
+    const tlMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const tlLeft = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), tlMat); tlLeft.position.set(1.6, 0.85, -4.61); tlLeft.rotation.y = Math.PI;
+    const tlRight = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), tlMat); tlRight.position.set(-1.6, 0.85, -4.61); tlRight.rotation.y = Math.PI;
+    vehicleGroup.add(hlLeft, hlRight, tlLeft, tlRight);
 
     // Wheels
     const createDetailedWheel = (x: number, z: number) => {
         const wg = new THREE.Group();
-        const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.6, 32), wheelMat);
-        tire.rotation.z = Math.PI / 2;
-        tire.castShadow = true;
-        const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.62, 16), rimMat);
-        rim.rotation.z = Math.PI / 2;
-        wg.add(tire, rim);
-        wg.position.set(x, 0.5, z);
-        return wg;
+        const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.6, 32), wheelMat); tire.rotation.z = Math.PI / 2; tire.castShadow = true;
+        const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.62, 16), rimMat); rim.rotation.z = Math.PI / 2;
+        const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.65, 8), carBlackMat); hub.rotation.z = Math.PI / 2;
+        wg.add(tire, rim, hub); wg.position.set(x, 0.4, z); return wg;
     };
-    
-    // Hovering wheels (slightly lower than body bottom)
-    vehicleGroup.add(createDetailedWheel(2.6, 3.2)); // Front Left
-    vehicleGroup.add(createDetailedWheel(-2.6, 3.2)); // Front Right
-    vehicleGroup.add(createDetailedWheel(2.6, -3.2)); // Rear Left
-    vehicleGroup.add(createDetailedWheel(-2.6, -3.2)); // Rear Right
+    vehicleGroup.add(createDetailedWheel(2.1, 3.0)); vehicleGroup.add(createDetailedWheel(-2.1, 3.0));
+    vehicleGroup.add(createDetailedWheel(2.1, -2.8)); vehicleGroup.add(createDetailedWheel(-2.1, -2.8));
+
+    // Hidden Inverter Powertrain Box
+    const inverterBox = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 1.5), new THREE.MeshStandardMaterial({ color: 0x999999, metalness: 0.8 }));
+    inverterBox.position.set(0, 0.45, 0); vehicleGroup.add(inverterBox);
 
     scene.add(vehicleGroup);
 
@@ -451,7 +445,7 @@ export default function MaglevModel() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {maglevComponents.map((section, idx) => (
             <div key={idx} className="bg-white/5 border border-white/10 p-6 shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.1)]">
               <h3 className="text-xl font-bold mb-6 text-white tracking-widest uppercase border-b border-primary/30 pb-4">
