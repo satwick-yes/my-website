@@ -389,7 +389,7 @@ export default function MaglevModel() {
     };
   }, []);
 
-  // ----------------------------------------------------
+    // ----------------------------------------------------
   // SECONDARY SCENE: EXPLODED LAYER BREAKDOWN
   // ----------------------------------------------------
   useEffect(() => {
@@ -400,7 +400,7 @@ export default function MaglevModel() {
     scene.background = new THREE.Color("#0a0f18");
 
     const camera = new THREE.PerspectiveCamera(40, explodedRef.current.clientWidth / explodedRef.current.clientHeight, 0.1, 1000);
-    camera.position.set(12, 8, 14);
+    camera.position.set(15, 12, 18);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(explodedRef.current.clientWidth, explodedRef.current.clientHeight);
@@ -409,56 +409,100 @@ export default function MaglevModel() {
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true; controls.dampingFactor = 0.05;
-    controls.autoRotate = true; controls.autoRotateSpeed = 1.2;
+    controls.autoRotate = true; controls.autoRotateSpeed = 0.8;
     controls.target.set(0, 0, 0);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); scene.add(ambientLight);
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.0); mainLight.position.set(10, 20, 15); scene.add(mainLight);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); scene.add(ambientLight);
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1.2); mainLight.position.set(10, 20, 15); scene.add(mainLight);
 
-    const group = new THREE.Group();
+    // Common materials
+    const copperMat = new THREE.MeshStandardMaterial({ color: 0xd48b37, metalness: 0.9, roughness: 0.2 });
+    const asphaltMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 1.0, metalness: 0.1 });
+    const shieldMat = new THREE.MeshStandardMaterial({ color: 0xa0aab5, metalness: 0.8, roughness: 0.3 });
+    const dirtMat = new THREE.MeshStandardMaterial({ color: 0x4a3b2c, roughness: 1.0 });
 
-    // 1. Conductive Shield (Bottom)
-    const shield = new THREE.Mesh(new THREE.BoxGeometry(6, 0.1, 9), new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.9, roughness: 0.2 }));
-    shield.position.y = -2.5; group.add(shield);
+    // Components
+    const pavementGrp = new THREE.Group();
+    const pavementShape = new THREE.Shape();
+    pavementShape.moveTo(-6, 5); pavementShape.lineTo(6, 5); pavementShape.lineTo(6, -5); pavementShape.lineTo(-6, -5);
+    const coilHole = new THREE.Path(); coilHole.moveTo(-3, 4); coilHole.lineTo(3, 4); coilHole.lineTo(3, -4); coilHole.lineTo(-3, -4);
+    pavementShape.holes.push(coilHole);
+    const paveMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(pavementShape, { depth: 0.3, bevelEnabled: false }), asphaltMat);
+    paveMesh.rotation.x = Math.PI / 2;
+    pavementGrp.add(paveMesh);
 
-    // 2. Ferrite Back-Iron (Middle)
-    const ferrite = new THREE.Mesh(new THREE.BoxGeometry(5.4, 0.3, 8.4), new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.3, roughness: 0.8 }));
-    ferrite.position.y = 0; group.add(ferrite);
-
-    // 3. Copper Coils (Top)
-    const coilsGroup = new THREE.Group();
-    const copperMat = new THREE.MeshStandardMaterial({ color: 0xd48b37, metalness: 0.8, roughness: 0.2 });
-    const numTurns = 5; const turnSpacing = 0.2; const trackWidth = 4.8; const trackLength = 7.8; const wireThickness = 0.15;
-    for (let i = 0; i < numTurns; i++) {
-        const w = trackWidth - (i * turnSpacing * 2); const l = trackLength - (i * turnSpacing * 2);
-        const s1 = new THREE.Mesh(new THREE.BoxGeometry(w, wireThickness, wireThickness), copperMat); s1.position.set(0, 0, l/2);
-        const s2 = new THREE.Mesh(new THREE.BoxGeometry(w, wireThickness, wireThickness), copperMat); s2.position.set(0, 0, -l/2);
-        const e1 = new THREE.Mesh(new THREE.BoxGeometry(wireThickness, wireThickness, l - wireThickness), copperMat); e1.position.set(w/2 - wireThickness/2, 0, 0);
-        const e2 = new THREE.Mesh(new THREE.BoxGeometry(wireThickness, wireThickness, l - wireThickness), copperMat); e2.position.set(-(w/2 - wireThickness/2), 0, 0);
-        coilsGroup.add(s1, s2, e1, e2);
+    const coilsGrp = new THREE.Group();
+    for (let i = 0; i < 5; i++) {
+        const w = 5.6 - (i * 0.3); const l = 7.6 - (i * 0.3);
+        const s1 = new THREE.Mesh(new THREE.BoxGeometry(w, 0.15, 0.15), copperMat); s1.position.set(0, 0, l/2);
+        const s2 = new THREE.Mesh(new THREE.BoxGeometry(w, 0.15, 0.15), copperMat); s2.position.set(0, 0, -l/2);
+        const e1 = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, l - 0.15), copperMat); e1.position.set(w/2 - 0.075, 0, 0);
+        const e2 = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, l - 0.15), copperMat); e2.position.set(-(w/2 - 0.075), 0, 0);
+        coilsGrp.add(s1, s2, e1, e2);
     }
-    coilsGroup.position.y = 2.5; group.add(coilsGroup);
 
-    // Dashed Guide Lines
-    const lineMat = new THREE.LineDashedMaterial({ color: 0x555555, dashSize: 0.2, gapSize: 0.2 });
-    const createLine = (x:number, z:number) => {
-        const points = [new THREE.Vector3(x, -2.5, z), new THREE.Vector3(x, 2.5, z)];
-        const geo = new THREE.BufferGeometry().setFromPoints(points);
-        const line = new THREE.Line(geo, lineMat); line.computeLineDistances(); return line;
-    };
-    group.add(createLine(2.5, 4)); group.add(createLine(-2.5, 4));
-    group.add(createLine(2.5, -4)); group.add(createLine(-2.5, -4));
+    const electronicsGrp = new THREE.Group();
+    const tray = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.4, 8), new THREE.MeshStandardMaterial({color: 0x333333}));
+    tray.position.set(-4.8, -0.1, 0);
+    const invChip1 = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.3, 1.2), new THREE.MeshStandardMaterial({color: 0x111111})); invChip1.position.set(-4.8, 0.15, 2);
+    const invChip2 = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.2, 0.8), new THREE.MeshStandardMaterial({color: 0x111111})); invChip2.position.set(-4.5, 0.15, 0);
+    const busBar1 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.2, 7.5), new THREE.MeshStandardMaterial({color: 0xffcc00, metalness: 1.0})); busBar1.position.set(-3.7, 0.1, 0);
+    const busBar2 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.2, 7.5), new THREE.MeshStandardMaterial({color: 0xffcc00, metalness: 1.0})); busBar2.position.set(-3.9, 0.1, 0);
+    electronicsGrp.add(tray, invChip1, invChip2, busBar1, busBar2);
+    coilsGrp.add(electronicsGrp);
 
-    scene.add(group);
+    const shieldGrp = new THREE.Group();
+    const shieldBase = new THREE.Mesh(new THREE.BoxGeometry(6.4, 0.2, 8.4), shieldMat);
+    shieldGrp.add(shieldBase);
+    for(let i=-3; i<=3; i+=0.5) {
+        const slot = new THREE.Mesh(new THREE.BoxGeometry(6.0, 0.25, 0.1), new THREE.MeshBasicMaterial({color: 0x050505}));
+        slot.position.set(0, 0, i); shieldGrp.add(slot);
+    }
+    const bluePipe = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 8), new THREE.MeshStandardMaterial({color: 0x1e3a8a, roughness: 0.2}));
+    bluePipe.rotation.x = Math.PI/2; bluePipe.position.set(3.4, 0, 0);
+    const redPipe = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 8), new THREE.MeshStandardMaterial({color: 0x991b1b, roughness: 0.2}));
+    redPipe.rotation.x = Math.PI/2; redPipe.position.set(3.8, 0, 0);
+    shieldGrp.add(bluePipe, redPipe);
+
+    const foundation = new THREE.Mesh(new THREE.BoxGeometry(13, 0.4, 11), dirtMat);
+
+    // Magnetic Fields (Half Toruses)
+    const fieldsGrp = new THREE.Group();
+    const blueLineMat = new THREE.LineBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.8 });
+    const orangeLineMat = new THREE.LineBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.8 });
+    for(let i=1; i<=4; i++) {
+        // Levitation (Blue) - Right side
+        const geoB = new THREE.RingGeometry(i*0.5, i*0.5 + 0.05, 32, 1, 0, Math.PI);
+        const edgeB = new THREE.EdgesGeometry(geoB);
+        const lineB = new THREE.Line(edgeB, blueLineMat);
+        lineB.position.set(1.5, 0.1, 0); lineB.rotation.y = Math.PI/2; lineB.rotation.x = -Math.PI/2;
+        fieldsGrp.add(lineB);
+        
+        // Charging (Orange) - Left side
+        const geoO = new THREE.RingGeometry(i*0.5, i*0.5 + 0.05, 32, 1, 0, Math.PI);
+        const edgeO = new THREE.EdgesGeometry(geoO);
+        const lineO = new THREE.Line(edgeO, orangeLineMat);
+        lineO.position.set(-1.5, 0.1, 0); lineO.rotation.y = Math.PI/2; lineO.rotation.x = -Math.PI/2;
+        fieldsGrp.add(lineO);
+    }
+
+    scene.add(pavementGrp, coilsGrp, shieldGrp, foundation, fieldsGrp);
 
     const clock = new THREE.Clock();
     let animId: number;
     const animate = () => {
         animId = requestAnimationFrame(animate); controls.update();
         const time = clock.getElapsedTime();
-        coilsGroup.position.y = 2.5 + Math.sin(time * 2) * 0.2;
-        ferrite.position.y = Math.sin(time * 2 + 0.5) * 0.1;
-        shield.position.y = -2.5 + Math.sin(time * 2 + 1.0) * 0.05;
+        
+        fieldsGrp.position.y = 3.5 + Math.sin(time * 1.5) * 0.1;
+        pavementGrp.position.y = 1.5 + Math.sin(time * 1.5 + 0.3) * 0.1;
+        coilsGrp.position.y = 0 + Math.sin(time * 1.5 + 0.6) * 0.1;
+        shieldGrp.position.y = -1.5 + Math.sin(time * 1.5 + 0.9) * 0.1;
+        foundation.position.y = -3.0 + Math.sin(time * 1.5 + 1.2) * 0.1;
+
+        // Pulse fields
+        fieldsGrp.scale.setScalar(1.0 + Math.sin(time*5)*0.05);
+
         renderer.render(scene, camera);
     };
     animate();
@@ -536,22 +580,33 @@ export default function MaglevModel() {
         </div>
         
         <div className="max-w-7xl mx-auto relative border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-            <div ref={explodedRef} className="w-full h-[50vh] cursor-grab active:cursor-grabbing"></div>
+            <div ref={explodedRef} className="w-full h-[60vh] cursor-grab active:cursor-grabbing"></div>
             
-            {/* HTML Callouts for the Exploded View */}
-            <div className="absolute top-[10%] left-[5%] pointer-events-none p-4 bg-black/60 backdrop-blur border-l-2 border-[#d48b37]">
-                <h4 className="text-[#d48b37] font-bold tracking-widest uppercase text-sm">Primary Coil Winding</h4>
-                <p className="text-gray-300 text-xs mt-1">Litz-wire dual-frequency loops</p>
+            {/* HTML Callouts arrayed around the canvas */}
+            <div className="absolute top-[5%] left-[2%] pointer-events-none p-3 bg-black/60 backdrop-blur border-l-2 border-blue-500">
+                <h4 className="text-blue-400 font-bold tracking-widest uppercase text-[10px] md:text-sm">Levitation Mode (Low Freq)</h4>
             </div>
-            
-            <div className="absolute top-[45%] left-[5%] pointer-events-none p-4 bg-black/60 backdrop-blur border-l-2 border-gray-400">
-                <h4 className="text-gray-300 font-bold tracking-widest uppercase text-sm">Flux-Guiding Back-Iron</h4>
-                <p className="text-gray-400 text-xs mt-1">Ferrite tiles channeling magnetic flux</p>
+            <div className="absolute top-[5%] right-[2%] pointer-events-none p-3 bg-black/60 backdrop-blur border-r-2 border-[#ff6600] text-right">
+                <h4 className="text-[#ff6600] font-bold tracking-widest uppercase text-[10px] md:text-sm">Charging Mode (High Freq)</h4>
             </div>
 
-            <div className="absolute top-[80%] left-[5%] pointer-events-none p-4 bg-black/60 backdrop-blur border-l-2 border-gray-200">
-                <h4 className="text-white font-bold tracking-widest uppercase text-sm">Conductive Shielding</h4>
-                <p className="text-gray-400 text-xs mt-1">Aluminum plate mitigating stray EMI</p>
+            <div className="absolute top-[30%] left-[2%] pointer-events-none p-3 bg-black/60 backdrop-blur border-l-2 border-gray-400">
+                <h4 className="text-gray-200 font-bold tracking-widest uppercase text-[10px] md:text-sm">Pavement Surface</h4>
+            </div>
+            
+            <div className="absolute top-[45%] left-[2%] pointer-events-none p-3 bg-black/60 backdrop-blur border-l-2 border-[#d48b37]">
+                <h4 className="text-[#d48b37] font-bold tracking-widest uppercase text-[10px] md:text-sm">Primary Litz-Wire Coil</h4>
+            </div>
+
+            <div className="absolute top-[45%] right-[2%] pointer-events-none p-3 bg-black/60 backdrop-blur border-r-2 border-gray-300 text-right">
+                <h4 className="text-gray-200 font-bold tracking-widest uppercase text-[10px] md:text-xs">Power & Control Module</h4>
+                <p className="text-gray-400 text-[9px] mt-1">Inverter & Control Circuitry</p>
+                <p className="text-yellow-500 text-[9px] mt-1">DC Power Bus 800-1200 VDC</p>
+            </div>
+
+            <div className="absolute bottom-[20%] left-[2%] pointer-events-none p-3 bg-black/60 backdrop-blur border-l-2 border-white">
+                <h4 className="text-white font-bold tracking-widest uppercase text-[10px] md:text-sm">Slotted EM Shield</h4>
+                <p className="text-gray-400 text-[9px] mt-1">W/ Active Fluid Cooling</p>
             </div>
         </div>
       </div>
