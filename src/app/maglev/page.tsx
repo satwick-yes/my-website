@@ -40,16 +40,12 @@ export default function MaglevModel() {
 
     // 1. Scene Setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#080808");
-    scene.fog = new THREE.FogExp2("#080808", 0.015);
+    scene.background = new THREE.Color("#111827"); // Deep moody sky
+    scene.fog = new THREE.FogExp2("#111827", 0.012);
 
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      containerRef.current.clientWidth / containerRef.current.clientHeight,
-      0.1,
-      1000
-    );
-    camera.position.set(15, 10, 20);
+    const camera = new THREE.PerspectiveCamera(45, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000);
+    // Positioned similar to the first image (isometric side view)
+    camera.position.set(12, 6, 15);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
@@ -65,158 +61,287 @@ export default function MaglevModel() {
     controls.maxPolarAngle = Math.PI / 2 - 0.05;
 
     // 2. Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    mainLight.position.set(10, 20, 10);
+    const moonLight = new THREE.DirectionalLight(0x90b0ff, 0.6);
+    moonLight.position.set(-10, 15, -10);
+    scene.add(moonLight);
+
+    const mainLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    mainLight.position.set(10, 20, 15);
     mainLight.castShadow = true;
-    mainLight.shadow.mapSize.width = 2048;
-    mainLight.shadow.mapSize.height = 2048;
+    mainLight.shadow.mapSize.width = 4096;
+    mainLight.shadow.mapSize.height = 4096;
+    mainLight.shadow.bias = -0.0005;
     scene.add(mainLight);
 
-    const spotLight = new THREE.SpotLight(0xd4af37, 2.5, 50, Math.PI / 3, 0.5, 1);
-    spotLight.position.set(0, 10, 0);
+    // Spotlight highlighting the active coil segment
+    const spotLight = new THREE.SpotLight(0xffa500, 2.5, 50, Math.PI / 4, 0.8, 1);
+    spotLight.position.set(0, 12, 0);
     spotLight.castShadow = true;
     scene.add(spotLight);
 
     // 3. Materials
-    const roadMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.9, metalness: 0.1 });
-    const lineMat = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
-    const ironMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.9, roughness: 0.4 });
-    const coilMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.7, roughness: 0.3, emissive: 0x442200, emissiveIntensity: 0.2 });
-    const receiverMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.6, roughness: 0.3, emissive: 0x554400, emissiveIntensity: 0.3 });
-    const carMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.8, roughness: 0.3 });
-    const glassMat = new THREE.MeshStandardMaterial({ color: 0x000000, metalness: 0.9, roughness: 0.1, transparent: true, opacity: 0.8 });
-    const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
-    const fieldCoreMat = new THREE.MeshBasicMaterial({ color: 0x60a5fa, transparent: true, opacity: 0.1, blending: THREE.AdditiveBlending });
+    const roadMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.1 });
+    const dirtMat = new THREE.MeshStandardMaterial({ color: 0x3d3024, roughness: 1.0 }); // Ground cutaway layers
+    const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const ironMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.6, roughness: 0.6 });
+    const coilBaseMat = new THREE.MeshStandardMaterial({ color: 0xff6600, emissive: 0xff3300, emissiveIntensity: 0.8 }); // Glowing bottom
+    const copperMat = new THREE.MeshStandardMaterial({ color: 0xd48b37, metalness: 0.8, roughness: 0.2 });
+    
+    // Sedan Materials
+    const carBodyMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.1 });
+    const carBlackMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.8, roughness: 0.3 });
+    const glassMat = new THREE.MeshStandardMaterial({ color: 0x050510, metalness: 0.9, roughness: 0.0, transparent: true, opacity: 0.85 });
+    const wheelMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.9 });
+    const rimMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.9, roughness: 0.2 });
+
+    const glowBlueMat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+    const glowOrangeMat = new THREE.MeshBasicMaterial({ color: 0xff9900, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
 
     // 4. Geometry Construction
 
-    // A. The Entire Road
-    const roadLength = 100;
+    // --- A. The Road & Environment ---
     const roadGroup = new THREE.Group();
+    const roadLength = 80;
 
-    const pavement = new THREE.Mesh(new THREE.BoxGeometry(12, 0.4, roadLength), roadMat);
-    pavement.position.y = -0.2;
-    pavement.receiveShadow = true;
-    roadGroup.add(pavement);
+    // Asphalt surface (with a square cutaway in the center)
+    const asphaltShape = new THREE.Shape();
+    asphaltShape.moveTo(-8, roadLength/2);
+    asphaltShape.lineTo(8, roadLength/2);
+    asphaltShape.lineTo(8, -roadLength/2);
+    asphaltShape.lineTo(-8, -roadLength/2);
+    // Hole for primary coil cutaway (x: -2 to 2, z: -3 to 3)
+    const holePath = new THREE.Path();
+    holePath.moveTo(-2.5, 3.5);
+    holePath.lineTo(2.5, 3.5);
+    holePath.lineTo(2.5, -3.5);
+    holePath.lineTo(-2.5, -3.5);
+    asphaltShape.holes.push(holePath);
 
-    // Road markings (dashed lines)
-    for (let i = -roadLength / 2; i < roadLength / 2; i += 4) {
-      if (Math.abs(i) < roadLength / 2 - 1) { // gap at edges
-        const line1 = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 2), lineMat);
-        line1.rotation.x = -Math.PI / 2;
-        line1.position.set(-2, 0.01, i);
-        roadGroup.add(line1);
+    const extrudeSettings = { depth: 0.4, bevelEnabled: false };
+    const rdGeo = new THREE.ExtrudeGeometry(asphaltShape, extrudeSettings);
+    rdGeo.rotateX(Math.PI / 2);
+    const roadPavement = new THREE.Mesh(rdGeo, roadMat);
+    roadPavement.position.y = 0;
+    roadPavement.receiveShadow = true;
+    roadGroup.add(roadPavement);
 
-        const line2 = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 2), lineMat);
-        line2.rotation.x = -Math.PI / 2;
-        line2.position.set(2, 0.01, i);
-        roadGroup.add(line2);
-      }
+    // Dirt/Sub-layer below the road
+    const dirtBase = new THREE.Mesh(new THREE.BoxGeometry(20, 1.5, roadLength), dirtMat);
+    dirtBase.position.y = -0.95;
+    dirtBase.receiveShadow = true;
+    roadGroup.add(dirtBase);
+
+    // Road side lines
+    const sideLineL = new THREE.Mesh(new THREE.PlaneGeometry(0.15, roadLength), lineMat);
+    sideLineL.rotation.x = -Math.PI/2; sideLineL.position.set(-6, 0.01, 0);
+    roadGroup.add(sideLineL);
+    
+    const sideLineR = new THREE.Mesh(new THREE.PlaneGeometry(0.15, roadLength), lineMat);
+    sideLineR.rotation.x = -Math.PI/2; sideLineR.position.set(6, 0.01, 0);
+    roadGroup.add(sideLineR);
+
+    // Solid median line
+    const medianLine = new THREE.Mesh(new THREE.PlaneGeometry(0.15, roadLength), lineMat);
+    medianLine.rotation.x = -Math.PI/2; medianLine.position.set(0, 0.01, 0);
+    roadGroup.add(medianLine);
+
+    // --- B. The Embedded Primary Coil (Highly Detailed Cutaway) ---
+    const coilCutawayGroup = new THREE.Group();
+    coilCutawayGroup.position.y = -0.3; // Sunk into the cutaway hole
+
+    // Base iron/ferrite tray
+    const ironTray = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.2, 6.6), ironMat);
+    ironTray.receiveShadow = true; ironTray.castShadow = true;
+    coilCutawayGroup.add(ironTray);
+
+    // Glowing orange base (visualizing power/heat)
+    const glowBase = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.05, 6.4), coilBaseMat);
+    glowBase.position.y = 0.12;
+    coilCutawayGroup.add(glowBase);
+
+    // Detailed Concentric Coils (Racetrack)
+    const numTurns = 5;
+    const turnSpacing = 0.12;
+    const trackWidth = 4.0;
+    const trackLength = 6.0;
+    const wireThickness = 0.08;
+
+    for(let i=0; i<numTurns; i++) {
+      const w = trackWidth - (i * turnSpacing * 2);
+      const l = trackLength - (i * turnSpacing * 2);
+      
+      const s1 = new THREE.Mesh(new THREE.BoxGeometry(w, wireThickness, wireThickness), copperMat);
+      s1.position.set(0, 0.2, l/2); s1.castShadow = true;
+      const s2 = new THREE.Mesh(new THREE.BoxGeometry(w, wireThickness, wireThickness), copperMat);
+      s2.position.set(0, 0.2, -l/2); s2.castShadow = true;
+      const e1 = new THREE.Mesh(new THREE.BoxGeometry(wireThickness, wireThickness, l - wireThickness), copperMat);
+      e1.position.set(w/2 - wireThickness/2, 0.2, 0); e1.castShadow = true;
+      const e2 = new THREE.Mesh(new THREE.BoxGeometry(wireThickness, wireThickness, l - wireThickness), copperMat);
+      e2.position.set(-(w/2 - wireThickness/2), 0.2, 0); e2.castShadow = true;
+
+      coilCutawayGroup.add(s1, s2, e1, e2);
+    }
+    
+    // Additional closed coil segments continuing along the road (under the asphalt)
+    // We'll just put simple boxes to simulate hidden coils ahead and behind
+    for(let i = -30; i <= 30; i+=8) {
+        if(Math.abs(i) > 4) { // skip the cutaway area
+            const hiddenIron = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.15, 7.5), ironMat);
+            hiddenIron.position.set(0, -0.3, i);
+            roadGroup.add(hiddenIron);
+        }
     }
 
-    // Embed multiple coil segments along the road
-    const createCoil = (mat: THREE.Material, scaleX = 1, scaleZ = 1) => {
-      const group = new THREE.Group();
-      const w = 3.6 * scaleX;
-      const d = 1.2 * scaleZ;
-      const thickness = 0.2;
-      const width = 0.3;
+    roadGroup.add(coilCutawayGroup);
+    
+    // --- C. Power Inverter Box & Grid Connection (Side of road) ---
+    const inverterGroup = new THREE.Group();
+    inverterGroup.position.set(-9, 0, 0); // Off the road on the grass/dirt
+    
+    const invBase = new THREE.Mesh(new THREE.BoxGeometry(3, 1.5, 2.5), new THREE.MeshStandardMaterial({ color: 0x999999, metalness: 0.6 }));
+    invBase.position.y = 0.75; invBase.castShadow = true; invBase.receiveShadow = true;
+    inverterGroup.add(invBase);
 
-      const s1 = new THREE.Mesh(new THREE.BoxGeometry(w, thickness, width), mat);
-      s1.position.z = d / 2;
-      s1.castShadow = true; s1.receiveShadow = true;
-      const s2 = new THREE.Mesh(new THREE.BoxGeometry(w, thickness, width), mat);
-      s2.position.z = -d / 2;
-      s2.castShadow = true; s2.receiveShadow = true;
-      const e1 = new THREE.Mesh(new THREE.BoxGeometry(width, thickness, d - width), mat);
-      e1.position.x = w / 2 - width / 2;
-      e1.castShadow = true; e1.receiveShadow = true;
-      const e2 = new THREE.Mesh(new THREE.BoxGeometry(width, thickness, d - width), mat);
-      e2.position.x = -(w / 2 - width / 2);
-      e2.castShadow = true; e2.receiveShadow = true;
+    // Cooling fans on inverter
+    const fanMat = new THREE.MeshStandardMaterial({ color: 0x050505 });
+    const f1 = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.1, 16), fanMat);
+    f1.rotation.x = Math.PI/2; f1.position.set(-0.8, 0.8, 1.25);
+    const f2 = f1.clone(); f2.position.set(0.8, 0.8, 1.25);
+    inverterGroup.add(f1, f2);
 
-      group.add(s1, s2, e1, e2);
-      return group;
-    };
+    // Digital screens/lights on inverter
+    const screenMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.4), screenMat);
+    screen.position.set(0, 1.2, 1.26);
+    inverterGroup.add(screen);
 
-    // Add Maglev Segment Cassettes along the center of the road
-    for (let i = -30; i <= 30; i += 6) {
-      const backIron = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.15, 4.8), ironMat);
-      backIron.position.set(0, 0.075, i);
-      backIron.receiveShadow = true;
-      roadGroup.add(backIron);
+    // Cables running to the road
+    const cableCurve = new THREE.QuadraticBezierCurve3(
+        new THREE.Vector3(0, 0.2, 0),
+        new THREE.Vector3(4, 0.2, 0),
+        new THREE.Vector3(6.5, -0.4, 0) // dive under road
+    );
+    const cableGeo = new THREE.TubeGeometry(cableCurve, 20, 0.08, 8, false);
+    const cable = new THREE.Mesh(cableGeo, new THREE.MeshStandardMaterial({ color: 0x111 }));
+    inverterGroup.add(cable);
 
-      const coilSeg = createCoil(coilMat, 1, 3);
-      coilSeg.position.set(0, 0.25, i);
-      roadGroup.add(coilSeg);
-    }
-
+    scene.add(inverterGroup);
     scene.add(roadGroup);
 
-    // B. The Entire Car
+    // --- D. Detailed White Sedan (Vehicle Subsystem) ---
     const vehicleGroup = new THREE.Group();
-    vehicleGroup.position.set(0, 1.6, 0); // Start at hover height
+    vehicleGroup.position.set(0, 1.8, 0); // Hover height
 
-    // Hover receiver coil underneath
-    const vehicleReceiverCoil = createCoil(receiverMat, 0.9, 2);
-    vehicleReceiverCoil.position.y = 0;
-    vehicleGroup.add(vehicleReceiverCoil);
+    // Underbelly / Receiver Panel
+    const underbelly = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.3, 9.6), carBlackMat);
+    underbelly.position.y = 0.15;
+    underbelly.castShadow = true; underbelly.receiveShadow = true;
+    vehicleGroup.add(underbelly);
 
-    // Car Chassis Layout
-    const chassisBase = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.5, 10), carMat);
-    chassisBase.position.y = 0.4;
-    chassisBase.castShadow = true; chassisBase.receiveShadow = true;
-    vehicleGroup.add(chassisBase);
+    // Glowing Receiver Coil on bottom
+    const rxCoil = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.05, 5.0), coilBaseMat);
+    rxCoil.position.y = -0.01;
+    vehicleGroup.add(rxCoil);
 
-    // Car Cabin
-    const cabin = new THREE.Mesh(new THREE.BoxGeometry(4.8, 1.8, 5.5), carMat);
-    cabin.position.set(0, 1.55, 0);
-    cabin.castShadow = true; cabin.receiveShadow = true;
-    vehicleGroup.add(cabin);
+    // Lower car chassis (white)
+    const lowerBody = new THREE.Mesh(new THREE.BoxGeometry(5.0, 1.0, 10.0), carBodyMat);
+    lowerBody.position.y = 0.8;
+    lowerBody.castShadow = true; lowerBody.receiveShadow = true;
+    vehicleGroup.add(lowerBody);
 
-    // Car Windows
-    const windshield = new THREE.Mesh(new THREE.BoxGeometry(4.4, 1.4, 0.1), glassMat);
-    windshield.position.set(0, 1.6, 2.75);
-    windshield.rotation.x = -0.2;
-    vehicleGroup.add(windshield);
+    // Front Grille / Bumper
+    const pInverterLabel = new THREE.Mesh(new THREE.BoxGeometry(4.0, 0.6, 0.2), new THREE.MeshStandardMaterial({color: 0x0a0a0a}));
+    pInverterLabel.position.set(0, 0.8, 5.0); // Front face
+    vehicleGroup.add(pInverterLabel);
+    // Glowing lines on grille
+    const grilleGlow = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 0.4), new THREE.MeshBasicMaterial({ color: 0x3b82f6 }));
+    grilleGlow.position.set(0, 0.8, 5.11);
+    vehicleGroup.add(grilleGlow);
 
-    const rearWindow = new THREE.Mesh(new THREE.BoxGeometry(4.4, 1.4, 0.1), glassMat);
-    rearWindow.position.set(0, 1.6, -2.75);
-    rearWindow.rotation.x = 0.2;
-    vehicleGroup.add(rearWindow);
+    // Cabin / Roof tapering
+    const cabinGeo = new THREE.CylinderGeometry(1.8, 2.5, 5.0, 4);
+    cabinGeo.rotateY(Math.PI/4);
+    cabinGeo.rotateZ(Math.PI/2);
+    cabinGeo.scale(1, 0.6, 1.2);
+    const cabinMesh = new THREE.Mesh(cabinGeo, carBodyMat);
+    cabinMesh.position.set(0, 1.8, -0.5);
+    cabinMesh.castShadow = true; cabinMesh.receiveShadow = true;
+    vehicleGroup.add(cabinMesh);
 
-    // Wheels (retracted or hovering position)
-    const createWheel = (x: number, z: number) => {
-      const w = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.6, 32), wheelMat);
-      w.rotation.z = Math.PI / 2;
-      w.position.set(x, 0.4, z);
-      w.castShadow = true; w.receiveShadow = true;
-      return w;
+    // Windshield (Black glass)
+    const wShield = new THREE.Mesh(new THREE.PlaneGeometry(3.5, 2.0), glassMat);
+    wShield.rotation.x = -Math.PI / 3;
+    wShield.position.set(0, 1.7, 2.0);
+    vehicleGroup.add(wShield);
+
+    // Rear window
+    const rShield = new THREE.Mesh(new THREE.PlaneGeometry(3.5, 2.5), glassMat);
+    rShield.rotation.x = Math.PI / 3.5;
+    rShield.position.set(0, 1.6, -3.2);
+    vehicleGroup.add(rShield);
+    
+    // Headlights
+    const hlMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const hlLeft = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.2), hlMat);
+    hlLeft.position.set(1.8, 1.1, 5.01);
+    const hlRight = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.2), hlMat);
+    hlRight.position.set(-1.8, 1.1, 5.01);
+    vehicleGroup.add(hlLeft, hlRight);
+
+    // Wheels
+    const createDetailedWheel = (x: number, z: number) => {
+        const wg = new THREE.Group();
+        const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.6, 32), wheelMat);
+        tire.rotation.z = Math.PI / 2;
+        tire.castShadow = true;
+        const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.62, 16), rimMat);
+        rim.rotation.z = Math.PI / 2;
+        wg.add(tire, rim);
+        wg.position.set(x, 0.5, z);
+        return wg;
     };
-    vehicleGroup.add(createWheel(2.8, 3.5)); // front left
-    vehicleGroup.add(createWheel(-2.8, 3.5)); // front right
-    vehicleGroup.add(createWheel(2.8, -3.5)); // back left
-    vehicleGroup.add(createWheel(-2.8, -3.5)); // back right
-
-    // Inverter Powertrain Box on top of receiver
-    const inverterBox = new THREE.Mesh(new THREE.BoxGeometry(3, 0.3, 2), new THREE.MeshStandardMaterial({ color: 0x999999, metalness: 0.8 }));
-    inverterBox.position.set(0, 0.8, 0);
-    vehicleGroup.add(inverterBox);
+    
+    // Hovering wheels (slightly lower than body bottom)
+    vehicleGroup.add(createDetailedWheel(2.6, 3.2)); // Front Left
+    vehicleGroup.add(createDetailedWheel(-2.6, 3.2)); // Front Right
+    vehicleGroup.add(createDetailedWheel(2.6, -3.2)); // Rear Left
+    vehicleGroup.add(createDetailedWheel(-2.6, -3.2)); // Rear Right
 
     scene.add(vehicleGroup);
 
-    // C. Multiplexed Magnetic Field (glowing block following car)
-    const fieldInner = new THREE.Mesh(new THREE.BoxGeometry(4.2, 1.2, 8), fieldCoreMat);
-    fieldInner.position.y = 0.9;
-    scene.add(fieldInner);
+    // --- E. Glowing Energy Streams (Levitation + Power) ---
+    const streamsGroup = new THREE.Group();
+    scene.add(streamsGroup);
+
+    const numStreams = 40;
+    const streams: { mesh: THREE.Mesh, speed: number, offset: number, isPower: boolean }[] = [];
+    
+    const streamGeo = new THREE.CylinderGeometry(0.04, 0.04, 2.0, 4);
+
+    for(let i=0; i<numStreams; i++) {
+        const isPower = Math.random() > 0.4; // More orange power streams
+        const m = new THREE.Mesh(streamGeo, isPower ? glowOrangeMat : glowBlueMat);
+        
+        // Randomly place within the coil overlap area
+        const rx = (Math.random() - 0.5) * 3.8;
+        const rz = (Math.random() - 0.5) * 5.0;
+        m.position.set(rx, 1.0, rz);
+        
+        streamsGroup.add(m);
+        streams.push({
+            mesh: m,
+            speed: isPower ? 1.5 + Math.random() : 0.5 + Math.random(), // power pulses faster
+            offset: Math.random() * Math.PI * 2,
+            isPower
+        });
+    }
 
     // 5. Animation Loop
     const clock = new THREE.Clock();
     let animationFrameId: number;
-    let carPos = -40; // Starts back of the road
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
@@ -224,24 +349,28 @@ export default function MaglevModel() {
 
       const time = clock.getElapsedTime();
 
-      // Car driving forward through the segments
-      carPos += 0.2; // Speed of the car
-      if (carPos > 40) carPos = -40;
+      // LF Levitation effect (slow vertical breathing of the car)
+      const levitationHeight = Math.sin(time * 2) * 0.05;
+      vehicleGroup.position.y = 1.8 + levitationHeight;
       
-      // Update vehicle Z position and follow camera target
-      vehicleGroup.position.z = carPos;
-      fieldInner.position.z = carPos;
+      // Update Energy Streams
+      streams.forEach((s) => {
+          // Pulse opacity and scale vertically
+          const pulse = Math.sin(time * s.speed * 5 + s.offset);
+          s.mesh.scale.y = 0.5 + Math.max(0, pulse * 0.5);
+          s.mesh.material.opacity = s.isPower 
+            ? 0.4 + pulse * 0.4  // glowing orange power pulses
+            : 0.2 + pulse * 0.3; // subtle blue LF control streams
+            
+          // Stick to the car position
+          s.mesh.position.y = 0.8 + (levitationHeight / 2); // mid-point
+      });
 
-      // Make camera follow vehicle if desired
-      controls.target.set(vehicleGroup.position.x, 2, vehicleGroup.position.z);
+      // Flashing LEDs on Inverter
+      screen.material.opacity = (Math.sin(time * 15) > 0) ? 1 : 0.5;
 
-      // LF Levitation effect (vertical breathing)
-      const gapVariaton = Math.sin(time * 3) * 0.05;
-      vehicleGroup.position.y = 1.4 + gapVariaton;
-
-      // HF Power transfer simulation
-      const hfPulse = (Math.sin(time * 20) + 1) / 2;
-      fieldInner.material.opacity = 0.15 + hfPulse * 0.2;
+      // Small lateral trim corrections
+      vehicleGroup.position.x = Math.sin(time * 1.5) * 0.03;
 
       renderer.render(scene, camera);
     };
@@ -266,7 +395,7 @@ export default function MaglevModel() {
   }, []);
 
   return (
-    <div className="pt-20 min-h-screen bg-[#080808] text-white flex flex-col font-sans">
+    <div className="pt-20 min-h-screen bg-[#111827] text-white flex flex-col font-sans">
       
       {/* Header Info */}
       <div className="max-w-7xl mx-auto px-4 py-8 w-full z-10 text-center">
@@ -280,13 +409,35 @@ export default function MaglevModel() {
 
       {/* 3D Canvas */}
       <div className="w-full bg-black relative border-y border-white/10 shadow-[0_0_30px_rgba(212,175,55,0.05)]">
-        <div ref={containerRef} className="w-full h-[60vh] cursor-grab active:cursor-grabbing"></div>
+        <div ref={containerRef} className="w-full h-[65vh] cursor-grab active:cursor-grabbing"></div>
+        
+        {/* Callouts over the canvas replicating the image */}
+        <div className="absolute top-10 left-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+            <h3 className="text-xl font-bold text-white mb-2 text-shadow">Intelligent Controller</h3>
+            <p className="text-blue-400 text-sm tracking-wide border-b border-white/30 pb-1">TDM / FDM Control</p>
+        </div>
+        
+        <div className="absolute top-20 right-20 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-right">
+            <h3 className="text-xl font-bold text-white mb-2 text-shadow">Grid Connection</h3>
+            <div className="w-16 h-px bg-white/50 ml-auto"></div>
+        </div>
+
+        <div className="absolute bottom-24 right-10 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] text-right hidden md:block">
+            <p className="text-blue-400 font-bold tracking-wider mb-2 flex items-center justify-end gap-2">
+                Magnetic Levitation (LF) <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+            </p>
+            <p className="text-[#ff6600] font-bold tracking-wider flex items-center justify-end gap-2">
+                Wireless Power Transfer (HF) <span className="w-2 h-2 rounded-full bg-[#ff6600]"></span>
+            </p>
+        </div>
+
+        {/* Legend */}
         <div className="absolute bottom-4 left-4 flex flex-wrap gap-4 text-xs tracking-wider uppercase opacity-80 bg-black/70 backdrop-blur p-4 border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.8)]">
-          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#444] border border-white/20" /> Road</div>
-          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-primary shadow-[0_0_8px_#d4af37]" /> Track Coils</div>
-          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-blue-500" /> Transfer Field</div>
-          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-yellow-400" /> Receiver</div>
-          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#777]" /> EV Body</div>
+          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#1a1a1a] border border-white/20" /> Road</div>
+          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#ff6600] shadow-[0_0_8px_#ff6600]" /> Primary Coils</div>
+          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-blue-500 shadow-[0_0_8px_#3b82f6]" /> Levitation Field</div>
+          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#ff9900]" /> Transfer Power</div>
+          <div className="flex items-center gap-2"><div className="w-3 h-3 bg-white border border-gray-400" /> EV Body</div>
         </div>
       </div>
 
@@ -302,7 +453,7 @@ export default function MaglevModel() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {maglevComponents.map((section, idx) => (
-            <div key={idx} className="bg-white/5 border border-white/10 p-6 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+            <div key={idx} className="bg-white/5 border border-white/10 p-6 shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.1)]">
               <h3 className="text-xl font-bold mb-6 text-white tracking-widest uppercase border-b border-primary/30 pb-4">
                 {section.category}
               </h3>
