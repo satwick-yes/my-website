@@ -10,7 +10,7 @@ const projects = [
     title: "Dual Use Coil Project",
     description: "An innovative hardware-software integration project exploring dual-use applications of electromagnetic coils for efficient energy transfer and magnetic levitation.",
     tech: ["C++", "Python", "Hardware Design", "Arduino"],
-    demo: "#",
+    demo: "/maglev",
   },
   {
     title: "Quantum Mechanics Simulator",
