@@ -13,13 +13,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "Achievements", path: "/achievements" },
-  { name: "Projects", path: "/projects" },
-  { name: "Education", path: "/education" },
-  { name: "Skills", path: "/skills" },
-  { name: "Thinking", path: "/thinking" },
-  { name: "Contact", path: "/contact" },
+  { name: "Sanctuary", path: "/" },
+  { name: "Glory", path: "/achievements" },
+  { name: "Missions", path: "/projects" },
+  { name: "Training", path: "/education" },
+  { name: "Techniques", path: "/skills" },
+  { name: "Philosophy", path: "/thinking" },
+  { name: "Summon", path: "/contact" },
 ];
 
 export default function Navbar() {
@@ -70,7 +70,7 @@ export default function Navbar() {
                   {isActive && (
                     <motion.div
                       layoutId="navbar-indicator"
-                      className="absolute bottom-0 left-0 right-0 h-1 bg-primary shadow-[0_2px_0_0_#00aa00]"
+                      className="absolute bottom-0 left-0 right-0 h-1 bg-primary shadow-[0_0_10px_rgba(212,175,55,0.8)]"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.3 }}

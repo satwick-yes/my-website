@@ -28,9 +28,9 @@ export default function Contact() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Contact Me</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Summon Me</h1>
         <p className="text-gray-400 text-lg mb-16 max-w-2xl">
-          Interested in collaborating or have a question? I'd love to hear from you. Fill out the form below or reach out directly.
+          Send a messenger raven for alliances or quests. I am always ready to listen.
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -44,7 +44,7 @@ export default function Contact() {
             <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
             
             <a href="mailto:satwick1234509@gmail.com" className="flex items-center gap-4 group">
-              <div className="p-4 bg-black/50 rounded-none group-hover:bg-primary/20 group-hover:text-primary transition-colors border-2 border-border group-hover:border-primary">
+              <div className="p-4 bg-black/40 rounded-none group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300 border border-white/10 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(212,175,55,0.2)]">
                 <Mail size={24} />
               </div>
               <div>
@@ -54,7 +54,7 @@ export default function Contact() {
             </a>
 
             <a href="tel:8250297411" className="flex items-center gap-4 group">
-              <div className="p-4 bg-black/50 rounded-none group-hover:bg-primary/20 group-hover:text-primary transition-colors border-2 border-border group-hover:border-primary">
+              <div className="p-4 bg-black/40 rounded-none group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300 border border-white/10 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(212,175,55,0.2)]">
                 <Phone size={24} />
               </div>
               <div>
@@ -64,7 +64,7 @@ export default function Contact() {
             </a>
 
             <a href="https://www.linkedin.com/in/satwick-shaw-a5b142371/" target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
-              <div className="p-4 bg-black/50 rounded-none group-hover:bg-primary/20 group-hover:text-primary transition-colors border-2 border-border group-hover:border-primary">
+              <div className="p-4 bg-black/40 rounded-none group-hover:bg-primary/10 group-hover:text-primary transition-all duration-300 border border-white/10 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(212,175,55,0.2)]">
                 <Linkedin size={24} />
               </div>
               <div>
@@ -88,7 +88,7 @@ export default function Contact() {
                     type="text"
                     id="name"
                     required
-                    className="w-full bg-black/50 border-2 border-border rounded-none px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary transition-all shadow-[inset_4px_4px_0_0_#050505]"
+                    className="w-full bg-black/40 border border-white/10 rounded-none px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary hover:border-primary/50 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]"
                     placeholder="John Doe"
                   />
                 </div>
@@ -98,7 +98,7 @@ export default function Contact() {
                     type="email"
                     id="email"
                     required
-                    className="w-full bg-black/50 border-2 border-border rounded-none px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary transition-all shadow-[inset_4px_4px_0_0_#050505]"
+                    className="w-full bg-black/40 border border-white/10 rounded-none px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary hover:border-primary/50 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -108,7 +108,7 @@ export default function Contact() {
                     id="message"
                     required
                     rows={4}
-                    className="w-full bg-black/50 border-2 border-border rounded-none px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary hover:border-primary transition-all shadow-[inset_4px_4px_0_0_#050505] resize-none"
+                    className="w-full bg-black/40 border border-white/10 rounded-none px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary hover:border-primary/50 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)] resize-none"
                     placeholder="How can I help you?"
                   />
                 </div>

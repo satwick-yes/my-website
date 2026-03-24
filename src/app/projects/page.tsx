@@ -30,9 +30,9 @@ export default function Projects() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Projects</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Missions</h1>
         <p className="text-gray-400 text-lg mb-12 max-w-2xl">
-          A collection of my technical projects ranging from hardware engineering to interactive web applications.
+          A collection of my completed missions and technical journeys.
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -44,13 +44,13 @@ export default function Projects() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="h-full"
             >
-              <Card gradient className="h-full flex flex-col group border-border hover:border-primary hover:shadow-[-8px_8px_0_0_#00aa00] transition-colors bg-card/80">
+              <Card gradient className="h-full flex flex-col group border-border hover:border-primary/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-colors bg-card/80">
                 <h3 className="text-2xl font-bold mb-3 tracking-widest text-white uppercase">{project.title}</h3>
                 <p className="text-gray-400 mb-6 flex-grow">{project.description}</p>
                 
                 <div className="flex flex-wrap gap-2 mb-8">
                   {project.tech.map((t) => (
-                    <span key={t} className="px-3 py-1 bg-black/50 border-2 border-border rounded-none text-sm text-primary font-bold uppercase tracking-wider">
+                    <span key={t} className="px-3 py-1 bg-black/40 border border-primary/30 rounded-none text-sm text-primary font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(212,175,55,0.1)]">
                       {t}
                     </span>
                   ))}

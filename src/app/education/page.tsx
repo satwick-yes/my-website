@@ -35,9 +35,9 @@ export default function Education() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Education</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Training</h1>
         <p className="text-gray-400 text-lg mb-16 max-w-2xl">
-          My academic journey, building a strong foundation in computer science and data science.
+          My foundational training and academic journey.
         </p>
 
         <div className="relative border-l border-white/20 ml-3 md:ml-6 space-y-12 pb-8">
@@ -51,12 +51,12 @@ export default function Education() {
               className="relative pl-8 md:pl-12"
             >
               {/* Timeline dot */}
-              <div className="absolute -left-[5px] top-1 w-3 h-3 rounded-none bg-primary shadow-[2px_2px_0_0_#333333] border border-black" />
+              <div className="absolute -left-[5px] top-1 w-3 h-3 rounded-none bg-primary shadow-[0_0_10px_rgba(212,175,55,0.8)] border border-primary/50" />
               
               <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-2 gap-2 md:gap-8">
                 <h3 className="text-2xl font-bold text-white">{edu.institution}</h3>
                 {edu.duration && (
-                  <span className="text-sm font-bold px-3 py-1 bg-black border-2 border-border rounded-none text-primary whitespace-nowrap w-fit">
+                  <span className="text-sm font-bold px-3 py-1 bg-black/60 border border-primary/50 rounded-none text-primary whitespace-nowrap w-fit shadow-[0_0_10px_rgba(212,175,55,0.2)]">
                     {edu.duration}
                   </span>
                 )}

@@ -59,9 +59,9 @@ export default function Skills() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Skills & Expertise</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Techniques</h1>
         <p className="text-gray-400 text-lg mb-16 max-w-2xl">
-          A comprehensive overview of my technical abilities and soft skills acquired through rigorous coursework and hands-on projects.
+          My shinobi arsenal: techniques honed through rigorous trials and deep study.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -73,9 +73,9 @@ export default function Skills() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
             >
-              <Card gradient className="h-full border-border hover:border-primary hover:shadow-[4px_4px_0_0_#aa00aa] transition-colors bg-card/80 rounded-none">
+              <Card gradient className="h-full border border-white/10 hover:border-primary/50 hover:shadow-[0_0_15px_rgba(212,175,55,0.2)] transition-all duration-300 bg-black/40 backdrop-blur-sm rounded-none">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 bg-black/50 rounded-none border-2 border-border">
+                  <div className="p-2 bg-black/40 border border-primary/30 rounded-none shadow-[0_0_10px_rgba(212,175,55,0.1)]">
                     {category.icon}
                   </div>
                   <h3 className="text-xl font-bold tracking-widest text-primary uppercase">{category.title}</h3>
@@ -88,7 +88,7 @@ export default function Skills() {
                         <span className="text-sm font-medium text-gray-300">{skill.name}</span>
                         <span className="text-sm text-gray-500">{skill.level}%</span>
                       </div>
-                      <div className="w-full h-4 bg-black/80 rounded-none border-2 border-border p-0.5">
+                      <div className="w-full h-4 bg-black/60 rounded-none border border-white/10 p-0.5">
                         <motion.div
                           className="h-full bg-primary rounded-none"
                           initial={{ width: 0 }}

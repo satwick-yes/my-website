@@ -33,9 +33,9 @@ export default function Thinking() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Thinking Out of the Box</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Philosophy</h1>
         <p className="text-gray-400 text-lg mb-16 max-w-2xl">
-          An experimental sandbox of paradoxes, logic puzzles, and unconventional perspectives. A place where art meets algorithms.
+          The path of the Shinobi: exploring the intersection of technology, philosophy, and code.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
@@ -47,7 +47,7 @@ export default function Thinking() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
             >
-              <Card gradient className="h-full flex flex-col relative overflow-hidden group border-2 border-border rounded-none hover:border-primary hover:shadow-[6px_6px_0_0_#121212] bg-card/80">
+              <Card gradient className="h-full flex flex-col relative overflow-hidden group border border-white/10 rounded-none hover:border-primary/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.15)] bg-black/40 backdrop-blur-sm transition-all duration-500">
                 <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
                   {thought.icon}
                 </div>
