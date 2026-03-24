@@ -13,13 +13,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 const navLinks = [
-  { name: "Sanctuary", path: "/" },
-  { name: "Glory", path: "/achievements" },
-  { name: "Missions", path: "/projects" },
-  { name: "Training", path: "/education" },
-  { name: "Techniques", path: "/skills" },
-  { name: "Philosophy", path: "/thinking" },
-  { name: "Summon", path: "/contact" },
+  { name: "Home", path: "/" },
+  { name: "Achievements", path: "/achievements" },
+  { name: "Projects", path: "/projects" },
+  { name: "Education", path: "/education" },
+  { name: "Skills", path: "/skills" },
+  { name: "Thinking", path: "/thinking" },
+  { name: "Contact", path: "/contact" },
 ];
 
 export default function Navbar() {

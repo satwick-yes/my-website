@@ -59,9 +59,9 @@ export default function Skills() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Techniques</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Skills & Expertise</h1>
         <p className="text-gray-400 text-lg mb-16 max-w-2xl">
-          My shinobi arsenal: techniques honed through rigorous trials and deep study.
+          A comprehensive overview of my technical abilities and soft skills acquired through rigorous coursework and hands-on projects.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

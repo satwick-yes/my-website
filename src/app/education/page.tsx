@@ -35,9 +35,9 @@ export default function Education() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Training</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Education</h1>
         <p className="text-gray-400 text-lg mb-16 max-w-2xl">
-          My foundational training and academic journey.
+          My academic journey, building a strong foundation in computer science and data science.
         </p>
 
         <div className="relative border-l border-white/20 ml-3 md:ml-6 space-y-12 pb-8">

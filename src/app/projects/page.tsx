@@ -30,9 +30,9 @@ export default function Projects() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Missions</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Projects</h1>
         <p className="text-gray-400 text-lg mb-12 max-w-2xl">
-          A collection of my completed missions and technical journeys.
+          A collection of my technical projects ranging from hardware engineering to interactive web applications.
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

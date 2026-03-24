@@ -33,9 +33,9 @@ export default function Achievements() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Glory</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Achievements</h1>
         <p className="text-gray-400 text-lg mb-12 max-w-2xl">
-          A chronicle of my most glorious victories and milestones across academics and beyond.
+          A showcase of my proudest moments and milestones across academics, sports, and public speaking.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

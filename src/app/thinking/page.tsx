@@ -33,9 +33,9 @@ export default function Thinking() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Philosophy</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Thinking Out of the Box</h1>
         <p className="text-gray-400 text-lg mb-16 max-w-2xl">
-          The path of the Shinobi: exploring the intersection of technology, philosophy, and code.
+          An experimental sandbox of paradoxes, logic puzzles, and unconventional perspectives. A place where art meets algorithms.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">

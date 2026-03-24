@@ -49,7 +49,7 @@ export default function Home() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="text-xl md:text-3xl font-bold text-gray-400 mb-10 tracking-wider uppercase text-shadow-sm"
         >
-          Shinobi <span className="text-primary mx-2">|</span> Developer <span className="text-primary mx-2">|</span> Philosopher
+          Innovator <span className="text-primary mx-2">|</span> Developer <span className="text-primary mx-2">|</span> Thinker
         </motion.p>
 
         <motion.div
@@ -60,12 +60,12 @@ export default function Home() {
         >
           <Link href="/projects">
             <Button size="lg" className="w-full sm:w-auto">
-              View Missions
+              View Projects
             </Button>
           </Link>
           <Link href="/contact">
             <Button variant="outline" size="lg" className="w-full sm:w-auto">
-              Summon Me
+              Contact Me
             </Button>
           </Link>
         </motion.div>
@@ -81,7 +81,7 @@ export default function Home() {
           className="w-full max-w-4xl"
         >
           <h2 className="text-3xl font-bold mb-10 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-yellow-600 uppercase tracking-widest">
-            Past Journeys
+            Experience
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card gradient className="group hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all bg-card/80">
