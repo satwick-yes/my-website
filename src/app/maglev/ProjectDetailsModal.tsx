@@ -260,18 +260,18 @@ export function ProjectDetailsModal({ isOpen, onClose }: ProjectDetailsModalProp
                   {[...Array(11)]
                     .map((_, i) => i + 1)
                     .filter(num => num !== 2)
-                    .map((num) => (
+                    .map((num, displayIndex) => (
                     <div key={num} className="group relative overflow-hidden rounded-lg border border-white/10 bg-black/40 hover:border-primary/50 transition-colors shadow-lg">
                       <div className="aspect-[4/3] bg-white/5 flex items-center justify-center p-4">
                         <img 
                           src={`/patent (${num}).png`} 
-                          alt={`Patent Figure ${num}`} 
+                          alt={`Patent Figure ${displayIndex + 1}`} 
                           className="max-w-full max-h-full object-contain filter brightness-90 group-hover:brightness-110 transition-all duration-300"
                           loading="lazy"
                         />
                       </div>
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-4 pb-2 pt-12 transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                        <p className="text-primary text-sm font-bold tracking-widest uppercase">Figure {num}</p>
+                        <p className="text-primary text-sm font-bold tracking-widest uppercase">Figure {displayIndex + 1}</p>
                       </div>
                     </div>
                   ))}
