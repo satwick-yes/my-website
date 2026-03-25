@@ -568,41 +568,81 @@ function buildModularCassette() {
 function buildCar() {
   const grp = new THREE.Group();
   
-  const chassisMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.1 });
+  // Sleek Tesla-like body
+  const bodyShape = new THREE.Shape();
+  bodyShape.moveTo(-4.2, 0.2); // Rear bottom
+  bodyShape.lineTo(4.0, 0.2);  // Front bottom
+  bodyShape.lineTo(4.6, 0.6);  // Front bumper
+  bodyShape.lineTo(2.8, 1.2);  // Hood
+  bodyShape.lineTo(-3.8, 1.3); // Rear deck
+  bodyShape.lineTo(-4.4, 0.9); // Trunk lip
+  bodyShape.lineTo(-4.2, 0.2);
   
-  const lowerBody = new THREE.Mesh(new THREE.BoxGeometry(4.5, 1.0, 9), chassisMat);
-  lowerBody.position.y = 0.5;
-  lowerBody.castShadow = true;
-  grp.add(lowerBody);
+  const extrudeSettings = { depth: 4.2, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.15, bevelThickness: 0.15 };
+  const bodyGeo = new THREE.ExtrudeGeometry(bodyShape, extrudeSettings);
+  bodyGeo.center();
   
-  const cabin = new THREE.Mesh(new THREE.BoxGeometry(3.5, 1.2, 5), chassisMat);
-  cabin.position.set(0, 1.6, -0.5);
-  cabin.castShadow = true;
-  grp.add(cabin);
+  // Ensure paint looks metallic and premium
+  const paintMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.6, roughness: 0.2 });
+  const body = new THREE.Mesh(bodyGeo, paintMat);
+  body.castShadow = true;
   
-  const glassMat = new THREE.MeshStandardMaterial({ color: 0x111122, transparent: true, opacity: 0.8, metalness: 0.9, roughness: 0.0 });
-  const windshield = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 1.8), glassMat);
-  windshield.rotation.x = -Math.PI / 3;
-  windshield.position.set(0, 1.6, 2.2);
-  windshield.castShadow = false; 
-  grp.add(windshield);
+  // Glass cabin shape
+  const cabinShape = new THREE.Shape();
+  cabinShape.moveTo(1.5, 1.1);
+  cabinShape.lineTo(0.3, 2.2);
+  cabinShape.lineTo(-1.8, 2.2);
+  cabinShape.lineTo(-3.5, 1.2);
+  cabinShape.lineTo(1.5, 1.1);
   
-  const padMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
-  const p1 = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.4), padMat); p1.rotation.z = Math.PI/2; p1.position.set(-2.2, 0.2, 3); grp.add(p1);
-  const p2 = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.4), padMat); p2.rotation.z = Math.PI/2; p2.position.set(2.2, 0.2, 3); grp.add(p2);
-  const p3 = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.4), padMat); p3.rotation.z = Math.PI/2; p3.position.set(-2.2, 0.2, -3); grp.add(p3);
-  const p4 = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.4), padMat); p4.rotation.z = Math.PI/2; p4.position.set(2.2, 0.2, -3); grp.add(p4);
+  const cabinExtrude = { depth: 3.6, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.1, bevelThickness: 0.1 };
+  const cabinGeo = new THREE.ExtrudeGeometry(cabinShape, cabinExtrude);
+  cabinGeo.center();
+  
+  const glassMat = new THREE.MeshStandardMaterial({ color: 0x050510, metalness: 0.9, roughness: 0.1, transparent: true, opacity: 0.85 });
+  const cabin = new THREE.Mesh(cabinGeo, glassMat);
+  cabin.position.set(-0.2, 0.8, 0); // Position slightly up and back relative to body center
+  
+  // Group the car shell and rotate it to align with Z axis (the highway direction)
+  const shell = new THREE.Group();
+  shell.add(body);
+  shell.add(cabin);
+  shell.rotation.y = -Math.PI / 2;
+  shell.position.y = 0.8;
+  grp.add(shell);
+  
+  // Wheels (Sporty alloys)
+  const tireMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
+  const rimMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.8, roughness: 0.3 });
+  
+  const createWheel = (x: number, z: number) => {
+    const wheelGrp = new THREE.Group();
+    const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.4, 32), tireMat);
+    tire.rotation.z = Math.PI/2;
+    const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.42, 16), rimMat);
+    rim.rotation.z = Math.PI/2;
+    wheelGrp.add(tire, rim);
+    wheelGrp.position.set(x, 0.4, z);
+    return wheelGrp;
+  };
+  
+  grp.add(createWheel(-2.2, -2.6)); // Front left (negative Z)
+  grp.add(createWheel(2.2, -2.6));  // Front right
+  grp.add(createWheel(-2.2, 2.6));  // Rear left
+  grp.add(createWheel(2.2, 2.6));   // Rear right
 
-  const rxCoil = new THREE.Mesh(new THREE.BoxGeometry(3, 0.2, 3), new THREE.MeshStandardMaterial({ color: 0xff6600, metalness: 0.3 }));
-  rxCoil.position.y = -0.1;
+  // Underbelly Receiver Coil
+  const rxCoil = new THREE.Mesh(new THREE.BoxGeometry(3, 0.1, 4), new THREE.MeshStandardMaterial({ color: 0xff6600, metalness: 0.5, roughness: 0.4 }));
+  rxCoil.position.y = 0.1;
   rxCoil.castShadow = true;
   grp.add(rxCoil);
 
+  // Holographic Blue Glow (Charging / Levitation)
   const glowGeo = new THREE.PlaneGeometry(6, 10);
-  const blueGlow = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+  const blueGlow = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
   const carGlow = new THREE.Mesh(glowGeo, blueGlow);
   carGlow.rotation.x = -Math.PI/2; 
-  carGlow.position.y = -0.5;
+  carGlow.position.y = 0.01;
   carGlow.name = "glow";
   grp.add(carGlow);
 

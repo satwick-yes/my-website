@@ -248,6 +248,46 @@ export function ProjectDetailsModal({ isOpen, onClose }: ProjectDetailsModalProp
                 </div>
               </section>
 
+              {/* Patent Images Gallery */}
+              <section className="space-y-6">
+                <h3 className="text-2xl font-bold text-white uppercase tracking-wider flex items-center gap-2 border-b border-primary/20 pb-2">
+                  <Layers className="text-primary" /> Appendix: System Diagrams & Patent Figures
+                </h3>
+                <p className="text-gray-400">
+                  The following visualizations illustrate the mathematical modeling, equivalent circuits, and structural design concepts developed for the dual-mode electromagnetic coil.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  {[...Array(11)].map((_, i) => (
+                    <div key={i} className="group relative overflow-hidden rounded-lg border border-white/10 bg-black/40 hover:border-primary/50 transition-colors shadow-lg">
+                      <div className="aspect-[4/3] bg-white/5 flex items-center justify-center p-4">
+                        <img 
+                          src={`/patent (${i + 1}).png`} 
+                          alt={`Patent Figure ${i + 1}`} 
+                          className="max-w-full max-h-full object-contain filter brightness-90 group-hover:brightness-110 transition-all duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-4 pb-2 pt-12 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                        <p className="text-primary text-sm font-bold tracking-widest uppercase">Figure {i + 1}</p>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="group relative overflow-hidden rounded-lg border border-white/10 bg-black/40 hover:border-primary/50 transition-colors shadow-lg">
+                    <div className="aspect-[4/3] bg-white/5 flex items-center justify-center p-4">
+                      <img 
+                        src={`/patent idea.png`} 
+                        alt={`Patent Idea Concept`} 
+                        className="max-w-full max-h-full object-contain filter brightness-90 group-hover:brightness-110 transition-all duration-300"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-4 pb-2 pt-12 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                      <p className="text-primary text-sm font-bold tracking-widest uppercase">Concept Details</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
               {/* Conclusion */}
               <section className="space-y-6 bg-gradient-to-r from-primary/10 to-transparent p-8 rounded-lg border border-primary/20">
                 <h3 className="text-2xl font-bold text-white uppercase tracking-wider">V. Conclusion</h3>
