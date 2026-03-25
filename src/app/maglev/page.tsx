@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { Button } from "@/components/ui/Button";
+import { FileText } from "lucide-react";
+import { ProjectDetailsModal } from "./ProjectDetailsModal";
 
 const maglevComponents = [
   {
@@ -28,6 +31,7 @@ const maglevComponents = [
 export default function MaglevModel() {
   const containerRef = useRef<HTMLDivElement>(null);
   const explodedRef = useRef<HTMLDivElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -329,6 +333,9 @@ export default function MaglevModel() {
         <p className="text-gray-400 text-sm md:text-base tracking-widest uppercase opacity-80 mb-6 max-w-3xl mx-auto">
           Dual-Use Embedded Coils and Control System for Combined Magnetic Levitation<br/>and Dynamic Wireless Charging of Vehicles.
         </p>
+        <Button onClick={() => setIsModalOpen(true)} className="gap-2 tracking-widest shadow-[0_0_20px_rgba(212,175,55,0.2)]">
+          <FileText size={18} /> View Details
+        </Button>
       </div>
 
       {/* 3D Canvas */}
@@ -409,6 +416,9 @@ export default function MaglevModel() {
           ))}
         </div>
       </div>
+
+      {/* Details Modal */}
+      <ProjectDetailsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
