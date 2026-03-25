@@ -6,21 +6,21 @@ import { motion } from "framer-motion";
 const AmbientGlows = ({ mousePos }: { mousePos: { x: number, y: number } }) => (
   <>
     <motion.div 
-      className="absolute top-1/4 left-1/4 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-yellow-500/10 rounded-full blur-[60px] md:blur-[80px] transition-transform duration-700 ease-out z-0 pointer-events-none"
-      style={{ transform: `translate(${mousePos.x}px, ${mousePos.y}px)`, willChange: 'transform' }}
-      animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+      className="absolute top-1/4 left-1/4 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-yellow-500/10 rounded-full blur-[100px] md:blur-[140px] transition-transform duration-700 ease-out z-0 pointer-events-none"
+      style={{ transform: `translate(${mousePos.x}px, ${mousePos.y}px)` }}
+      animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
       transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
     />
     <motion.div 
-      className="absolute bottom-1/4 right-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-amber-500/10 rounded-full blur-[50px] md:blur-[70px] transition-transform duration-700 ease-out z-0 pointer-events-none"
-      style={{ transform: `translate(${-mousePos.x * 1.5}px, ${-mousePos.y * 1.5}px)`, willChange: 'transform' }}
-      animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+      className="absolute bottom-1/4 right-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-amber-500/10 rounded-full blur-[90px] md:blur-[120px] transition-transform duration-700 ease-out z-0 pointer-events-none"
+      style={{ transform: `translate(${-mousePos.x * 1.5}px, ${-mousePos.y * 1.5}px)` }}
+      animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
       transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
     />
     <motion.div 
-      className="absolute top-3/4 left-1/2 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-orange-500/10 rounded-full blur-[40px] md:blur-[60px] transition-transform duration-700 ease-out z-0 pointer-events-none"
-      style={{ transform: `translate(${mousePos.x * 2}px, ${mousePos.y * 2}px)`, willChange: 'transform' }}
-      animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.3, 0.1] }}
+      className="absolute top-3/4 left-1/2 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-orange-500/10 rounded-full blur-[80px] md:blur-[100px] transition-transform duration-700 ease-out z-0 pointer-events-none"
+      style={{ transform: `translate(${mousePos.x * 2}px, ${mousePos.y * 2}px)` }}
+      animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
       transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 5 }}
     />
   </>
@@ -58,11 +58,9 @@ class Particle {
 
     let dx = mouse.x - this.x;
     let dy = mouse.y - this.y;
-    let distanceSq = dx * dx + dy * dy;
-    let radiusSq = mouse.radius * mouse.radius;
+    let distance = Math.sqrt(dx * dx + dy * dy);
     
-    if (distanceSq < radiusSq) {
-      let distance = Math.sqrt(distanceSq);
+    if (distance < mouse.radius) {
       // Gentle repulsion
       const forceDirectionX = dx / distance;
       const forceDirectionY = dy / distance;
@@ -139,8 +137,8 @@ export default function Particles() {
       canvas.height = window.innerHeight;
       
       particles = [];
-      const particleCount = Math.floor((canvas.width * canvas.height) / 12000); 
-      for (let i = 0; i < Math.min(particleCount, 60); i++) {
+      const particleCount = Math.floor((canvas.width * canvas.height) / 10000); 
+      for (let i = 0; i < Math.min(particleCount, 120); i++) {
         particles.push(new Particle(canvas.width, canvas.height, colors));
       }
     };
@@ -156,13 +154,12 @@ export default function Particles() {
         particles[i].draw(ctx);
 
         // Connect particles
-        for (let j = i + 1; j < particles.length; j++) {
+        for (let j = i; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
-          const distanceSq = dx * dx + dy * dy;
+          const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distanceSq < 14400) { // 120 * 120
-            const distance = Math.sqrt(distanceSq);
+          if (distance < 120) {
             ctx.beginPath();
             ctx.strokeStyle = `rgba(212, 175, 55, ${(1 - distance/120) * 0.6})`; // gold line
             ctx.lineWidth = 0.5 + ((1 - distance/120) * 0.5);
@@ -176,10 +173,9 @@ export default function Particles() {
         if (mouse.x !== -1000 && mouse.y !== -1000) {
           const mdx = particles[i].x - mouse.x;
           const mdy = particles[i].y - mouse.y;
-          const mDistanceSq = mdx * mdx + mdy * mdy;
+          const mDistance = Math.sqrt(mdx * mdx + mdy * mdy);
           
-          if (mDistanceSq < 22500) { // 150 * 150
-            const mDistance = Math.sqrt(mDistanceSq);
+          if (mDistance < 150) {
             ctx.beginPath();
             ctx.strokeStyle = `rgba(250, 204, 21, ${(1 - mDistance/150) * 0.8})`; // brighter gold line
             ctx.lineWidth = 1;
