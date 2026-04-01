@@ -91,7 +91,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white tracking-widest uppercase">Microsoft</h3>
-                  <p className="text-primary font-bold">Software Engineering Intern</p>
+                  <p className="text-primary font-bold">AI/ML Intern</p>
                 </div>
               </div>
               <p className="text-sm text-gray-300">
