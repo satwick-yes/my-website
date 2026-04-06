@@ -21,10 +21,16 @@
   --font-sans: var(--font-cinzel);
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
 }
 
 /* Custom blocky scrollbar for Minecraft theme */

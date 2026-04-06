@@ -13,13 +13,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "Achievements", path: "/achievements" },
-  { name: "Projects", path: "/projects" },
-  { name: "Education", path: "/education" },
-  { name: "Skills", path: "/skills" },
-  { name: "3D model", path: "/maglev" },
-  { name: "Thinking", path: "/thinking" },
+  { name: "Home", path: "/#home" },
+  { name: "Achievements", path: "/#achievements" },
+  { name: "Projects", path: "/#projects" },
+  { name: "Education", path: "/#education" },
+  { name: "Skills", path: "/#skills" },
+  { name: "3D model", path: "/#maglev" },
+  { name: "Thinking", path: "/#thinking" },
   { name: "Contact", path: "/contact" },
 ];
 

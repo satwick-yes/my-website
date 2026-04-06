@@ -10,15 +10,36 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate form submission
-    setTimeout(() => {
+    
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        (e.target as HTMLFormElement).reset();
+        setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        alert("Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      alert("An error occurred. Please try again later.");
+    } finally {
       setIsSubmitting(false);
-      setSubmitted(true);
-      setTimeout(() => setSubmitted(false), 3000);
-    }, 1500);
+    }
   };
 
   return (
@@ -87,6 +108,7 @@ export default function Contact() {
                   <input
                     type="text"
                     id="name"
+                    name="name"
                     required
                     className="w-full bg-black/40 border border-white/10 rounded-none px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary hover:border-primary/50 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]"
                     placeholder="John Doe"
@@ -97,6 +119,7 @@ export default function Contact() {
                   <input
                     type="email"
                     id="email"
+                    name="email"
                     required
                     className="w-full bg-black/40 border border-white/10 rounded-none px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary hover:border-primary/50 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]"
                     placeholder="john@example.com"
@@ -106,6 +129,7 @@ export default function Contact() {
                   <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">Message</label>
                   <textarea
                     id="message"
+                    name="message"
                     required
                     rows={4}
                     className="w-full bg-black/40 border border-white/10 rounded-none px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary hover:border-primary/50 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)] resize-none"

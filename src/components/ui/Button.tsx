@@ -4,7 +4,7 @@ import { motion, HTMLMotionProps } from "framer-motion";
 
 export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   variant?: "primary" | "outline" | "ghost";
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   children?: React.ReactNode;
 }
 
@@ -27,6 +27,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             "h-10 px-4 text-sm": size === "sm",
             "h-14 px-8 text-base": size === "md",
             "h-16 px-12 text-lg": size === "lg",
+            "h-20 px-16 text-xl": size === "xl",
           },
           className
         )}
