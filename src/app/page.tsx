@@ -12,11 +12,6 @@ import {
   Lightbulb, RotateCcw, Glasses 
 } from "lucide-react";
 
-// Lazy load the heavy 3D section
-const MaglevSection = dynamic(() => import("@/components/MaglevSection"), { 
-  ssr: false,
-  loading: () => <div className="h-[80vh] flex items-center justify-center bg-black/20 font-mono text-primary animate-pulse">INITIALIZING 3D ENGINE...</div>
-});
 
 const achievements = [
   {
@@ -44,7 +39,7 @@ const projects = [
     title: "Dual Use Coil Project",
     description: "An innovative hardware-software integration project exploring dual-use applications of electromagnetic coils for efficient energy transfer and magnetic levitation.",
     tech: ["C++", "Python", "Hardware Design", "Arduino"],
-    demo: "#maglev",
+    demo: "/3d-model",
   },
   {
     title: "Quantum Mechanics Simulator",
@@ -308,6 +303,12 @@ export default function Home() {
                       <Button size="sm" className="gap-2" onClick={() => document.getElementById(project.demo.slice(1))?.scrollIntoView({ behavior: 'smooth' })}>
                          View Module
                       </Button>
+                    ) : project.demo.startsWith('/') ? (
+                      <Link href={project.demo}>
+                        <Button size="sm" className="gap-2">
+                           View Project
+                        </Button>
+                      </Link>
                     ) : (
                       <a href={project.demo} target="_blank" rel="noreferrer">
                         <Button size="sm" className="gap-2">
@@ -323,8 +324,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3D Model Section */}
-      <MaglevSection />
 
       {/* Education Section */}
       <section id="education" className="py-32 px-4 max-w-5xl mx-auto snap-start">

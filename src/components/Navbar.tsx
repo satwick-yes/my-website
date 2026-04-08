@@ -18,8 +18,7 @@ const navLinks = [
   { name: "Projects", path: "/#projects" },
   { name: "Education", path: "/#education" },
   { name: "Skills", path: "/#skills" },
-  { name: "3D model", path: "/#maglev" },
-  { name: "Thinking", path: "/#thinking" },
+  { name: "3D model", path: "/3d-model" },
   { name: "Contact", path: "/contact" },
 ];
 
@@ -55,31 +54,62 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex space-x-1">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.path;
-              return (
-                <Link
-                  key={link.name}
-                  href={link.path}
-                  className={cn(
-                    "relative px-3 py-2 text-sm font-medium transition-colors hover:text-white",
-                    isActive ? "text-white" : "text-gray-400"
-                  )}
-                >
-                  {link.name}
-                  {isActive && (
-                    <motion.div
-                      layoutId="navbar-indicator"
-                      className="absolute bottom-0 left-0 right-0 h-1 bg-primary shadow-[0_0_10px_rgba(212,175,55,0.8)]"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
+          <nav className="hidden md:flex items-center space-x-6">
+            {/* Boxed Primary Links */}
+            <div className="flex items-center space-x-1 px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.3)]">
+              {navLinks.slice(0, 5).map((link) => {
+                const isActive = pathname === link.path;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.path}
+                    className={cn(
+                      "relative px-3 py-2 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:text-primary",
+                      isActive ? "text-primary" : "text-gray-400"
+                    )}
+                  >
+                    {link.name}
+                    {isActive && (
+                      <motion.div
+                        layoutId="navbar-indicator"
+                        className="absolute bottom-0 left-3 right-3 h-0.5 bg-primary shadow-[0_0_8px_rgba(212,175,55,0.8)]"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Separate Secondary Links */}
+            <div className="flex items-center space-x-2">
+              {navLinks.slice(5).map((link) => {
+                const isActive = pathname === link.path;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.path}
+                    className={cn(
+                      "relative px-4 py-2 text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:text-white",
+                      isActive ? "text-white" : "text-gray-400"
+                    )}
+                  >
+                    {link.name}
+                    {isActive && (
+                      <motion.div
+                        layoutId="navbar-indicator-secondary"
+                        className="absolute bottom-0 left-4 right-4 h-0.5 bg-primary shadow-[0_0_8px_rgba(212,175,55,0.8)]"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
           </nav>
 
           {/* Mobile Menu Button */}
