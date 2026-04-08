@@ -11,45 +11,45 @@ import { Cpu, Battery, Zap, Shield, Search, Layers } from "lucide-react";
 const guidewaySpecs = [
   {
     title: "AC Grid Feeder & DC Bus",
-    description: "Medium-voltage step-down and distribution establishing a centralized DC bus for local segments.",
+    description: "Medium-voltage step-down system establishing a centralized DC power bus for segmented track delivery.",
     icon: <Zap className="text-yellow-500" size={20} />
   },
   {
-    title: "Multiplexing Control Module",
-    description: "Coordinates LF and HF algorithms, routing precise setpoints to the inverter stage.",
+    title: "Multiplexing Control Unit",
+    description: "Advanced microcontroller coordinating LF (Levitation) and HF (WPT) signal multiplexing to the shared coils.",
     icon: <Cpu className="text-blue-400" size={20} />
   },
   {
-    title: "Power Stage",
-    description: "High-current multi-level inverter delivering up to 150 A for LF levitation and 85 kHz HF charging.",
+    title: "Multi-Band Inverter",
+    description: "High-power stage delivering combined 150A LF (30Hz) and resonant HF (85kHz) current for simultaneous lift and charge.",
     icon: <Battery className="text-green-400" size={20} />
   },
   {
-    title: "Embedded Primary Coil Stack",
-    description: "Shared in-road track winding nested over a Flux-Guiding Back-Iron with conductive shielding.",
+    title: "Dual-Use Primary Coil Stack",
+    description: "Precision-wound Litz-wire coils embedded in the guideway, optimized for both magnetic lift and induction.",
     icon: <Layers className="text-primary" size={20} />
   }
 ];
 
 const onboardSpecs = [
   {
-    title: "Receiver Coil",
-    description: "Underbelly chassis induction coil that intercepts the combined multiplexed magnetic field.",
+    title: "Advanced Receiver Coil",
+    description: "Chassis-integrated induction coil designed to capture both levitation and WPT flux components efficiently.",
     icon: <Search className="text-white" size={20} />
   },
   {
-    title: "Diplexer / Filter Network",
-    description: "Separates the received signal into the LF Component (levitation) and HF Component (charging).",
+    title: "Diplexer Filter Network",
+    description: "High-speed filtering system that separates the received multiplexed signal into lift and charging channels.",
     icon: <Shield className="text-blue-500" size={20} />
   },
   {
-    title: "Levitation Control",
-    description: "Uses real-time Gap Sensing to feed the Levitation Control Interface for active stability.",
+    title: "Stabilization Control",
+    description: "Real-time gap sensing feedback loop driving active trim coils for stable 18mm flight height.",
     icon: <Cpu className="text-amber-500" size={20} />
   },
   {
-    title: "HF Rectifier",
-    description: "Converts the 85 kHz HF component into stable DC power, supporting bidirectional flow.",
+    title: "HF Power Link & Regen",
+    description: "High-frequency rectification stage for 85kHz charging, supporting bidirectional regenerative braking energy.",
     icon: <Zap className="text-green-500" size={20} />
   }
 ];

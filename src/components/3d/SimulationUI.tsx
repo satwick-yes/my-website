@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/Button';
 import { 
   Zap, Gauge, Wind, Thermometer, 
   Settings2, Camera, Info, Radio,
-  ArrowBigUp, ChevronDown, ChevronUp
+  ArrowBigUp, ChevronDown, ChevronUp,
+  Activity, Cpu
 } from 'lucide-react';
 import { SimState } from './MaglevSimulation';
 import { cn } from '@/components/Navbar';
@@ -68,6 +69,8 @@ export const SimulationUI: React.FC<SimulationUIProps> = ({ state, onUpdate }) =
             { label: 'Velocity', value: Math.round(state.speed), unit: 'km/h', icon: <Gauge size={14} />, mobileLabel: 'VEL' },
             { label: 'Air Gap', value: state.gapHeight.toFixed(1), unit: 'mm', icon: <Wind size={14} />, mobileLabel: 'GAP' },
             { label: 'Lift', value: Math.round(state.liftForce), unit: 'N', icon: <ArrowBigUp size={14} />, mobileLabel: 'LIFT' },
+            { label: 'Charge', value: Math.round(state.chargePower), unit: 'kW', icon: <Zap size={14} />, mobileLabel: 'CHG' },
+            { label: 'RMS Current', value: state.rmsCurrent.toFixed(1), unit: 'A', icon: <Activity size={14} />, mobileLabel: 'RMS' },
             { label: 'Temp', value: Math.round(state.tempRise), unit: '°C', icon: <Thermometer size={14} />, mobileLabel: 'TEMP' },
           ].map((item, idx) => (
             <motion.div
@@ -115,7 +118,7 @@ export const SimulationUI: React.FC<SimulationUIProps> = ({ state, onUpdate }) =
                     {controlsOpen ? <ChevronDown size={16} className="text-gray-500" /> : <ChevronUp size={16} className="text-gray-500" />}
                 </button>
 
-                <div className="px-6 pb-6 pt-2 space-y-6">
+                <div className="px-6 pb-6 pt-2 space-y-4">
                     <div className="space-y-4">
                         <div className="space-y-2">
                             <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest">
@@ -133,7 +136,7 @@ export const SimulationUI: React.FC<SimulationUIProps> = ({ state, onUpdate }) =
 
                         <div className="space-y-2">
                             <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest">
-                                <span className="text-gray-400">Levitation Power</span>
+                                <span className="text-gray-400">Levitation Power (LF)</span>
                                 <span className="text-primary font-mono">{Math.round(state.levitationPower * 100)}%</span>
                             </div>
                             <input 
@@ -141,6 +144,20 @@ export const SimulationUI: React.FC<SimulationUIProps> = ({ state, onUpdate }) =
                                 min="20" max="150" 
                                 value={state.levitationPower * 100} 
                                 onChange={(e) => onUpdate({ levitationPower: parseInt(e.target.value) / 100 })}
+                                className="w-full accent-primary bg-white/10 h-1 appearance-none cursor-pointer"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest">
+                                <span className="text-gray-400">Frequency (HF)</span>
+                                <span className="text-primary font-mono">{state.frequency} kHz</span>
+                            </div>
+                            <input 
+                                type="range" 
+                                min="20" max="250" 
+                                value={state.frequency} 
+                                onChange={(e) => onUpdate({ frequency: parseInt(e.target.value) })}
                                 className="w-full accent-primary bg-white/10 h-1 appearance-none cursor-pointer"
                             />
                         </div>
