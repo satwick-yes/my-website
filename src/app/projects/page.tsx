@@ -1,10 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, X } from "lucide-react";
 
 const projects = [
   {
@@ -22,8 +23,11 @@ const projects = [
 ];
 
 export default function ProjectsPage() {
+  const [isModelOpen, setIsModelOpen] = useState(false);
+
   return (
-    <div className="relative min-h-screen pt-10">
+    <>
+      <div className="relative min-h-screen pt-10">
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-16 text-center uppercase tracking-tighter">Projects</h1>
@@ -50,7 +54,11 @@ export default function ProjectsPage() {
                   </div>
 
                   <div className="flex flex-wrap gap-4 mt-auto">
-                    {project.demo.startsWith('#') ? (
+                    {project.demo === '/3d-model' ? (
+                      <Button size="sm" className="gap-2" onClick={() => setIsModelOpen(true)}>
+                         View 3D Model
+                      </Button>
+                    ) : project.demo.startsWith('#') ? (
                       <Button size="sm" className="gap-2">
                          View Module
                       </Button>
@@ -74,6 +82,33 @@ export default function ProjectsPage() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+
+      <AnimatePresence>
+        {isModelOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex flex-col bg-[#0a0a0a]"
+          >
+            <div className="flex justify-between items-center p-4 border-b border-white/10">
+              <h2 className="text-xl font-bold tracking-widest uppercase">3D Maglev Model</h2>
+              <button 
+                onClick={() => setIsModelOpen(false)}
+                className="p-2 bg-white/10 hover:bg-white/20 rounded-none transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            <iframe 
+              src="/maglev.html" 
+              className="flex-grow w-full border-none"
+              title="3D Maglev Model"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
