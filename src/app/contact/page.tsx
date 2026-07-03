@@ -49,7 +49,7 @@ export default function Contact() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Contact Me</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Hire Me</h1>
         <p className="text-gray-400 text-lg mb-16 max-w-2xl">
           Interested in collaborating or have a question? I'd love to hear from you. Fill out the form below or reach out directly.
         </p>

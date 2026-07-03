@@ -19,7 +19,7 @@ const navLinks = [
   { name: "Education", path: "/#education" },
   { name: "Skills", path: "/#skills" },
   { name: "3D model", path: "/3d-model" },
-  { name: "Contact", path: "/contact" },
+  { name: "Hire Me", path: "/contact" },
 ];
 
 export default function Navbar() {

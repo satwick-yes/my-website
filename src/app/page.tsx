@@ -95,6 +95,8 @@ const skillCategories = [
     title: "Web Development",
     icon: <Globe className="w-6 h-6 text-amber-400" />,
     skills: [
+      { name: "Fullstack Developer", level: 95 },
+      { name: "Web Developer", level: 95 },
       { name: "HTML / CSS", level: 95 },
       { name: "JavaScript / TypeScript", level: 90 },
       { name: "React / Next.js", level: 85 },
@@ -196,7 +198,7 @@ export default function Home() {
           </Button>
           <Link href="/contact">
             <Button variant="outline" size="lg" className="w-full sm:w-auto">
-              Contact Me
+              Hire Me
             </Button>
           </Link>
         </motion.div>
