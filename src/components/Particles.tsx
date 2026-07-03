@@ -142,7 +142,7 @@ export default function Particles() {
       
       particles = [];
       const particleCount = Math.floor((canvas.width * canvas.height) / 10000); 
-      for (let i = 0; i < Math.min(particleCount, 120); i++) {
+      for (let i = 0; i < Math.min(particleCount, 60); i++) {
         particles.push(new Particle(canvas.width, canvas.height, colors));
       }
     };
@@ -163,10 +163,10 @@ export default function Particles() {
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distance < 120) {
+          if (distance < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(212, 175, 55, ${(1 - distance/120) * 0.6})`; // gold line
-            ctx.lineWidth = 0.5 + ((1 - distance/120) * 0.5);
+            ctx.strokeStyle = `rgba(212, 175, 55, ${(1 - distance/100) * 0.6})`; // gold line
+            ctx.lineWidth = 0.5 + ((1 - distance/100) * 0.5);
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
