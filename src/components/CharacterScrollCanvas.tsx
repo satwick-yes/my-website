@@ -237,21 +237,6 @@ export function CharacterScrollCanvas({
 
   return (
     <div className={`${getContainerPositionClass()} ${className}`}>
-      {/* Speech Bubble / Status Tag */}
-      <AnimatePresence>
-        {!isMinimized && speechBubble && isLoaded && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.9 }}
-            className="pointer-events-auto mb-3 px-4 py-2 bg-card/90 backdrop-blur-md border border-primary/40 rounded-none shadow-[4px_4px_0_0_#121212] text-xs font-mono font-bold text-primary uppercase tracking-widest flex items-center gap-2 max-w-xs"
-          >
-            <Sparkles size={14} className="text-yellow-400 animate-pulse shrink-0" />
-            <span>{speechBubble}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Main Avatar Container */}
       <motion.div
         layout
