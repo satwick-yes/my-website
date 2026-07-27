@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ExternalLink, X, Github, Star, GitFork } from "lucide-react";
-import { CharacterScrollCanvas } from "@/components/CharacterScrollCanvas";
 
 interface Repository {
   id: number;
@@ -191,16 +190,6 @@ export default function ProjectsPage() {
 
   return (
     <>
-      {/* 3D Character Avatar with Projects Showcase Moves */}
-      <CharacterScrollCanvas
-        startFrame={121}
-        endFrame={160}
-        greetingEndFrame={135}
-        autoPlayGreeting={true}
-        position="fixed-bottom-right"
-        title="Projects Avatar"
-      />
-
       <div className="relative min-h-screen pt-10 pb-32">
         <section className="py-16 px-4">
           <div className="max-w-7xl mx-auto">

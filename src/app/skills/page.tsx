@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Database, LineChart, Globe, Brain, MessageSquare } from "lucide-react";
-import { CharacterScrollCanvas } from "@/components/CharacterScrollCanvas";
 
 const skillCategories = [
   {
@@ -57,15 +56,6 @@ const skillCategories = [
 export default function SkillsPage() {
   return (
     <div className="relative min-h-screen pt-10">
-      {/* 3D Character Avatar with Skill Action Moves */}
-      <CharacterScrollCanvas
-        startFrame={161}
-        endFrame={200}
-        greetingEndFrame={175}
-        autoPlayGreeting={true}
-        position="fixed-bottom-right"
-        title="Skill Moves"
-      />
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-20 text-center uppercase tracking-tighter">Skills & Expertise</h1>

@@ -9,7 +9,6 @@ import {
   Briefcase, 
   Lightbulb, RotateCcw, Glasses 
 } from "lucide-react";
-import { CharacterScrollCanvas } from "@/components/CharacterScrollCanvas";
 
 const thoughts = [
   {
@@ -35,16 +34,6 @@ const thoughts = [
 export default function Home() {
   return (
     <div className="relative min-h-screen">
-      
-      {/* 3D Character Interactive Scroll Avatar */}
-      <CharacterScrollCanvas
-        startFrame={1}
-        endFrame={120}
-        greetingEndFrame={50}
-        autoPlayGreeting={true}
-        position="fixed-bottom-right"
-        title="3D Avatar"
-      />
 
       {/* Hero Section */}
       <section id="home" className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center snap-start">

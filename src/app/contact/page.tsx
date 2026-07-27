@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Mail, Phone, Linkedin, Send } from "lucide-react";
-import { CharacterScrollCanvas } from "@/components/CharacterScrollCanvas";
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,15 +44,6 @@ export default function Contact() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pb-40">
-      {/* 3D Character Avatar with Reach-Out / Call-to-Action Pose */}
-      <CharacterScrollCanvas
-        startFrame={201}
-        endFrame={240}
-        greetingEndFrame={220}
-        autoPlayGreeting={true}
-        position="fixed-bottom-right"
-        title="Contact Avatar"
-      />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

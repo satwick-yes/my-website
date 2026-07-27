@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CharacterScrollCanvas } from "@/components/CharacterScrollCanvas";
 
 const educationDetails = [
   {
@@ -29,15 +28,6 @@ const educationDetails = [
 export default function EducationPage() {
   return (
     <div className="relative min-h-screen pt-10">
-      {/* 3D Character Avatar with Academic / Learning Moves */}
-      <CharacterScrollCanvas
-        startFrame={61}
-        endFrame={120}
-        greetingEndFrame={75}
-        autoPlayGreeting={true}
-        position="fixed-bottom-right"
-        title="Learning Journey"
-      />
       <section className="py-20 px-4 max-w-5xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold mb-20 text-center uppercase tracking-tighter">Education</h1>
         <div className="relative border-l-2 border-primary/30 ml-4 md:ml-6 space-y-16 pb-8">
