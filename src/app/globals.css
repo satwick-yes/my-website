@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --card: #141414;
+  --card-foreground: #ffffff;
+  --border: #333333;
+  --primary: #d4af37;
+  --primary-foreground: #000000;
+  --accent: #facc15;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-cinzel);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom blocky scrollbar for Minecraft theme */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0b0b;
+  border-left: 2px solid #333;
+}
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border: 2px solid #0b0b0b;
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}

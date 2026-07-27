@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detailed Maglev & WPT Coil System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        body { margin: 0; overflow-x: hidden; background-color: #111827; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        #canvas-container { width: 100vw; height: 75vh; position: relative; }
+        #exploded-container { width: 100vw; height: 50vh; position: relative; background: #0a0f18; border-bottom: 1px solid #222; border-top: 1px solid #222;}
+        
+        #info { position: absolute; top: 20px; width: 100%; text-align: center; pointer-events: none; z-index: 100; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        h2 { margin: 0 0 5px 0; font-weight: 300; letter-spacing: 1px; color: #d4af37; text-transform: uppercase; text-shadow: 0 0 10px rgba(212,175,55,0.4); }
+        p.subtitle { margin: 0; color: #aaa; text-transform: uppercase; font-size: 13px; letter-spacing: 2px; }
+        
+        /* Floating Graphic Elements */
+        .callout { position: absolute; pointer-events: none; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .callout h3 { margin:0 0 4px 0; font-size: 18px; color: #fff; }
+        .callout p { margin:0; font-size: 13px; color: #60a5fa; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 4px; display: inline-block;}
+        .callout.left { top: 120px; left: 40px; }
+        .callout.right { top: 120px; right: 40px; text-align: right; }
+        .callout.right p { border-bottom: none; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 4px; padding-bottom: 0; }
+
+        .fields-legend { position: absolute; bottom: 80px; right: 40px; pointer-events: none; text-align: right; }
+        .fields-legend p { font-size: 14px; font-weight: bold; letter-spacing: 1px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin: 8px 0; text-shadow: 0 2px 4px #000; }
+        .fields-legend p span.dot { width: 10px; height: 10px; border-radius: 50%; }
+
+        #labels { position: absolute; bottom: 20px; left: 20px; pointer-events: none; background: rgba(10,10,10,0.7); padding: 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px); display: flex; flex-direction: column; gap: 10px; }
+        .label-item { display: flex; align-items: center; font-size: 11px; color: #ccc; text-transform: uppercase; letter-spacing: 1px; }
+        .color-box { width: 12px; height: 12px; display: inline-block; margin-right: 12px; box-shadow: inset 0 0 4px rgba(0,0,0,0.8); }
+        
+        #controls-hint { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 11px; color: #777; pointer-events: none; letter-spacing: 2px; }
+
+        /* Document Section */
+        #doc-section { padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
+        .doc-header { text-align: center; margin-bottom: 50px; }
+        .doc-header h3 { color: #d4af37; font-size: 24px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+        .doc-header p { color: #aaa; line-height: 1.8; font-size: 16px; max-width: 800px; margin: 0 auto; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px; }
+        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 30px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card h4 { color: #fff; font-size: 18px; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 15px; margin-top: 0; margin-bottom: 25px; }
+        .item { margin-bottom: 20px; }
+        .item h5 { color: #d4af37; margin: 0 0 8px 0; font-size: 14px; letter-spacing: 1px; }
+        .item p { color: #888; font-size: 14px; line-height: 1.6; margin: 0; }
+
+        /* Simulation UI Overlay */
+        #sim-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; font-family: 'Outfit', sans-serif; }
+        
+        #telemetry { position: absolute; top: 30px; left: 30px; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 12px; border-left: 4px solid #d4af37; backdrop-filter: blur(8px); width: 220px; }
+        .stat-item { margin-bottom: 12px; }
+        .stat-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .stat-value { font-size: 18px; color: #fff; font-weight: bold; font-family: 'Courier New', monospace; }
+        .stat-unit { font-size: 11px; color: #60a5fa; margin-left: 4px; }
+
+        #sim-controls { position: absolute; bottom: 100px; right: 30px; background: rgba(10,12,18,0.9); padding: 25px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(12px); width: 280px; pointer-events: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .control-group { margin-bottom: 20px; }
+        .control-group:last-child { margin-bottom: 0; }
+        .control-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .control-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1.5px; }
+        .control-value { font-size: 13px; color: #d4af37; font-weight: bold; }
+        
+        input[type=range] { -webkit-appearance: none; width: 100%; background: #222; height: 4px; border-radius: 2px; outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #d4af37; cursor: pointer; box-shadow: 0 0 10px rgba(212,175,55,0.4); border: 2px solid #000; }
+        
+        #camera-controls { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; pointer-events: auto; }
+        .cam-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s ease; backdrop-filter: blur(4px); }
+        .cam-btn:hover { background: #d4af37; color: black; border-color: #d4af37; }
+        .cam-btn.active { background: #60a5fa; color: black; border-color: #60a5fa; }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <div id="info">
+            <h2>Detailed Maglev Concept System</h2>
+            <p class="subtitle">Combined Magnetic Levitation & Wireless Charging</p>
+        </div>
+
+        <div class="callout left">
+            <h3>Intelligent Controller</h3>
+            <p>TDM / FDM Control</p>
+        </div>
+
+        <div class="callout right">
+            <h3>Grid Connection</h3>
+            <p style="border-top: none; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 4px; padding-top: 0;">Multi-band Inverter Unit</p>
+        </div>
+
+        <div class="fields-legend">
+            <p style="color: #60a5fa;">Magnetic Levitation (Low Freq) <span class="dot" style="background:#3b82f6; box-shadow: 0 0 8px #3b82f6;"></span></p>
+            <p style="color: #ff9900;">Wireless Power Transfer (High Freq) <span class="dot" style="background:#ff6600; box-shadow: 0 0 8px #ff6600;"></span></p>
+        </div>
+
+        <div id="labels">
+            <div class="label-item"><span class="color-box" style="background:#1a1a1a; border:1px solid #333;"></span> Road Cutaway</div>
+            <div class="label-item"><span class="color-box" style="background:#d48b37;"></span> Primary Concentric Coils</div>
+            <div class="label-item"><span class="color-box" style="background:#ff6600; box-shadow: 0 0 6px #ff6600;"></span> Glowing Flux Bed</div>
+            <div class="label-item"><span class="color-box" style="background:#fff; border:1px solid #999;"></span> White Sedan Body</div>
+            <div class="label-item"><span class="color-box" style="background:#999;"></span> Powertrain / Interver</div>
+        </div>
+        <div id="controls-hint">DRAG TO ROTATE SCENE | SCROLL TO ZOOM</div>
+
+        <!-- Simulation UI -->
+        <div id="sim-ui">
+            <div id="telemetry">
+                <div class="stat-item">
+                    <div class="stat-label">Velocity</div>
+                    <div class="stat-value" id="val-speed">0</div><span class="stat-unit">km/h</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Air Gap</div>
+                    <div class="stat-value" id="val-gap">18</div><span class="stat-unit">mm</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Lift Force</div>
+                    <div class="stat-value" id="val-lift">0</div><span class="stat-unit">N</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">RMS Current</div>
+                    <div class="stat-value" id="val-rms">0</div><span class="stat-unit">A</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Charge Rate</div>
+                    <div class="stat-value" id="val-charge">0</div><span class="stat-unit">kW</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Inverter Temp</div>
+                    <div class="stat-value" id="val-temp">32</div><span class="stat-unit">°C</span>
+                </div>
+            </div>
+
+            <div id="sim-controls">
+                <div class="control-group">
+                    <div class="control-header">
+                        <span class="control-label">Target Speed</span>
+                        <span class="control-value" id="disp-speed">60 km/h</span>
+                    </div>
+                    <input type="range" id="input-speed" min="0" max="600" value="60">
+                </div>
+                <div class="control-group">
+                    <div class="control-header">
+                        <span class="control-label">Levitation Power (LF)</span>
+                        <span class="control-value" id="disp-lev">85%</span>
+                    </div>
+                    <input type="range" id="input-lev" min="20" max="150" value="85">
+                </div>
+                <div class="control-group">
+                    <div class="control-header">
+                        <span class="control-label">Frequency (HF)</span>
+                        <span class="control-value" id="disp-freq">85 kHz</span>
+                    </div>
+                    <input type="range" id="input-freq" min="20" max="250" value="85">
+                </div>
+                <div class="control-group" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                    <span class="control-label">Regenerative Mode</span>
+                    <input type="checkbox" id="input-regen" style="cursor:pointer; width: 20px; height: 20px;">
+                </div>
+            </div>
+
+            <div id="camera-controls">
+                <button id="btn-orbit" class="cam-btn">Orbit View</button>
+                <button id="btn-follow" class="cam-btn active">Follow Cam</button>
+                <button id="btn-cinematic" class="cam-btn">360 View</button>
+                <button id="btn-technical" class="cam-btn">Technical View</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="exploded-container">
+        <div style="position:absolute; top:20px; width:100%; text-align:center; pointer-events:none;">
+            <h3 style="color:#d4af37; margin:0; text-transform:uppercase; letter-spacing:2px;">Guideway Coil Breakdown</h3>
+            <p style="color:#aaa; font-size:12px; text-transform:uppercase; margin-top:5px; letter-spacing:1px;">Layer-wise Exploded View</p>
+        </div>
+
+        <div style="position:absolute; top:10%; left:20px; background:rgba(0,0,0,0.7); padding:10px; border-left:2px solid #3b82f6; pointer-events:none;">
+            <h4 style="color:#60a5fa; margin:0; font-size:11px; text-transform:uppercase;">Levitation Mode (Low Freq)</h4>
+        </div>
+        <div style="position:absolute; top:10%; right:20px; background:rgba(0,0,0,0.7); padding:10px; border-right:2px solid #ff6600; text-align:right; pointer-events:none;">
+            <h4 style="color:#ff9900; margin:0; font-size:11px; text-transform:uppercase;">Charging Mode (High Freq)</h4>
+        </div>
+
+        <div style="position:absolute; top:30%; left:20px; background:rgba(0,0,0,0.7); padding:10px; border-left:2px solid #aaa; pointer-events:none;">
+            <h4 style="color:#ccc; margin:0; font-size:11px; text-transform:uppercase;">Pavement Surface</h4>
+        </div>
+        
+        <div style="position:absolute; top:45%; left:20px; background:rgba(0,0,0,0.7); padding:10px; border-left:2px solid #d48b37; pointer-events:none;">
+            <h4 style="color:#d48b37; margin:0; font-size:11px; text-transform:uppercase;">Primary Litz-Wire Coil</h4>
+        </div>
+
+        <div style="position:absolute; top:45%; right:20px; background:rgba(0,0,0,0.7); padding:10px; border-right:2px solid #ccc; text-align:right; pointer-events:none;">
+            <h4 style="color:#eee; margin:0; font-size:11px; text-transform:uppercase;">Power & Control Module</h4>
+            <div style="color:#aaa; font-size:9px; margin-top:2px;">Inverter & Control Circuitry</div>
+            <div style="color:#ffcc00; font-size:9px; margin-top:2px;">DC Power Bus 800-1200 VDC</div>
+        </div>
+
+        <div style="position:absolute; bottom:20%; left:20px; background:rgba(0,0,0,0.7); padding:10px; border-left:2px solid #fff; pointer-events:none;">
+            <h4 style="color:#fff; margin:0; font-size:11px; text-transform:uppercase;">Slotted EM Shield</h4>
+        </div>
+    </div>
+
+    <div id="doc-section">
+        <div class="doc-header">
+            <h3>Unified Dual-Use Coil System</h3>
+            <p>
+                Based on peak technical specifications (1850N Lift @ 18mm Gap). The unified architecture logically divides signal flow across the Guideway and Onboard Vehicle System using multiplexing.
+            </p>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h4>Road / Guideway System</h4>
+                <div class="item">
+                    <h5>AC Grid Feeder & DC Bus</h5>
+                    <p>Medium-voltage step-down and distribution establishing a centralized DC bus for local segments.</p>
+                </div>
+                <div class="item">
+                    <h5>Multiplexing Control Module (μC + Sch.)</h5>
+                    <p>Coordinates LF and HF algorithms, routing precise setpoints to the inverter stage.</p>
+                </div>
+                <div class="stat-item">
+                    <h5>Power Stage</h5>
+                    <p>High-current multi-level inverter delivering up to 150 A for LF levitation (30 Hz) and resonant HF charging (85 kHz).</p>
+                </div>
+                <div class="item">
+                    <h5>Dual-Use Embedded Primary Coil Stack</h5>
+                    <p>The shared in-road track winding nested over a Flux-Guiding Back-Iron with conductive shielding.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>Onboard Vehicle System</h4>
+                <div class="item">
+                    <h5>Receiver Coil</h5>
+                    <p>Underbelly chassis induction coil that intercepts the combined multiplexed magnetic field.</p>
+                </div>
+                <div class="item">
+                    <h5>Diplexer / Filter Network</h5>
+                    <p>Separates the received signal into the LF Component (levitation) and HF Component (resonant charging).</p>
+                </div>
+                <div class="item">
+                    <h5>Levitation Control & Trim Coils</h5>
+                    <p>Uses real-time Gap Sensing to feed the Levitation Control Interface, driving active Trim Coils for stability.</p>
+                </div>
+                <div class="item">
+                    <h5>HF Rectifier & Regenerative Link</h5>
+                    <p>Converts the 85 kHz HF component into stable DC power, supporting both charging and bidirectional (Regen) power flow to the grid.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('canvas-container');
+
+        // --- Simulation State ---
+        const simState = {
+            speed: 60, // km/h
+            targetSpeed: 60,
+            levitationPower: 0.85,
+            frequency: 85,
+            gapHeight: 18,
+            liftForce: 1850,
+            rmsCurrent: 154.5,
+            chargePower: 82.4,
+            tempRise: 32.5,
+            isRegen: false,
+            currentCamera: 'follow',
+            roadSpeed: 0
+        };
+
+        const uiElements = {
+            valSpeed: document.getElementById('val-speed'),
+            valGap: document.getElementById('val-gap'),
+            valLift: document.getElementById('val-lift'),
+            valRms: document.getElementById('val-rms'),
+            valCharge: document.getElementById('val-charge'),
+            valTemp: document.getElementById('val-temp'),
+            dispSpeed: document.getElementById('disp-speed'),
+            dispLev: document.getElementById('disp-lev'),
+            dispFreq: document.getElementById('disp-freq'),
+            inputSpeed: document.getElementById('input-speed'),
+            inputLev: document.getElementById('input-lev'),
+            inputFreq: document.getElementById('input-freq'),
+            inputRegen: document.getElementById('input-regen')
+        };
+
+        function updateStateFromUI() {
+            simState.targetSpeed = parseFloat(uiElements.inputSpeed.value);
+            simState.levitationPower = parseFloat(uiElements.inputLev.value) / 100;
+            simState.frequency = parseFloat(uiElements.inputFreq.value);
+            simState.isRegen = uiElements.inputRegen.checked;
+            
+            uiElements.dispSpeed.innerText = `${simState.targetSpeed} km/h`;
+            uiElements.dispLev.innerText = `${Math.round(simState.levitationPower * 100)}%`;
+            uiElements.dispFreq.innerText = `${simState.frequency} kHz`;
+        }
+
+        uiElements.inputSpeed.addEventListener('input', updateStateFromUI);
+        uiElements.inputLev.addEventListener('input', updateStateFromUI);
+        uiElements.inputFreq.addEventListener('input', updateStateFromUI);
+        uiElements.inputRegen.addEventListener('change', updateStateFromUI);
+
+        function setCamera(type, element) {
+            simState.currentCamera = type;
+            document.querySelectorAll('.cam-btn').forEach(btn => btn.classList.remove('active'));
+            if (element) element.classList.add('active');
+            
+            // Reset camera orientation when switching modes to ensure proper OrbitControls behavior
+            camera.up.set(0, 1, 0);
+            
+            if (type === 'orbit') {
+                controls.enabled = true;
+            } else {
+                controls.enabled = false;
+            }
+        }
+
+        document.getElementById('btn-orbit').addEventListener('click', (e) => setCamera('orbit', e.target));
+        document.getElementById('btn-follow').addEventListener('click', (e) => setCamera('follow', e.target));
+        document.getElementById('btn-cinematic').addEventListener('click', (e) => setCamera('cinematic', e.target));
+        document.getElementById('btn-technical').addEventListener('click', (e) => setCamera('technical', e.target));
+
+        // 1. Scene Setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color('#111827');
+        scene.fog = new THREE.FogExp2('#111827', 0.012);
+        
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(12, 6, 15);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.dampingFactor = 0.05;
+        controls.target.set(0, 1, 0); controls.maxPolarAngle = Math.PI / 2 - 0.05;
+        controls.enabled = false; // Disabled by default as we start in Follow Cam
+
+        // 2. Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3); scene.add(ambientLight);
+        const moonLight = new THREE.DirectionalLight(0x90b0ff, 0.6); moonLight.position.set(-10, 15, -10); scene.add(moonLight);
+        const mainLight = new THREE.DirectionalLight(0xffffff, 0.9);
+        mainLight.position.set(10, 20, 15); mainLight.castShadow = true;
+        mainLight.shadow.mapSize.width = 4096; mainLight.shadow.mapSize.height = 4096; mainLight.shadow.bias = -0.0005;
+        scene.add(mainLight);
+
+        const spotLight = new THREE.SpotLight(0xffa500, 2.5, 50, Math.PI / 4, 0.8, 1);
+        spotLight.position.set(0, 12, 0); spotLight.castShadow = true; scene.add(spotLight);
+
+        // 3. Materials
+        const roadMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9, metalness: 0.1 });
+        const dirtMat = new THREE.MeshStandardMaterial({ color: 0x3d3024, roughness: 1.0 });
+        const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const ironMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.6, roughness: 0.6 });
+        const coilBaseMat = new THREE.MeshStandardMaterial({ color: 0xff6600, emissive: 0xff3300, emissiveIntensity: 0.8 });
+        const copperMat = new THREE.MeshStandardMaterial({ color: 0xd48b37, metalness: 0.8, roughness: 0.2 });
+        
+        const carBodyMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.2, roughness: 0.1 });
+        const carBlackMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.8, roughness: 0.3 });
+        const glassMat = new THREE.MeshStandardMaterial({ color: 0x050510, metalness: 0.9, roughness: 0.0, transparent: true, opacity: 0.85 });
+        const wheelMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.9 });
+        const rimMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.9, roughness: 0.2 });
+
+        const glowBlueMat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+        const glowOrangeMat = new THREE.MeshBasicMaterial({ color: 0xff9900, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
+
+        // 4. Geometry Construction
+
+        const roadSegments = [];
+        const roadLength = 80;
+
+        function createRoadSegment(zOffset) {
+            const roadGroup = new THREE.Group();
+            
+            const asphaltShape = new THREE.Shape();
+            asphaltShape.moveTo(-8, roadLength/2);
+            asphaltShape.lineTo(8, roadLength/2);
+            asphaltShape.lineTo(8, -roadLength/2);
+            asphaltShape.lineTo(-8, -roadLength/2);
+            const holePath = new THREE.Path();
+            holePath.moveTo(-2.5, 3.5);
+            holePath.lineTo(2.5, 3.5);
+            holePath.lineTo(2.5, -3.5);
+            holePath.lineTo(-2.5, -3.5);
+            asphaltShape.holes.push(holePath);
+
+            const rdGeo = new THREE.ExtrudeGeometry(asphaltShape, { depth: 0.4, bevelEnabled: false });
+            rdGeo.rotateX(Math.PI / 2);
+            const roadPavement = new THREE.Mesh(rdGeo, roadMat); roadPavement.position.y = 0; roadPavement.receiveShadow = true;
+            roadGroup.add(roadPavement);
+
+            const dirtBase = new THREE.Mesh(new THREE.BoxGeometry(20, 1.5, roadLength), dirtMat);
+            dirtBase.position.y = -0.95; dirtBase.receiveShadow = true; roadGroup.add(dirtBase);
+
+            const sideLineL = new THREE.Mesh(new THREE.PlaneGeometry(0.15, roadLength), lineMat); sideLineL.rotation.x = -Math.PI/2; sideLineL.position.set(-6, 0.01, 0);
+            const sideLineR = new THREE.Mesh(new THREE.PlaneGeometry(0.15, roadLength), lineMat); sideLineR.rotation.x = -Math.PI/2; sideLineR.position.set(6, 0.01, 0);
+            const medianLine = new THREE.Mesh(new THREE.PlaneGeometry(0.15, roadLength), lineMat); medianLine.rotation.x = -Math.PI/2; medianLine.position.set(0, 0.01, 0);
+            roadGroup.add(sideLineL, sideLineR, medianLine);
+
+            // --- B. The Embedded Primary Coil (Detailed Cutaway) ---
+            const coilCutawayGroup = new THREE.Group();
+            coilCutawayGroup.position.y = -0.3;
+
+            const ironTray = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.2, 6.6), ironMat);
+            ironTray.receiveShadow = true; ironTray.castShadow = true; coilCutawayGroup.add(ironTray);
+
+            const glowBase = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.05, 6.4), coilBaseMat);
+            glowBase.position.y = 0.12; coilCutawayGroup.add(glowBase);
+
+            const numTurns = 5; const turnSpacing = 0.12; const trackWidth = 4.0; const trackLength = 6.0; const wireThickness = 0.08;
+            for(let i=0; i<numTurns; i++) {
+                const w = trackWidth - (i * turnSpacing * 2); const l = trackLength - (i * turnSpacing * 2);
+                const s1 = new THREE.Mesh(new THREE.BoxGeometry(w, wireThickness, wireThickness), copperMat); s1.position.set(0, 0.2, l/2); s1.castShadow = true;
+                const s2 = new THREE.Mesh(new THREE.BoxGeometry(w, wireThickness, wireThickness), copperMat); s2.position.set(0, 0.2, -l/2); s2.castShadow = true;
+                const e1 = new THREE.Mesh(new THREE.BoxGeometry(wireThickness, wireThickness, l - wireThickness), copperMat); e1.position.set(w/2 - wireThickness/2, 0.2, 0); e1.castShadow = true;
+                const e2 = new THREE.Mesh(new THREE.BoxGeometry(wireThickness, wireThickness, l - wireThickness), copperMat); e2.position.set(-(w/2 - wireThickness/2), 0.2, 0); e2.castShadow = true;
+                coilCutawayGroup.add(s1, s2, e1, e2);
+            }
+            
+            for(let i = -30; i <= 30; i+=8) {
+                if(Math.abs(i) > 4) {
+                    const hiddenIron = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.15, 7.5), ironMat);
+                    hiddenIron.position.set(0, -0.3, i); roadGroup.add(hiddenIron);
+                }
+            }
+            roadGroup.add(coilCutawayGroup);
+            roadGroup.position.z = zOffset;
+            scene.add(roadGroup);
+            return roadGroup;
+        }
+
+        roadSegments.push(createRoadSegment(0));
+        roadSegments.push(createRoadSegment(-roadLength));
+        roadSegments.push(createRoadSegment(roadLength));
+
+        // --- C. Power Inverter Box ---
+        const inverterGroup = new THREE.Group();
+        inverterGroup.position.set(-9, 0, 0);
+        const invBase = new THREE.Mesh(new THREE.BoxGeometry(3, 1.5, 2.5), new THREE.MeshStandardMaterial({ color: 0x999999, metalness: 0.6 }));
+        invBase.position.y = 0.75; invBase.castShadow = true; invBase.receiveShadow = true; inverterGroup.add(invBase);
+
+        const fanMat = new THREE.MeshStandardMaterial({ color: 0x050505 });
+        const f1 = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.1, 16), fanMat); f1.rotation.x = Math.PI/2; f1.position.set(-0.8, 0.8, 1.25);
+        const f2 = f1.clone(); f2.position.set(0.8, 0.8, 1.25); inverterGroup.add(f1, f2);
+
+        const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.4), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
+        screen.position.set(0, 1.2, 1.26); inverterGroup.add(screen);
+
+        const cableCurve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(0, 0.2, 0), new THREE.Vector3(4, 0.2, 0), new THREE.Vector3(6.5, -0.4, 0));
+        const cableGeo = new THREE.TubeGeometry(cableCurve, 20, 0.08, 8, false);
+        const cable = new THREE.Mesh(cableGeo, new THREE.MeshStandardMaterial({ color: 0x111 })); inverterGroup.add(cable);
+
+        scene.add(inverterGroup);
+
+        // --- D. Detailed White Sedan ---
+        const vehicleGroup = new THREE.Group();
+        vehicleGroup.position.set(0, 1.8, 0);
+
+        const rxCoil = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.05, 5.0), coilBaseMat);
+        rxCoil.position.y = -0.01; vehicleGroup.add(rxCoil);
+
+        const carShape = new THREE.Shape();
+        carShape.moveTo(4.6, 0.3); carShape.lineTo(-4.4, 0.3); carShape.bezierCurveTo(-4.8, 0.3, -4.8, 0.8, -4.6, 0.9); 
+        carShape.lineTo(-3.4, 1.3); carShape.quadraticCurveTo(-1.5, 2.0, -0.5, 2.15); carShape.lineTo(1.0, 2.15); 
+        carShape.quadraticCurveTo(2.8, 1.5, 3.8, 1.1); carShape.quadraticCurveTo(4.6, 0.9, 4.8, 0.7); carShape.quadraticCurveTo(5.0, 0.5, 4.6, 0.3); 
+        
+        const extrudeSettings = { depth: 4.2, bevelEnabled: true, bevelSegments: 4, steps: 2, bevelSize: 0.15, bevelThickness: 0.15 };
+        const bodyGeo = new THREE.ExtrudeGeometry(carShape, extrudeSettings); bodyGeo.translate(0, 0, -2.1);
+        const carBody = new THREE.Mesh(bodyGeo, carBodyMat); carBody.rotation.y = -Math.PI / 2; carBody.castShadow = true; carBody.receiveShadow = true; vehicleGroup.add(carBody);
+
+        const glassShape = new THREE.Shape();
+        glassShape.moveTo(3.7, 1.1); glassShape.quadraticCurveTo(2.7, 1.55, 1.0, 2.18); glassShape.lineTo(-0.5, 2.18); 
+        glassShape.quadraticCurveTo(-1.3, 2.05, -3.3, 1.35); glassShape.lineTo(3.7, 1.35); 
+        const glassGeo = new THREE.ExtrudeGeometry(glassShape, { depth: 3.8, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05, bevelSegments: 2 }); glassGeo.translate(0, 0, -1.9);
+        const glassMesh = new THREE.Mesh(glassGeo, glassMat); glassMesh.rotation.y = -Math.PI / 2; vehicleGroup.add(glassMesh);
+
+        const sideWinGeo = new THREE.PlaneGeometry(3.6, 0.65);
+        const sideWinL = new THREE.Mesh(sideWinGeo, glassMat); sideWinL.rotation.y = Math.PI / 2; sideWinL.position.set(2.11, 1.45, -0.5);
+        const sideWinR = new THREE.Mesh(sideWinGeo, glassMat); sideWinR.rotation.y = -Math.PI / 2; sideWinR.position.set(-2.11, 1.45, -0.5);
+        vehicleGroup.add(sideWinL, sideWinR);
+
+        const underbelly = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.1, 9.0), carBlackMat); underbelly.position.y = 0.25; vehicleGroup.add(underbelly);
+
+        const hlMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const hlL = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), hlMat); hlL.position.set(1.6, 0.75, 4.81);
+        const hlR = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), hlMat); hlR.position.set(-1.6, 0.75, 4.81);
+        const tlMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const tlL = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), tlMat); tlL.position.set(1.6, 0.85, -4.61); tlL.rotation.y = Math.PI;
+        const tlR = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.15), tlMat); tlR.position.set(-1.6, 0.85, -4.61); tlR.rotation.y = Math.PI;
+        vehicleGroup.add(hlL, hlR, tlL, tlR);
+
+        const createDetailedWheel = (x, z) => {
+            const wg = new THREE.Group();
+            const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.6, 32), wheelMat); tire.rotation.z = Math.PI / 2; tire.castShadow = true;
+            const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.62, 16), rimMat); rim.rotation.z = Math.PI / 2;
+            const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.65, 8), carBlackMat); hub.rotation.z = Math.PI / 2;
+            wg.add(tire, rim, hub); wg.position.set(x, 0.4, z); return wg;
+        };
+        vehicleGroup.add(createDetailedWheel(2.1, 3.0)); vehicleGroup.add(createDetailedWheel(-2.1, 3.0));
+        vehicleGroup.add(createDetailedWheel(2.1, -2.8)); vehicleGroup.add(createDetailedWheel(-2.1, -2.8));
+
+        scene.add(vehicleGroup);
+
+        // --- E. Glowing Energy Streams ---
+        const streamsGroup = new THREE.Group(); scene.add(streamsGroup);
+        const numStreams = 40; const streams = []; const streamGeo = new THREE.CylinderGeometry(0.04, 0.04, 2.0, 4);
+
+        for(let i=0; i<numStreams; i++) {
+            const isPower = Math.random() > 0.4;
+            const m = new THREE.Mesh(streamGeo, isPower ? glowOrangeMat : glowBlueMat);
+            const rx = (Math.random() - 0.5) * 3.8; const rz = (Math.random() - 0.5) * 5.0;
+            m.position.set(rx, 1.0, rz); streamsGroup.add(m);
+            streams.push({ mesh: m, speed: isPower ? 1.5 + Math.random() : 0.5 + Math.random(), offset: Math.random() * Math.PI * 2, isPower });
+        }
+
+        // 5. Animation Loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+            const delta = clock.getDelta(); // This clock.getDelta() needs to be used carefully with clock.getElapsedTime()
+
+            // Simulation Logic
+            simState.speed += (simState.targetSpeed - simState.speed) * 0.02;
+            simState.roadSpeed = simState.speed / 3.6; // m/s
+            
+            // Vehicle Motion
+            const speedMS = simState.speed / 3.6;
+            vehicleGroup.position.z += speedMS * 0.016; 
+            
+            // Road "Leap-frogging" (Endless Path)
+            roadSegments.forEach(segment => {
+                if (vehicleGroup.position.z - segment.position.z > roadLength * 1.5) {
+                    segment.position.z += roadLength * 3;
+                }
+            });
+
+            // --- Technical Physics Calculations ---
+            
+            // Levitation height calculation (Refined to 15-22mm stability range)
+            const baseGap = 15 + (simState.levitationPower * 7); // Range 15 to 22 mm
+            const oscillation = Math.sin(time * 3) * (0.5 + (1.5 - simState.levitationPower)); 
+            simState.gapHeight = baseGap + oscillation;
+            vehicleGroup.position.y = (simState.gapHeight / 10) + 0.3; // Scaled for 3D view
+            
+            // Lift Force Calculation (N) - Approx 1850N at 85% power / 18mm gap
+            simState.liftForce = 1850 * (simState.levitationPower / 0.85) * Math.pow(18/simState.gapHeight, 2);
+
+            // RMS Current (A) - LF: ~150A peak, HF: ~25A peak
+            const ilf = 150 * simState.levitationPower;
+            const ihf = 25 * (simState.frequency / 85);
+            simState.rmsCurrent = Math.sqrt(Math.pow(ilf, 2) + Math.pow(ihf, 2) / 2);
+
+            // Temperature Rise (°C)
+            simState.tempRise = 30 + (simState.rmsCurrent / 10) + (simState.speed * 0.01);
+
+            // Charge Power (kW) - Bidirectional
+            const baseCharge = (simState.frequency * 0.9) * (simState.levitationPower + 0.2);
+            simState.chargePower = simState.isRegen ? -baseCharge * 0.7 : baseCharge;
+
+            // Flux Intensity & Visuals
+            coilBaseMat.emissiveIntensity = 0.4 + simState.levitationPower;
+            glowOrangeMat.opacity = 0.3 + (simState.frequency / 250);
+            
+            streams.forEach((s) => {
+                const pulse = Math.sin(time * s.speed * 5 + s.offset);
+                s.mesh.scale.y = 0.5 + Math.max(0, pulse * 0.5);
+                s.mesh.material.opacity = s.isPower ? (0.4 + pulse * 0.4) * simState.levitationPower : (0.2 + pulse * 0.3);
+                s.mesh.position.y = (simState.gapHeight / 20);
+            });
+
+            // Camera Views & Tracking... (rest of the logic)
+            // ... (keep camera logic from line 549)
+            if (simState.currentCamera === 'orbit') {
+                controls.target.set(vehicleGroup.position.x, 1, vehicleGroup.position.z);
+                controls.update(); 
+            } else if (simState.currentCamera === 'follow') {
+                const followHeight = 5;
+                const followDist = 14;
+                const targetPos = new THREE.Vector3(
+                    vehicleGroup.position.x,
+                    vehicleGroup.position.y + followHeight, 
+                    vehicleGroup.position.z - followDist 
+                );
+                camera.position.lerp(targetPos, 0.1);
+                camera.up.set(0, 1, 0); 
+                camera.lookAt(vehicleGroup.position.x, vehicleGroup.position.y, vehicleGroup.position.z);
+            } else if (simState.currentCamera === 'cinematic') {
+                const radius = 18;
+                const camX = vehicleGroup.position.x + Math.sin(time * 0.4) * radius;
+                const camZ = vehicleGroup.position.z + Math.cos(time * 0.4) * radius;
+                const targetPos = new THREE.Vector3(camX, vehicleGroup.position.y + 6, camZ);
+                camera.position.lerp(targetPos, 0.05);
+                camera.up.set(0, 1, 0);
+                camera.lookAt(vehicleGroup.position);
+            } else if (simState.currentCamera === 'technical') {
+                const targetPos = new THREE.Vector3(
+                    vehicleGroup.position.x + 15,
+                    2,
+                    vehicleGroup.position.z
+                );
+                camera.position.lerp(targetPos, 0.08);
+                camera.lookAt(vehicleGroup.position.x, 1, vehicleGroup.position.z);
+            }
+
+            // UI Telemetry Update
+            uiElements.valSpeed.innerText = Math.round(simState.speed);
+            uiElements.valGap.innerText = simState.gapHeight.toFixed(1);
+            uiElements.valLift.innerText = Math.round(simState.liftForce);
+            uiElements.valRms.innerText = simState.rmsCurrent.toFixed(1);
+            uiElements.valCharge.innerText = simState.chargePower.toFixed(1);
+            uiElements.valTemp.innerText = Math.round(simState.tempRise);
+
+            screen.material.opacity = (Math.sin(time * 15) > 0) ? 1 : 0.5;
+            vehicleGroup.position.x = Math.sin(time * 1.5) * 0.03;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        // ==========================================
+        // SCENE 2: EXPLODED VIEW
+        // ==========================================
+        const explContainer = document.getElementById('exploded-container');
+        const sc2 = new THREE.Scene();
+        sc2.background = new THREE.Color('#0a0f18');
+
+        const cam2 = new THREE.PerspectiveCamera(40, explContainer.clientWidth / explContainer.clientHeight, 0.1, 1000);
+        cam2.position.set(15, 12, 18);
+
+        const rend2 = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        rend2.setSize(explContainer.clientWidth, explContainer.clientHeight);
+        explContainer.appendChild(rend2.domElement);
+
+        const ctrl2 = new THREE.OrbitControls(cam2, rend2.domElement);
+        ctrl2.enableDamping = true; ctrl2.dampingFactor = 0.05;
+        ctrl2.autoRotate = true; ctrl2.autoRotateSpeed = 0.8;
+
+        sc2.add(new THREE.AmbientLight(0xffffff, 0.5));
+        const ml2 = new THREE.DirectionalLight(0xffffff, 1.2); ml2.position.set(10, 20, 15); sc2.add(ml2);
+
+        const copperMat2 = new THREE.MeshStandardMaterial({ color: 0xd48b37, metalness: 0.9, roughness: 0.2 });
+        const asphaltMat2 = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 1.0, metalness: 0.1 });
+        const shieldMat2 = new THREE.MeshStandardMaterial({ color: 0xa0aab5, metalness: 0.8, roughness: 0.3 });
+        const dirtMat2 = new THREE.MeshStandardMaterial({ color: 0x4a3b2c, roughness: 1.0 });
+
+        const pavementGrp = new THREE.Group();
+        const pavementShape = new THREE.Shape();
+        pavementShape.moveTo(-6, 5); pavementShape.lineTo(6, 5); pavementShape.lineTo(6, -5); pavementShape.lineTo(-6, -5);
+        const coilHole = new THREE.Path(); coilHole.moveTo(-3, 4); coilHole.lineTo(3, 4); coilHole.lineTo(3, -4); coilHole.lineTo(-3, -4);
+        pavementShape.holes.push(coilHole);
+        const paveMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(pavementShape, { depth: 0.3, bevelEnabled: false }), asphaltMat2);
+        paveMesh.rotation.x = Math.PI / 2; pavementGrp.add(paveMesh);
+
+        const coilsGrp = new THREE.Group();
+        for (let i = 0; i < 5; i++) {
+            const w = 5.6 - (i * 0.3); const l = 7.6 - (i * 0.3);
+            const s1 = new THREE.Mesh(new THREE.BoxGeometry(w, 0.15, 0.15), copperMat2); s1.position.set(0, 0, l/2);
+            const s2 = new THREE.Mesh(new THREE.BoxGeometry(w, 0.15, 0.15), copperMat2); s2.position.set(0, 0, -l/2);
+            const e1 = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, l - 0.15), copperMat2); e1.position.set(w/2 - 0.075, 0, 0);
+            const e2 = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, l - 0.15), copperMat2); e2.position.set(-(w/2 - 0.075), 0, 0);
+            coilsGrp.add(s1, s2, e1, e2);
+        }
+
+        const electronicsGrp = new THREE.Group();
+        const tray = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.4, 8), new THREE.MeshStandardMaterial({color: 0x333333})); tray.position.set(-4.8, -0.1, 0);
+        const invChip1 = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.3, 1.2), new THREE.MeshStandardMaterial({color: 0x111111})); invChip1.position.set(-4.8, 0.15, 2);
+        const invChip2 = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.2, 0.8), new THREE.MeshStandardMaterial({color: 0x111111})); invChip2.position.set(-4.5, 0.15, 0);
+        const busBar1 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.2, 7.5), new THREE.MeshStandardMaterial({color: 0xffcc00, metalness: 1.0})); busBar1.position.set(-3.7, 0.1, 0);
+        const busBar2 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.2, 7.5), new THREE.MeshStandardMaterial({color: 0xffcc00, metalness: 1.0})); busBar2.position.set(-3.9, 0.1, 0);
+        electronicsGrp.add(tray, invChip1, invChip2, busBar1, busBar2);
+        coilsGrp.add(electronicsGrp);
+
+        const shieldGrp = new THREE.Group();
+        const shieldBase = new THREE.Mesh(new THREE.BoxGeometry(6.4, 0.2, 8.4), shieldMat2); shieldGrp.add(shieldBase);
+        for(let i=-3; i<=3; i+=0.5) {
+            const slot = new THREE.Mesh(new THREE.BoxGeometry(6.0, 0.25, 0.1), new THREE.MeshBasicMaterial({color: 0x050505}));
+            slot.position.set(0, 0, i); shieldGrp.add(slot);
+        }
+        const bluePipe = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 8), new THREE.MeshStandardMaterial({color: 0x1e3a8a, roughness: 0.2}));
+        bluePipe.rotation.x = Math.PI/2; bluePipe.position.set(3.4, 0, 0);
+        const redPipe = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 8), new THREE.MeshStandardMaterial({color: 0x991b1b, roughness: 0.2}));
+        redPipe.rotation.x = Math.PI/2; redPipe.position.set(3.8, 0, 0);
+        shieldGrp.add(bluePipe, redPipe);
+
+        const foundation = new THREE.Mesh(new THREE.BoxGeometry(13, 0.4, 11), dirtMat2);
+
+        const fieldsGrp = new THREE.Group();
+        const blueLineMat = new THREE.LineBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.8 });
+        const orangeLineMat = new THREE.LineBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.8 });
+        for(let i=1; i<=4; i++) {
+            const geoB = new THREE.RingGeometry(i*0.5, i*0.5 + 0.05, 32, 1, 0, Math.PI);
+            const lineB = new THREE.Line(new THREE.EdgesGeometry(geoB), blueLineMat);
+            lineB.position.set(1.5, 0.1, 0); lineB.rotation.y = Math.PI/2; lineB.rotation.x = -Math.PI/2; fieldsGrp.add(lineB);
+            
+            const geoO = new THREE.RingGeometry(i*0.5, i*0.5 + 0.05, 32, 1, 0, Math.PI);
+            const lineO = new THREE.Line(new THREE.EdgesGeometry(geoO), orangeLineMat);
+            lineO.position.set(-1.5, 0.1, 0); lineO.rotation.y = Math.PI/2; lineO.rotation.x = -Math.PI/2; fieldsGrp.add(lineO);
+        }
+
+        sc2.add(pavementGrp, coilsGrp, shieldGrp, foundation, fieldsGrp);
+
+        function animate2() {
+            requestAnimationFrame(animate2); ctrl2.update();
+            const time = clock.getElapsedTime();
+            
+            fieldsGrp.position.y = 3.5 + Math.sin(time * 1.5) * 0.1;
+            pavementGrp.position.y = 1.5 + Math.sin(time * 1.5 + 0.3) * 0.1;
+            coilsGrp.position.y = 0 + Math.sin(time * 1.5 + 0.6) * 0.1;
+            shieldGrp.position.y = -1.5 + Math.sin(time * 1.5 + 0.9) * 0.1;
+            foundation.position.y = -3.0 + Math.sin(time * 1.5 + 1.2) * 0.1;
+
+            fieldsGrp.scale.setScalar(1.0 + Math.sin(time*5)*0.05);
+
+            rend2.render(sc2, cam2);
+        }
+        animate2();
+
+        window.addEventListener('resize', () => {
+            cam2.aspect = explContainer.clientWidth / explContainer.clientHeight;
+            cam2.updateProjectionMatrix();
+            rend2.setSize(explContainer.clientWidth, explContainer.clientHeight);
+        });
+    </script>
+</body>
+</html>
