@@ -117,19 +117,6 @@ const fallbackRepos: Repository[] = [
     updated_at: "2026-07-03T08:34:25Z",
   },
   {
-    id: 6,
-    name: "rishi",
-    full_name: "satwick-yes/rishi",
-    html_url: "https://github.com/satwick-yes/rishi",
-    description: repoDescriptionsMap["rishi"],
-    homepage: "https://rishi-eight-tawny.vercel.app",
-    stargazers_count: 2,
-    forks_count: 0,
-    language: "HTML",
-    topics: ["frontend", "web-design"],
-    updated_at: "2026-06-30T04:40:02Z",
-  },
-  {
     id: 7,
     name: "app",
     full_name: "satwick-yes/app",
@@ -172,12 +159,15 @@ export default function ProjectsPage() {
         if (res.ok) {
           const data: Repository[] = await res.json();
           if (data && data.length > 0) {
-            data.sort(
+            const validData = data.filter(
+              (repo) => repo.name.toLowerCase() !== "rishi"
+            );
+            validData.sort(
               (a, b) =>
                 new Date(b.updated_at).getTime() -
                 new Date(a.updated_at).getTime()
             );
-            setRepos(data);
+            setRepos(validData);
           }
         }
       } catch (err) {
@@ -194,6 +184,7 @@ export default function ProjectsPage() {
   ];
 
   const filteredRepos = repos.filter((repo) => {
+    if (repo.name.toLowerCase() === "rishi") return false;
     if (filterLang === "All") return true;
     return repo.language === filterLang;
   });
