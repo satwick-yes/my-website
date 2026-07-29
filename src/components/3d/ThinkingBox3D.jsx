@@ -13,7 +13,7 @@ const THINKING_LOGS = [
     tagline: 'Refactoring & Identity',
     quote: '"If every line of a legacy monolith is refactored across 100 PRs, does it remain the original system?"',
     fullText: 'In software architecture, systems undergo total replacement of components while preserving business logic contracts. Does identity rest in the source code bytes or the behavioral state state machine?',
-    position: [-2.5, 0.5, -28],
+    position: [-2.5, 0.5, -58],
     rotation: [0, 0.25, -0.05],
   },
   {
@@ -23,7 +23,7 @@ const THINKING_LOGS = [
     tagline: 'Async Rendering & Paradoxes',
     quote: '"A React component exists in both rendered and un-rendered states until observed by user layout shift."',
     fullText: 'Until state hydration completes, UI elements hover between loading spinners and rendered DOM nodes. Optimistic updates collapse the wave function of user intent into reality before server confirmation.',
-    position: [0, 1.2, -31],
+    position: [0, 1.2, -61],
     rotation: [0.1, 0, 0.03],
   },
   {
@@ -33,7 +33,7 @@ const THINKING_LOGS = [
     tagline: 'Console.log & Heysenbugs',
     quote: '"The act of attaching a debugger alters timing loops, causing the race condition bug to vanish into thin air."',
     fullText: 'In distributed microservices and multithreaded runtimes, observing state inserts overhead that masks concurrency bugs. Real debugging requires non-intrusive tracing telemetry.',
-    position: [2.5, 0.3, -29],
+    position: [2.5, 0.3, -59],
     rotation: [0, -0.22, 0.05],
   },
 ];
@@ -160,7 +160,7 @@ export default function ThinkingBox3D({ onSelectLog }) {
       ))}
 
       {/* Ambient Doodle Floating Icons */}
-      <group ref={ambientGroup} position={[0, 1, -29.5]}>
+      <group ref={ambientGroup} position={[0, 1, -59.5]}>
         <Text position={[-3.5, 2, 0]} fontSize={0.6} color="#1a1a1a">
           ?
         </Text>

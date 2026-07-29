@@ -14,7 +14,7 @@ const PROJECTS = [
     description: 'Neural sketch-to-code compiler transforming hand-drawn UI wireframes into production React components in real time.',
     techStack: ['PyTorch', 'Next.js', 'Vision LLMs', 'Tailwind'],
     demoUrl: 'https://github.com/satwick-yes',
-    position: [-2.8, 1.2, -43],
+    position: [-2.8, 1.2, -88],
     rotation: [0.05, 0.2, -0.05],
   },
   {
@@ -25,7 +25,7 @@ const PROJECTS = [
     description: 'Optimistic state hydration engine enabling zero-latency UI updates with automatic time-travel debugging & rollbacks.',
     techStack: ['TypeScript', 'React', 'WebGL', 'Zustand'],
     demoUrl: 'https://github.com/satwick-yes',
-    position: [2.8, 1.0, -44],
+    position: [2.8, 1.0, -89],
     rotation: [-0.05, -0.2, 0.04],
   },
   {
@@ -36,7 +36,7 @@ const PROJECTS = [
     description: 'Interactive notebook sketch hallway experience built with React Three Fiber, procedural shaders, and GSAP camera dollying.',
     techStack: ['Three.js', 'R3F', 'GSAP', 'Next.js'],
     demoUrl: 'https://github.com/satwick-yes',
-    position: [-2.6, -1.2, -46],
+    position: [-2.6, -1.2, -91],
     rotation: [0.08, 0.15, 0.03],
   },
   {
@@ -47,20 +47,20 @@ const PROJECTS = [
     description: 'Scalable multi-agent execution pipeline orchestrating code generation, linting, and automated unit testing in sandbox containers.',
     techStack: ['Node.js', 'Docker', 'Python', 'WebSockets'],
     demoUrl: 'https://github.com/satwick-yes',
-    position: [2.6, -1.0, -47],
+    position: [2.6, -1.0, -92],
     rotation: [-0.04, -0.18, -0.05],
   },
 ];
 
 const SKILLS = [
-  { name: 'React', color: '#1a1a1a', pos: [-4.2, 2.5, -45] },
-  { name: 'Next.js', color: '#e63946', pos: [-2.0, 2.8, -44] },
-  { name: 'Three.js / WebGL', color: '#1d3557', pos: [1.8, 2.7, -45] },
-  { name: 'PyTorch / AI', color: '#e63946', pos: [4.2, 2.4, -46] },
-  { name: 'TypeScript', color: '#1a1a1a', pos: [-4.5, -2.6, -46] },
-  { name: 'GSAP Animations', color: '#1d3557', pos: [-1.5, -2.7, -45] },
-  { name: 'Tailwind CSS', color: '#1a1a1a', pos: [1.8, -2.8, -46] },
-  { name: 'Python / ML', color: '#e63946', pos: [4.2, -2.5, -45] },
+  { name: 'React', color: '#1a1a1a', pos: [-4.2, 2.5, -90] },
+  { name: 'Next.js', color: '#e63946', pos: [-2.0, 2.8, -89] },
+  { name: 'Three.js / WebGL', color: '#1d3557', pos: [1.8, 2.7, -90] },
+  { name: 'PyTorch / AI', color: '#e63946', pos: [4.2, 2.4, -91] },
+  { name: 'TypeScript', color: '#1a1a1a', pos: [-4.5, -2.6, -91] },
+  { name: 'GSAP Animations', color: '#1d3557', pos: [-1.5, -2.7, -90] },
+  { name: 'Tailwind CSS', color: '#1a1a1a', pos: [1.8, -2.8, -91] },
+  { name: 'Python / ML', color: '#e63946', pos: [4.2, -2.5, -90] },
 ];
 
 function PolaroidFrame({ project, onSelectProject }) {

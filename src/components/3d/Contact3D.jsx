@@ -23,7 +23,7 @@ export default function Contact3D({ onOpenContactForm }) {
   });
 
   return (
-    <group ref={groupRef} position={[0, 0, -60]}>
+    <group ref={groupRef} position={[0, 0, -120]}>
       {/* 3D Sketchy Wooden Signpost Dock */}
       {/* Central Post */}
       <mesh position={[0, -0.5, 0]}>

@@ -25,96 +25,42 @@ export default function Home() {
   const [isZoomingIn, setIsZoomingIn] = useState<boolean>(false);
   const [selectedDoor, setSelectedDoor] = useState<any>(null);
 
-  // Modal State Management
-  const [activeModal, setActiveModal] = useState<string | null>(null);
-  const [modalData, setModalData] = useState<any>(null);
-
-  // Sync scroll position to target Z-axis depth (0 to -65)
+  // Sync scroll position to target Z-axis depth (0 to -150)
   useEffect(() => {
     const handleScroll = () => {
-      if (isZoomingIn) return;
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (scrollHeight <= 0) return;
       const progress = window.scrollY / scrollHeight;
-      const newZ = -progress * 65;
+      const newZ = -progress * 150;
       setTargetZ(newZ);
       setCurrentZ(newZ);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isZoomingIn]);
+  }, []);
 
   // Programmatically glide camera to specific Z position
   const handleNavigateZ = useCallback((destZ: number) => {
-    setIsZoomingIn(false);
-    setSelectedDoor(null);
     setTargetZ(destZ);
     setCurrentZ(destZ);
 
     // Scroll window to match progress
     const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = Math.abs(destZ) / 65;
+    const progress = Math.abs(destZ) / 150;
     window.scrollTo({
       top: progress * scrollHeight,
       behavior: 'smooth'
     });
   }, []);
 
-  // Door selection trigger
-  const handleSelectDoor = useCallback((doorInfo: any) => {
-    setSelectedDoor(doorInfo);
-    setIsZoomingIn(true);
-    setActiveModal('door');
-    setModalData(doorInfo);
-  }, []);
-
-  // Experience badge selection
-  const handleSelectExp = useCallback((expInfo: any) => {
-    setActiveModal('experience');
-    setModalData(expInfo);
-  }, []);
-
-  // Thinking Box log card selection
-  const handleSelectLog = useCallback((logInfo: any) => {
-    setActiveModal('thinking');
-    setModalData(logInfo);
-  }, []);
-
-  // Project polaroid selection
-  const handleSelectProject = useCallback((projectInfo: any) => {
-    setActiveModal('project');
-    setModalData(projectInfo);
-  }, []);
-
-  // Open Contact Form modal
-  const handleOpenContactForm = useCallback(() => {
-    setActiveModal('contact');
-  }, []);
-
-  // Close any modal
-  const handleCloseModal = useCallback(() => {
-    setActiveModal(null);
-    setModalData(null);
-    setIsZoomingIn(false);
-    setSelectedDoor(null);
-  }, []);
-
   return (
-    <main className="relative min-h-[500vh] w-full bg-[#f4f1ea] text-[#1a1a1a]">
+    <main className="relative min-h-[1000vh] w-full bg-[#f4f1ea] text-[#1a1a1a]">
       {/* Main 3D Canvas Scene wrapped in Error Boundary */}
       <ErrorBoundary>
         <CanvasScene
           targetZ={targetZ}
-          isZoomingIn={isZoomingIn}
-          selectedDoor={selectedDoor}
           onNavigateZ={handleNavigateZ}
-          onSelectDoor={handleSelectDoor}
-          onSelectExp={handleSelectExp}
-          onSelectLog={handleSelectLog}
-          onSelectProject={handleSelectProject}
-          onOpenContactForm={handleOpenContactForm}
-          onCameraReachTarget={() => {}}
         />
       </ErrorBoundary>
 
@@ -122,10 +68,6 @@ export default function Home() {
       <OverlayUI
         currentZ={currentZ}
         onNavigateZ={handleNavigateZ}
-        activeModal={activeModal}
-        modalData={modalData}
-        onCloseModal={handleCloseModal}
-        onOpenContactForm={handleOpenContactForm}
       />
     </main>
   );

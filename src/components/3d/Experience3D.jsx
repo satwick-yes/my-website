@@ -19,7 +19,7 @@ const EXPERIENCES = [
       'Collaborated on high-throughput PyTorch model deployment microservices.'
     ],
     skills: ['PyTorch', 'Transformers', 'Python', 'ONNX', 'Azure AI'],
-    position: [-3.2, 0.5, -15],
+    position: [-3.2, 0.5, -30],
     rotation: [0, 0.35, 0],
   },
   {
@@ -34,7 +34,7 @@ const EXPERIENCES = [
       'Optimized React runtime state trees, reducing memory overhead by 35%.'
     ],
     skills: ['React', 'Node.js', 'TypeScript', 'Docker', 'Kubernetes'],
-    position: [3.2, 0.5, -15],
+    position: [3.2, 0.5, -30],
     rotation: [0, -0.35, 0],
   }
 ];

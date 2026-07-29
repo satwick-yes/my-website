@@ -56,39 +56,35 @@ export default function CanvasScene({
           title="EXPERIENCE"
           subtitle="MICROSOFT • WIPRO"
           position={[0, 0, -15]}
-          onSelectDoor={onSelectDoor}
         />
-        <Experience3D onSelectExp={onSelectExp} />
+        <Experience3D />
 
-        {/* Door 2: THINKING BOX (Z: -30) */}
+        {/* Door 2: THINKING BOX (Z: -45) */}
         <InteractiveDoor
           id="door-thinking"
           title="THINKING BOX"
           subtitle="PARADOXES & LOGS"
-          position={[0, 0, -30]}
-          onSelectDoor={onSelectDoor}
+          position={[0, 0, -45]}
         />
-        <ThinkingBox3D onSelectLog={onSelectLog} />
+        <ThinkingBox3D />
 
-        {/* Door 3: PROJECTS & SKILLS (Z: -45) */}
+        {/* Door 3: PROJECTS & SKILLS (Z: -75) */}
         <InteractiveDoor
           id="door-projects"
           title="PROJECTS & SKILLS"
           subtitle="POLAROIDS & DOODLES"
-          position={[0, 0, -45]}
-          onSelectDoor={onSelectDoor}
+          position={[0, 0, -75]}
         />
-        <Projects3D onSelectProject={onSelectProject} />
+        <Projects3D />
 
-        {/* Door 4: CONTACT / HIRE ME (Z: -60) */}
+        {/* Door 4: CONTACT / HIRE ME (Z: -105) */}
         <InteractiveDoor
           id="door-contact"
           title="CONTACT / HIRE ME"
           subtitle="DIRECT TERMINAL"
-          position={[0, 0, -60]}
-          onSelectDoor={onSelectDoor}
+          position={[0, 0, -105]}
         />
-        <Contact3D onOpenContactForm={onOpenContactForm} />
+        <Contact3D />
       </Canvas>
     </div>
   );

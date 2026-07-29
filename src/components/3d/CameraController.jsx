@@ -5,7 +5,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import gsap from 'gsap';
 
-export default function CameraController({ targetZ, isZoomingIn, selectedDoor, onCameraReachTarget }) {
+export default function CameraController({ targetZ, onCameraReachTarget }) {
   const { camera } = useThree();
   const currentPos = useRef(new THREE.Vector3(0, 0, 5));
   const targetPos = useRef(new THREE.Vector3(0, 0, 5));
@@ -21,18 +21,11 @@ export default function CameraController({ targetZ, isZoomingIn, selectedDoor, o
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Update target Z position smooth transition using GSAP when targetZ or zoom state changes
+  // Update target Z position smooth transition using GSAP when targetZ changes
   useEffect(() => {
     let destZ = targetZ;
     let destX = 0;
     let destY = 0;
-
-    if (isZoomingIn && selectedDoor) {
-      // Zoom directly through the selected door position
-      destZ = selectedDoor.z - 2;
-      destX = selectedDoor.x;
-      destY = selectedDoor.y || 0;
-    }
 
     gsap.to(targetPos.current, {
       x: destX,
@@ -44,7 +37,7 @@ export default function CameraController({ targetZ, isZoomingIn, selectedDoor, o
         if (onCameraReachTarget) onCameraReachTarget();
       }
     });
-  }, [targetZ, isZoomingIn, selectedDoor, onCameraReachTarget]);
+  }, [targetZ, onCameraReachTarget]);
 
   useFrame((state, delta) => {
     // Parallax sway
