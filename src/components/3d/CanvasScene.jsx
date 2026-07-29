@@ -13,15 +13,7 @@ import Contact3D from './Contact3D';
 
 export default function CanvasScene({
   targetZ,
-  isZoomingIn,
-  selectedDoor,
-  onNavigateZ,
-  onSelectDoor,
-  onSelectExp,
-  onSelectLog,
-  onSelectProject,
-  onOpenContactForm,
-  onCameraReachTarget
+  onNavigateZ
 }) {
   return (
     <div className="fixed inset-0 w-full h-full z-0 bg-[#f4f1ea] pointer-events-auto">
@@ -39,9 +31,6 @@ export default function CanvasScene({
         {/* Camera GSAP Controller */}
         <CameraController
           targetZ={targetZ}
-          isZoomingIn={isZoomingIn}
-          selectedDoor={selectedDoor}
-          onCameraReachTarget={onCameraReachTarget}
         />
 
         {/* 3D Sketch Corridor Environment */}
