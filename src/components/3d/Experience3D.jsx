@@ -81,7 +81,7 @@ function BuildingBadge({ exp, onSelectExp }) {
       {/* Sketch Building / Framed Badge Plane */}
       <mesh position={[0, 0, 0]}>
         <boxGeometry args={[3.2, 4.2, 0.15]} />
-        <meshBasicMaterial map={texture} />
+        <meshBasicMaterial map={texture || undefined} color="#f4f1ea" />
       </mesh>
 
       {/* Wireframe Accent Outline */}

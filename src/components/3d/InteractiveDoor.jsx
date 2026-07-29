@@ -16,10 +16,9 @@ export default function InteractiveDoor({
 }) {
   const meshRef = useRef();
   const outlineRef = useRef();
-  const textRef = useRef();
   const [hovered, setHovered] = useState(false);
 
-  // Generate procedural sketch texture for this door
+  // Generate procedural sketch texture safely
   const doorTexture = useMemo(() => {
     return createDoorTexture(title, 512, 512);
   }, [title]);
@@ -64,7 +63,7 @@ export default function InteractiveDoor({
         }}
       >
         <boxGeometry args={[3.2, 5.2, 0.2]} />
-        <meshBasicMaterial map={doorTexture} />
+        <meshBasicMaterial map={doorTexture || undefined} color="#faf7f2" />
       </mesh>
 
       {/* Hover Ink Outline Glow */}

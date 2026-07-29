@@ -8,7 +8,7 @@ import { createPaperTexture } from '@/utils/sketchTextures';
 export default function CorridorMesh() {
   const particlesRef = useRef();
 
-  // Create paper grid textures for walls and floor
+  // Create paper grid textures safely
   const wallTexture = useMemo(() => createPaperTexture(1024, 1024, 'grid'), []);
   const floorTexture = useMemo(() => createPaperTexture(1024, 1024, 'grid'), []);
 
@@ -35,19 +35,19 @@ export default function CorridorMesh() {
       {/* Floor Plane */}
       <mesh position={[0, -3.2, -35]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[14, 90]} />
-        <meshBasicMaterial map={floorTexture} side={THREE.DoubleSide} />
+        <meshBasicMaterial map={floorTexture || undefined} color="#f4f1ea" side={THREE.DoubleSide} />
       </mesh>
 
       {/* Ceiling Plane */}
       <mesh position={[0, 3.8, -35]} rotation={[Math.PI / 2, 0, 0]}>
         <planeGeometry args={[14, 90]} />
-        <meshBasicMaterial map={wallTexture} side={THREE.DoubleSide} />
+        <meshBasicMaterial map={wallTexture || undefined} color="#f4f1ea" side={THREE.DoubleSide} />
       </mesh>
 
       {/* Left Wall Plane */}
       <mesh position={[-6.5, 0.3, -35]} rotation={[0, Math.PI / 2, 0]}>
         <planeGeometry args={[90, 7]} />
-        <meshBasicMaterial map={wallTexture} side={THREE.DoubleSide} />
+        <meshBasicMaterial map={wallTexture || undefined} color="#f4f1ea" side={THREE.DoubleSide} />
       </mesh>
 
       {/* Notebook Red Margin Line on Left Wall */}
@@ -59,7 +59,7 @@ export default function CorridorMesh() {
       {/* Right Wall Plane */}
       <mesh position={[6.5, 0.3, -35]} rotation={[0, -Math.PI / 2, 0]}>
         <planeGeometry args={[90, 7]} />
-        <meshBasicMaterial map={wallTexture} side={THREE.DoubleSide} />
+        <meshBasicMaterial map={wallTexture || undefined} color="#f4f1ea" side={THREE.DoubleSide} />
       </mesh>
 
       {/* Corridor Doorway Arch Beams along Z axis */}

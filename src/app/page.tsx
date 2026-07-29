@@ -3,8 +3,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import OverlayUI from '@/components/ui/OverlayUI';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
-// Dynamically import 3D CanvasScene with SSR disabled for Next.js WebGL compatibility
+// Dynamically import 3D CanvasScene with SSR disabled for WebGL compatibility
 const CanvasScene = dynamic(() => import('@/components/3d/CanvasScene'), {
   ssr: false,
   loading: () => (
@@ -101,19 +102,21 @@ export default function Home() {
 
   return (
     <main className="relative min-h-[500vh] w-full bg-[#f4f1ea] text-[#1a1a1a]">
-      {/* Main 3D Canvas Scene */}
-      <CanvasScene
-        targetZ={targetZ}
-        isZoomingIn={isZoomingIn}
-        selectedDoor={selectedDoor}
-        onNavigateZ={handleNavigateZ}
-        onSelectDoor={handleSelectDoor}
-        onSelectExp={handleSelectExp}
-        onSelectLog={handleSelectLog}
-        onSelectProject={handleSelectProject}
-        onOpenContactForm={handleOpenContactForm}
-        onCameraReachTarget={() => {}}
-      />
+      {/* Main 3D Canvas Scene wrapped in Error Boundary */}
+      <ErrorBoundary>
+        <CanvasScene
+          targetZ={targetZ}
+          isZoomingIn={isZoomingIn}
+          selectedDoor={selectedDoor}
+          onNavigateZ={handleNavigateZ}
+          onSelectDoor={handleSelectDoor}
+          onSelectExp={handleSelectExp}
+          onSelectLog={handleSelectLog}
+          onSelectProject={handleSelectProject}
+          onOpenContactForm={handleOpenContactForm}
+          onCameraReachTarget={() => {}}
+        />
+      </ErrorBoundary>
 
       {/* Modern Sketch HUD Overlay */}
       <OverlayUI
