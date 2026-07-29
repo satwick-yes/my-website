@@ -1,20 +1,10 @@
 import type { Metadata } from "next";
-import { Cinzel } from "next/font/google";
 import "./globals.css";
 
-const cinzel = Cinzel({
-  variable: "--font-cinzel",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Satwick Shaw | Portfolio",
-  description: "Innovator | Developer | Thinker",
+  title: "Satwick Shaw — 3D Hand-Drawn Sketch Portfolio",
+  description: "Innovator | Developer | Thinker — Interactive 3D Hallway Sketch Exploration Portfolio",
 };
-
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import Particles from "@/components/Particles";
 
 export default function RootLayout({
   children,
@@ -22,16 +12,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${cinzel.variable} antialiased min-h-screen bg-background text-foreground selection:bg-yellow-500/30 overflow-x-hidden flex flex-col relative`} suppressHydrationWarning>
-        <Particles />
-        <div className="relative z-10 flex flex-col min-h-screen w-full">
-          <Navbar />
-          <main className="flex-grow pt-20">
-            {children}
-          </main>
-          <Footer />
-        </div>
+    <html lang="en">
+      <body 
+        className="min-h-screen bg-[#f4f1ea] text-[#1a1a1a] selection:bg-[#e63946] selection:text-[#f4f1ea] antialiased overflow-x-hidden"
+        suppressHydrationWarning
+      >
+        {children}
       </body>
     </html>
   );
