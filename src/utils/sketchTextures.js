@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-// Helper to create a safe procedural hand-drawn paper canvas texture
+// Helper to create a safe procedural hand-drawn paper canvas texture (Brave Shields & WebGL safe)
 export function createPaperTexture(width = 512, height = 512, type = 'grid') {
   if (typeof window === 'undefined' || typeof document === 'undefined') {
     const fallback = new THREE.Texture();
@@ -20,43 +20,32 @@ export function createPaperTexture(width = 512, height = 512, type = 'grid') {
     ctx.fillStyle = '#f4f1ea';
     ctx.fillRect(0, 0, width, height);
 
-    // Add subtle paper fiber noise
-    const imgData = ctx.getImageData(0, 0, width, height);
-    const data = imgData.data;
-    for (let i = 0; i < data.length; i += 4) {
-      const noise = (Math.random() - 0.5) * 12;
-      data[i] = Math.min(255, Math.max(0, data[i] + noise));
-      data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + noise - 2));
-      data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + noise - 4));
-    }
-    ctx.putImageData(imgData, 0, 0);
-
-    // Draw grid lines if requested
+    // Draw paper grid lines safely without getImageData
     if (type === 'grid' || type === 'corridor') {
-      ctx.strokeStyle = 'rgba(26, 26, 26, 0.15)';
+      ctx.strokeStyle = 'rgba(26, 26, 26, 0.12)';
       ctx.lineWidth = 1.5;
       const step = 40;
       
       // Vertical grid lines
       for (let x = step; x < width; x += step) {
         ctx.beginPath();
-        ctx.moveTo(x + (Math.random() - 0.5) * 2, 0);
-        ctx.lineTo(x + (Math.random() - 0.5) * 2, height);
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
         ctx.stroke();
       }
       
       // Horizontal grid lines
       for (let y = step; y < height; y += step) {
         ctx.beginPath();
-        ctx.moveTo(0, y + (Math.random() - 0.5) * 2);
-        ctx.lineTo(width, y + (Math.random() - 0.5) * 2);
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
         ctx.stroke();
       }
     }
 
     // Red margin line for notebook paper texture
     if (type === 'notebook') {
-      ctx.strokeStyle = 'rgba(230, 57, 70, 0.5)';
+      ctx.strokeStyle = 'rgba(230, 57, 70, 0.4)';
       ctx.lineWidth = 3;
       ctx.beginPath();
       ctx.moveTo(60, 0);
@@ -64,15 +53,14 @@ export function createPaperTexture(width = 512, height = 512, type = 'grid') {
       ctx.stroke();
     }
 
-    // Random doodle ink spots / cross hatching
-    ctx.strokeStyle = '#1a1a1a';
-    ctx.lineWidth = 1;
-    for (let k = 0; k < 15; k++) {
-      const rx = Math.random() * width;
-      const ry = Math.random() * height;
+    // Random doodle ink specks (drawn safely with arc)
+    ctx.fillStyle = 'rgba(26, 26, 26, 0.15)';
+    for (let k = 0; k < 25; k++) {
+      const rx = (k * 37) % width;
+      const ry = (k * 53) % height;
       ctx.beginPath();
-      ctx.arc(rx, ry, Math.random() * 2, 0, Math.PI * 2);
-      ctx.stroke();
+      ctx.arc(rx, ry, 1.2, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     const texture = new THREE.CanvasTexture(canvas);
@@ -81,6 +69,7 @@ export function createPaperTexture(width = 512, height = 512, type = 'grid') {
     texture.needsUpdate = true;
     return texture;
   } catch (e) {
+    console.warn('Paper texture generation warning:', e);
     const fallback = new THREE.Texture();
     fallback.wrapS = THREE.RepeatWrapping;
     fallback.wrapT = THREE.RepeatWrapping;
