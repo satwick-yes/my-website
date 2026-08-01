@@ -204,7 +204,7 @@
       .nav-center { display: flex; }
     }
     .nav-list {
-      display: flex; align-items: center; gap: 2rem;
+      display: flex; align-items: center; gap: 1.5rem;
       font-size: 0.875rem; font-weight: 500;
       background: var(--nav-bg);
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -558,11 +558,11 @@
     .tile-dark { background: var(--ink); color: #ffffff; }
     .tile-ghost { background: var(--surface-2); color: var(--muted); }
     
-    /* PORTFOLIO SECTION */
-    #works {
-      background: var(--background); padding-block: 3rem 5rem; transition: background-color 0.3s ease;
+    /* PORTFOLIO & GITHUB EXPLORER SECTION */
+    #works, #projects {
+      background: var(--background); padding-block: 4rem 5rem; transition: background-color 0.3s ease;
     }
-    @media (min-width: 1024px) { #works { padding-block: 4rem 7rem; } }
+    @media (min-width: 1024px) { #works, #projects { padding-block: 5rem 7rem; } }
     .section-header {
       display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 3rem;
     }
@@ -618,6 +618,101 @@
       display: inline-flex; border: 1px solid rgba(255,255,255,0.2); color: #ffffff;
       border-radius: 9999px; padding: 0.375rem 0.875rem; font-size: 0.75rem; font-weight: 500;
     }
+
+    /* GITHUB EXPLORER STYLES */
+    .github-explorer-box {
+      margin-top: 4rem; border-top: 1px solid var(--line); padding-top: 3rem;
+    }
+    .gh-toolbar {
+      display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;
+    }
+    @media (min-width: 640px) {
+      .gh-toolbar { flex-direction: row; align-items: center; justify-content: space-between; }
+    }
+    .gh-search-input {
+      border: 1px solid var(--line); background: var(--surface);
+      border-radius: var(--radius-pill); padding: 0.625rem 1.25rem;
+      font-size: 0.875rem; color: var(--foreground); outline: none; min-width: 16rem;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+    .gh-search-input:focus { border-color: var(--accent); background: var(--background); }
+    .gh-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .gh-filter-btn {
+      border: 1px solid var(--line); background: var(--surface); color: var(--foreground);
+      border-radius: 9999px; padding: 0.375rem 1rem; font-size: 0.75rem; font-weight: 500;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .gh-filter-btn.active, .gh-filter-btn:hover { background: var(--ink); color: #ffffff; border-color: var(--ink); }
+
+    .gh-repos-grid {
+      display: grid; grid-template-columns: 1fr; gap: 1rem;
+    }
+    @media (min-width: 640px) { .gh-repos-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .gh-repos-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .repo-card {
+      border: 1px solid var(--line); background: var(--surface);
+      border-radius: var(--radius-card-sm); padding: 1.25rem; display: flex; flex-direction: column;
+      justify-content: space-between; gap: 1rem; transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+    .repo-card:hover { transform: translateY(-4px); border-color: var(--accent); background: var(--background); }
+    .repo-name { font-size: 1.125rem; font-weight: 600; color: var(--foreground); display: flex; align-items: center; justify-content: space-between; }
+    .repo-desc { font-size: 0.8125rem; color: var(--muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .repo-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; color: var(--muted); }
+
+    /* SKILLS SECTION */
+    #skills {
+      background: var(--background); padding-block: 5rem; border-top: 1px solid var(--line);
+      transition: background-color 0.3s ease;
+    }
+    @media (min-width: 1024px) { #skills { padding-block: 7rem; } }
+    .skills-categories-grid {
+      display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 3rem;
+    }
+    @media (min-width: 768px) { .skills-categories-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .skills-category-card {
+      border: 1px solid var(--line); background: var(--surface);
+      border-radius: var(--radius-card-sm); padding: 1.75rem;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    .skills-cat-title {
+      font-size: 1.25rem; font-weight: 600; color: var(--foreground); margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .skills-chip-list { display: flex; flex-wrap: wrap; gap: 0.625rem; }
+    .skill-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1px solid var(--line); background: var(--background); color: var(--foreground);
+      border-radius: var(--radius-pill); padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+    .skill-badge:hover { transform: translateY(-3px); border-color: var(--accent); }
+
+    /* ACHIEVEMENTS SECTION */
+    #achievements {
+      background: var(--background); padding-block: 5rem; border-top: 1px solid var(--line);
+      transition: background-color 0.3s ease;
+    }
+    @media (min-width: 1024px) { #achievements { padding-block: 7rem; } }
+    .achievements-grid {
+      display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 3rem;
+    }
+    @media (min-width: 768px) { .achievements-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .achievement-card {
+      position: relative; border-radius: var(--radius-card-sm);
+      background: var(--surface); border: 1px solid var(--line); padding: 2rem;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease;
+    }
+    .achievement-card:hover { transform: translateY(-6px); border-color: var(--accent); }
+    .ach-icon-box {
+      width: 3rem; height: 3rem; display: grid; place-items: center; border-radius: 9999px;
+      background: var(--ink); color: #ffffff; font-size: 1.25rem;
+    }
+    .ach-title { font-size: 1.375rem; font-weight: 600; color: var(--foreground); margin-bottom: 0.5rem; }
+    .ach-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.5; }
     
     /* SERVICES SECTION */
     #services { background: var(--background); padding-block: 5rem; transition: background-color 0.3s ease; }
@@ -749,14 +844,14 @@
     .menu-nav-body {
       flex: 1; display: flex; flex-direction: column; justify-content: center;
     }
-    .menu-nav-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .menu-nav-list { display: flex; flex-direction: column; gap: 0.25rem; }
     .menu-nav-item {
-      display: flex; align-items: center; gap: 1rem; padding-block: 0.5rem;
-      font-size: 2.25rem; font-weight: 600; letter-spacing: -0.02em; text-align: left;
+      display: flex; align-items: center; gap: 1rem; padding-block: 0.4rem;
+      font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; text-align: left;
       opacity: 0; transform: translateY(1rem); transition: opacity 0.4s ease, transform 0.4s ease;
       color: rgba(255,255,255,0.7); cursor: pointer;
     }
-    @media (min-width: 640px) { .menu-nav-item { font-size: 3.75rem; } }
+    @media (min-width: 640px) { .menu-nav-item { font-size: 3rem; } }
     #nav-menu.active .menu-nav-item { opacity: 1; transform: translateY(0); }
     .menu-nav-item:hover { color: #ffffff; }
     .menu-idx { font-size: 1rem; font-weight: 400; color: rgba(255,255,255,0.3); transition: color 0.2s; }
@@ -856,7 +951,9 @@
         <nav class="nav-center">
           <ul class="nav-list">
             <li class="nav-item"><a href="#home" data-scroll="#home">Home</a></li>
-            <li class="nav-item"><a href="#works" data-scroll="#works">Work</a></li>
+            <li class="nav-item"><a href="#projects" data-scroll="#projects">Projects</a></li>
+            <li class="nav-item"><a href="#skills" data-scroll="#skills">Skills</a></li>
+            <li class="nav-item"><a href="#achievements" data-scroll="#achievements">Achievements</a></li>
             <li class="nav-item"><a href="#services" data-scroll="#services">Services</a></li>
             <li class="nav-item"><a href="#about" data-scroll="#about">About</a></li>
             <li class="nav-item"><button type="button" class="open-modal-trigger">Contact</button></li>
@@ -874,7 +971,6 @@
 
           <!-- Theme Toggle Button -->
           <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle dark/light mode">
-            <!-- Sun Icon (shown in dark theme) -->
             <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle>
               <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -886,7 +982,6 @@
               <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
             </svg>
-            <!-- Moon Icon (shown in light theme) -->
             <svg class="moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
@@ -944,7 +1039,7 @@
               </span>
             </button>
 
-            <a href="#works" data-scroll="#works" class="pill-btn">
+            <a href="#projects" data-scroll="#projects" class="pill-btn">
               <span class="pill-inner pill-outline">
                 <span>View Work</span>
               </span>
@@ -1047,7 +1142,6 @@
 
         <div class="about-right">
           <h2 class="about-h2" id="about-statement">
-            <!-- Populated via JS word split -->
             I build responsive web applications to ship seamless digital products, robust architectures, and clean interfaces.
           </h2>
 
@@ -1055,7 +1149,7 @@
             <div>
               <div style="font-size:0.875rem; color:var(--muted)">Find me online</div>
               <div class="social-chips">
-                <a href="https://github.com" target="_blank" rel="noopener" class="social-chip accent" aria-label="GitHub">GH</a>
+                <a href="https://github.com/satwick-yes" target="_blank" rel="noopener" class="social-chip accent" aria-label="GitHub">GH</a>
                 <a href="https://twitter.com" target="_blank" rel="noopener" class="social-chip neutral" aria-label="X / Twitter">X</a>
                 <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-chip neutral" aria-label="LinkedIn">IN</a>
               </div>
@@ -1092,20 +1186,21 @@
       </div>
     </section>
 
-    <!-- PORTFOLIO SECTION -->
-    <section id="works">
+    <!-- PROJECTS & GITHUB REPOSITORIES SECTION -->
+    <section id="projects">
       <div class="shell">
         <div class="section-header">
           <div class="eyebrow-pill">
             <span class="eyebrow-dot"></span>
-            <span>Selected Projects</span>
+            <span>Selected Projects &amp; GitHub Portfolio</span>
           </div>
-          <h2 class="section-title">Selected Work</h2>
+          <h2 class="section-title">Projects (140+ Shipped)</h2>
         </div>
 
+        <!-- Featured Projects Grid -->
         <div class="portfolio-grid">
           <!-- Card 1 -->
-          <article class="project-card">
+          <article class="project-card" onclick="window.open('https://github.com/satwick-yes', '_blank')">
             <div class="card-top-meta">
               <span>Backend / AI — 2026</span>
               <div class="card-arrow-badge">↗</div>
@@ -1124,7 +1219,7 @@
           </article>
 
           <!-- Card 2 -->
-          <article class="project-card">
+          <article class="project-card" onclick="window.open('https://github.com/satwick-yes', '_blank')">
             <div class="card-top-meta">
               <span>Web / Promo — 2026</span>
               <div class="card-arrow-badge">↗</div>
@@ -1142,7 +1237,7 @@
           </article>
 
           <!-- Card 3 -->
-          <article class="project-card">
+          <article class="project-card" onclick="window.open('https://github.com/satwick-yes', '_blank')">
             <div class="card-top-meta">
               <span>Front-End — 2026</span>
               <div class="card-arrow-badge">↗</div>
@@ -1161,7 +1256,7 @@
           </article>
 
           <!-- Card 4 -->
-          <article class="project-card">
+          <article class="project-card" onclick="window.open('https://github.com/satwick-yes', '_blank')">
             <div class="card-top-meta">
               <span>Data Science — 2025</span>
               <div class="card-arrow-badge">↗</div>
@@ -1178,6 +1273,161 @@
               </div>
             </div>
           </article>
+        </div>
+
+        <!-- GitHub Live Repositories Explorer -->
+        <div class="github-explorer-box">
+          <div class="gh-toolbar">
+            <div>
+              <h3 style="font-size:1.5rem; font-weight:600; color:var(--foreground);">GitHub Repositories Live Explorer</h3>
+              <p style="font-size:0.875rem; color:var(--muted)">Live synchronization with <a href="https://github.com/satwick-yes" target="_blank" rel="noopener" style="text-decoration:underline; color:var(--accent);">github.com/satwick-yes</a></p>
+            </div>
+
+            <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+              <input type="text" class="gh-search-input" id="gh-search" placeholder="Search 140+ projects..." />
+              <div class="gh-filters">
+                <button type="button" class="gh-filter-btn active" data-filter="all">All</button>
+                <button type="button" class="gh-filter-btn" data-filter="TypeScript">TypeScript</button>
+                <button type="button" class="gh-filter-btn" data-filter="Python">Python</button>
+                <button type="button" class="gh-filter-btn" data-filter="C++">C++</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="gh-repos-grid" id="gh-repos-container">
+            <div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--muted)">
+              Loading GitHub projects from satwick-yes...
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section id="skills">
+      <div class="shell">
+        <div class="section-header">
+          <div class="eyebrow-pill">
+            <span class="eyebrow-dot"></span>
+            <span>Technical Expertise</span>
+          </div>
+          <h2 class="section-title">Skills &amp; Technologies</h2>
+        </div>
+
+        <div class="skills-categories-grid">
+          <!-- Languages -->
+          <div class="skills-category-card">
+            <div class="skills-cat-title">
+              <span style="color:var(--accent)">⚡</span>
+              <span>Languages</span>
+            </div>
+            <div class="skills-chip-list">
+              <span class="skill-badge">TypeScript</span>
+              <span class="skill-badge">JavaScript (ES6+)</span>
+              <span class="skill-badge">C / C++</span>
+              <span class="skill-badge">Python</span>
+              <span class="skill-badge">HTML5 &amp; CSS3</span>
+              <span class="skill-badge">SQL</span>
+            </div>
+          </div>
+
+          <!-- Frameworks & Frontend -->
+          <div class="skills-category-card">
+            <div class="skills-cat-title">
+              <span style="color:var(--accent)">🚀</span>
+              <span>Frameworks &amp; Architecture</span>
+            </div>
+            <div class="skills-chip-list">
+              <span class="skill-badge">Next.js (App Router)</span>
+              <span class="skill-badge">React</span>
+              <span class="skill-badge">TailwindCSS</span>
+              <span class="skill-badge">Node.js</span>
+              <span class="skill-badge">Framer Motion</span>
+              <span class="skill-badge">Lenis Smooth Scroll</span>
+            </div>
+          </div>
+
+          <!-- AI & Data Science -->
+          <div class="skills-category-card">
+            <div class="skills-cat-title">
+              <span style="color:var(--accent)">🤖</span>
+              <span>AI &amp; Data Science</span>
+            </div>
+            <div class="skills-chip-list">
+              <span class="skill-badge">LLM API Integration</span>
+              <span class="skill-badge">Supabase &amp; Vector DB</span>
+              <span class="skill-badge">PyTorch</span>
+              <span class="skill-badge">OpenCV</span>
+              <span class="skill-badge">Two-Stage Model Router</span>
+            </div>
+          </div>
+
+          <!-- Developer Tools & Engineering -->
+          <div class="skills-category-card">
+            <div class="skills-cat-title">
+              <span style="color:var(--accent)">🛠️</span>
+              <span>Tools &amp; Infrastructure</span>
+            </div>
+            <div class="skills-chip-list">
+              <span class="skill-badge">Git &amp; GitHub</span>
+              <span class="skill-badge">REST &amp; GraphQL APIs</span>
+              <span class="skill-badge">System Architecture</span>
+              <span class="skill-badge">Vercel &amp; Edge Functions</span>
+              <span class="skill-badge">Performance Tuning</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS SECTION -->
+    <section id="achievements">
+      <div class="shell">
+        <div class="section-header">
+          <div class="eyebrow-pill">
+            <span class="eyebrow-dot"></span>
+            <span>Milestones &amp; Credentials</span>
+          </div>
+          <h2 class="section-title">Key Achievements</h2>
+        </div>
+
+        <div class="achievements-grid">
+          <!-- Card 1 -->
+          <div class="achievement-card">
+            <div class="ach-icon-box">🚀</div>
+            <div>
+              <h3 class="ach-title">140+ Projects Shipped</h3>
+              <p class="ach-desc">Engineered over 140 web applications, AI models, backend routers, and interactive front-end designs available on GitHub.</p>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="achievement-card">
+            <div class="ach-icon-box">🎓</div>
+            <div>
+              <h3 class="ach-title">Chandigarh University CS Program</h3>
+              <p class="ach-desc">Pursuing Computer Science &amp; Engineering in India, focusing on algorithms, data structures, and web technologies.</p>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="achievement-card">
+            <div class="ach-icon-box">🧠</div>
+            <div>
+              <h3 class="ach-title">AI &amp; LLM Architecture Specialist</h3>
+              <p class="ach-desc">Designed and deployed two-stage LLM classifiers, intelligent query routing, and real-time database integrations.</p>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="achievement-card">
+            <div class="ach-icon-box">⭐</div>
+            <div>
+              <h3 class="ach-title">GitHub Open Source Creator</h3>
+              <p class="ach-desc">Active contributor on GitHub (<a href="https://github.com/satwick-yes" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:underline;">satwick-yes</a>) maintaining public codebases and modular web projects.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1241,7 +1491,7 @@
           <h2 class="section-title" style="color:#ffffff; text-align:left;">Proof in the code, not the words.</h2>
 
           <div class="stats-grid">
-            <div class="stat-item" data-target="10" data-suffix="+">
+            <div class="stat-item" data-target="140" data-suffix="+">
               <div class="stat-num">0+</div>
               <div class="stat-label">Projects shipped</div>
             </div>
@@ -1294,7 +1544,9 @@
           <div class="footer-col-title">Navigation</div>
           <ul class="footer-link-list">
             <li><a href="#home" data-scroll="#home">Home</a></li>
-            <li><a href="#works" data-scroll="#works">Work</a></li>
+            <li><a href="#projects" data-scroll="#projects">Projects</a></li>
+            <li><a href="#skills" data-scroll="#skills">Skills</a></li>
+            <li><a href="#achievements" data-scroll="#achievements">Achievements</a></li>
             <li><a href="#services" data-scroll="#services">Services</a></li>
             <li><a href="#about" data-scroll="#about">About</a></li>
           </ul>
@@ -1303,7 +1555,7 @@
         <div>
           <div class="footer-col-title">Socials</div>
           <ul class="footer-link-list">
-            <li><a href="https://github.com" target="_blank" rel="noopener">GitHub ↗</a></li>
+            <li><a href="https://github.com/satwick-yes" target="_blank" rel="noopener">GitHub ↗</a></li>
             <li><a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn ↗</a></li>
             <li><a href="https://twitter.com" target="_blank" rel="noopener">Twitter / X ↗</a></li>
           </ul>
@@ -1353,20 +1605,28 @@
             <span class="menu-idx">01</span>
             <span>Home</span>
           </div>
-          <div class="menu-nav-item" data-target="#works">
+          <div class="menu-nav-item" data-target="#projects">
             <span class="menu-idx">02</span>
-            <span>Work</span>
+            <span>Projects (140+)</span>
+          </div>
+          <div class="menu-nav-item" data-target="#skills">
+            <span class="menu-idx">03</span>
+            <span>Skills</span>
+          </div>
+          <div class="menu-nav-item" data-target="#achievements">
+            <span class="menu-idx">04</span>
+            <span>Achievements</span>
           </div>
           <div class="menu-nav-item" data-target="#services">
-            <span class="menu-idx">03</span>
+            <span class="menu-idx">05</span>
             <span>Services</span>
           </div>
           <div class="menu-nav-item" data-target="#about">
-            <span class="menu-idx">04</span>
+            <span class="menu-idx">06</span>
             <span>About</span>
           </div>
           <div class="menu-nav-item" id="menu-contact-item">
-            <span class="menu-idx">05</span>
+            <span class="menu-idx">07</span>
             <span>Contact</span>
           </div>
         </div>
@@ -1631,7 +1891,7 @@
 
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
-        // Draw Before texture (Theme-adaptive base surface)
+        // Draw Before texture
         ctxB.fillStyle = isDark ? '#0f0f0f' : '#ecebe9';
         ctxB.fillRect(0, 0, canvas.width, canvas.height);
         ctxB.strokeStyle = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
@@ -1644,7 +1904,7 @@
           ctxB.beginPath(); ctxB.moveTo(0, y); ctxB.lineTo(canvas.width, y); ctxB.stroke();
         }
 
-        // Draw After texture (Rich dual-tone burnt orange gradient with technical circles)
+        // Draw After texture
         const gradA = ctxA.createLinearGradient(0, 0, canvas.width, canvas.height);
         gradA.addColorStop(0, '#cf8047');
         gradA.addColorStop(0.5, '#b15f2c');
@@ -1665,7 +1925,6 @@
       generateTextures();
       window.addEventListener('resize', generateTextures);
 
-      // Offscreen trail mask
       const maskCanvas = document.createElement('canvas');
       maskCanvas.width = canvas.width;
       maskCanvas.height = canvas.height;
@@ -1764,7 +2023,90 @@
       updateCarousel(currentSlide + 1);
     });
 
-    // 7. WORD SPLIT ANIMATION FOR ABOUT STATEMENT
+    // 7. GITHUB API REPOSITORIES INTEGRATION
+    let allGithubRepos = [];
+    const ghContainer = document.getElementById('gh-repos-container');
+    const ghSearch = document.getElementById('gh-search');
+    const filterBtns = document.querySelectorAll('.gh-filter-btn');
+
+    async function fetchGitHubRepos() {
+      try {
+        const res = await fetch('https://api.github.com/users/satwick-yes/repos?sort=updated&per_page=100');
+        if (!res.ok) throw new Error('Failed to load GitHub repos');
+        const data = await res.json();
+        allGithubRepos = data.map(repo => ({
+          name: repo.name,
+          desc: repo.description || 'Public repository created by Satwick Shaw.',
+          language: repo.language || 'Web / Code',
+          stars: repo.stargazers_count,
+          forks: repo.forks_count,
+          url: repo.html_url,
+          updated: new Date(repo.updated_at).toLocaleDateString()
+        }));
+        renderRepos(allGithubRepos);
+      } catch (err) {
+        console.warn('GitHub API fetch fallback:', err);
+        // Fallback array if rate-limited
+        allGithubRepos = [
+          { name: 'my-website', desc: 'Personal portfolio and studio site built with pure HTML/CSS/JS.', language: 'TypeScript', stars: 2, forks: 0, url: 'https://github.com/satwick-yes/my-website', updated: '2026' },
+          { name: 'two-stage-llm-router', desc: 'Backend classifier routing user queries across specialized LLMs.', language: 'Python', stars: 5, forks: 1, url: 'https://github.com/satwick-yes', updated: '2026' },
+          { name: 'academic-brand-platform', desc: 'Promotional platform and brand system built for academic support.', language: 'TypeScript', stars: 4, forks: 0, url: 'https://github.com/satwick-yes', updated: '2026' },
+          { name: 'ai-demographic-detector', desc: 'PyTorch and OpenCV model detecting demographic parameters.', language: 'Python', stars: 8, forks: 2, url: 'https://github.com/satwick-yes', updated: '2025' },
+          { name: 'cpp-algorithms-suite', desc: 'Optimized C++ data structures and algorithmic suites.', language: 'C++', stars: 3, forks: 0, url: 'https://github.com/satwick-yes', updated: '2025' },
+          { name: 'interactive-canvas-scripts', desc: 'Bespoke HTML5 canvas interactive effects and smooth scroll modules.', language: 'JavaScript', stars: 6, forks: 1, url: 'https://github.com/satwick-yes', updated: '2026' }
+        ];
+        renderRepos(allGithubRepos);
+      }
+    }
+
+    function renderRepos(repos) {
+      if (!ghContainer) return;
+      if (repos.length === 0) {
+        ghContainer.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--muted)">No repositories found matching filter.</div>`;
+        return;
+      }
+      ghContainer.innerHTML = repos.map(r => `
+        <div class="repo-card" onclick="window.open('${r.url}', '_blank')">
+          <div>
+            <div class="repo-name">
+              <span>${r.name}</span>
+              <span style="font-size:0.875rem; color:var(--accent)">↗</span>
+            </div>
+            <p class="repo-desc" style="margin-top:0.5rem">${r.desc}</p>
+          </div>
+          <div class="repo-meta">
+            <span style="border:1px solid var(--line); border-radius:9999px; padding:0.2rem 0.6rem; font-size:0.7rem; background:var(--background);">${r.language}</span>
+            <span>⭐ ${r.stars} • 🍴 ${r.forks}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    fetchGitHubRepos();
+
+    let activeFilter = 'all';
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.getAttribute('data-filter');
+        filterAndRender();
+      });
+    });
+
+    ghSearch?.addEventListener('input', () => filterAndRender());
+
+    function filterAndRender() {
+      const q = (ghSearch?.value || '').toLowerCase();
+      const filtered = allGithubRepos.filter(r => {
+        const matchesFilter = activeFilter === 'all' || (r.language && r.language.toLowerCase().includes(activeFilter.toLowerCase()));
+        const matchesQuery = r.name.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q) || r.language.toLowerCase().includes(q);
+        return matchesFilter && matchesQuery;
+      });
+      renderRepos(filtered);
+    }
+
+    // 8. WORD SPLIT ANIMATION FOR ABOUT STATEMENT
     const aboutStmt = document.getElementById('about-statement');
     if (aboutStmt) {
       const text = aboutStmt.textContent.trim();
@@ -1782,7 +2124,7 @@
       observer.observe(aboutStmt);
     }
 
-    // 8. STATS SCROLL COUNT-UP ANIMATION
+    // 9. STATS SCROLL COUNT-UP ANIMATION
     const statItems = document.querySelectorAll('.stat-item');
     const statsObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -1814,7 +2156,7 @@
 
     statItems.forEach(item => statsObserver.observe(item));
 
-    // 9. NAVIGATION SCROLL LINKS
+    // 10. NAVIGATION SCROLL LINKS
     document.querySelectorAll('[data-scroll]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1823,7 +2165,7 @@
       });
     });
 
-    // 10. NAV MENU OVERLAY HANDLERS
+    // 11. NAV MENU OVERLAY HANDLERS
     const navMenu = document.getElementById('nav-menu');
     const openMenuBtn = document.getElementById('open-menu-btn');
     const closeMenuBtn = document.getElementById('close-menu-btn');
@@ -1859,7 +2201,7 @@
       setTimeout(openModal, 300);
     });
 
-    // 11. REQUEST MODAL HANDLERS
+    // 12. REQUEST MODAL HANDLERS
     const requestModal = document.getElementById('request-modal');
     const modalFormState = document.getElementById('modal-form-state');
     const modalSuccessState = document.getElementById('modal-success-state');
