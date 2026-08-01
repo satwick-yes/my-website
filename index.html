@@ -1040,10 +1040,23 @@
       display: inline-block; background: #000000; color: transparent;
       padding-inline: 0.35em; border-radius: 0.2em; cursor: pointer; user-select: none;
       box-shadow: 0 0 0 1px rgba(255,255,255,0.2);
-      transition: background 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), color 0.35s ease;
+      transition: background 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), color 0.35s ease, box-shadow 0.35s ease;
+    }
+    .redacted-text:hover:not(.revealed) {
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    .redacted-text.revealed {
+      background: rgba(207, 128, 71, 0.15);
+      color: #ffffff;
+      box-shadow: 0 0 0 1px var(--accent);
+      user-select: text;
     }
     html:not([data-theme="dark"]) .redacted-text {
       background: #111111;
+    }
+    html:not([data-theme="dark"]) .redacted-text.revealed {
+      background: rgba(207, 128, 71, 0.12);
+      color: var(--foreground);
     }
     /* ----------------------------------------------------
        INTERACTIVE ML CANVAS DEMO (DOODLE DIGIT CLASSIFIER)
@@ -3022,6 +3035,8 @@
         });
       });
     }
+    initTerminalSystem();
+
     // 16. INTERACTIVE ML DOODLE DIGIT CLASSIFIER
     function initMLDigitClassifier() {
       const canvas = document.getElementById('doodleCanvas');
