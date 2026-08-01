@@ -11,7 +11,7 @@
   <meta name="theme-color" content="#0a0a0a" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     /* CSS RESET & BASE TOKENS */
@@ -24,6 +24,17 @@
     }
 
     :root {
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-24: 6rem;
+      --space-32: 8rem;
+
       --background: #faf9f6;
       --foreground: #111111;
       --ink: #111111;
@@ -84,10 +95,10 @@
     body {
       background: var(--background);
       color: var(--foreground);
-      font-family: 'Onest', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       overflow-x: hidden;
-      line-height: 1.5;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      line-height: 1.6; letter-spacing: -0.01em;
+      transition: background-color 0.2s ease, color 0.3s ease;
     }
 
     /* CUSTOM INTERACTIVE GLOWING CURSOR */
@@ -143,7 +154,7 @@
     .repo-card {
       position: relative;
       overflow: hidden;
-      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease, border-color 0.3s ease;
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease, border-color 0.2s ease;
       transform-style: preserve-3d;
     }
 
@@ -155,7 +166,7 @@
       z-index: 1;
       background: radial-gradient(450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(207, 128, 71, 0.18), transparent 60%);
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.2s ease;
     }
 
     .project-card:hover .card-spotlight,
@@ -691,7 +702,7 @@
       border-radius: var(--radius-pill);
       padding: 0.5rem 1.5rem;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-      transition: background 0.3s ease, border-color 0.3s ease;
+      transition: background 0.2s ease, border-color 0.3s ease;
     }
 
     .nav-item button,
@@ -729,7 +740,7 @@
       font-size: 0.75rem;
       color: var(--foreground);
       opacity: 0.8;
-      transition: background 0.3s ease, border-color 0.3s ease;
+      transition: background 0.2s ease, border-color 0.3s ease;
     }
 
     @media (min-width: 768px) {
@@ -760,7 +771,7 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--foreground);
-      transition: background 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease;
+      transition: background 0.2s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease;
     }
 
     .theme-toggle-btn:hover {
@@ -798,7 +809,7 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--foreground);
-      transition: background 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease;
+      transition: background 0.2s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease;
     }
 
     .menu-btn:hover {
@@ -816,7 +827,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     .hero-bg-wrap {
@@ -850,13 +861,13 @@
       z-index: 1;
       text-align: center;
       user-select: none;
-      font-weight: 700;
+      font-weight: 600; letter-spacing: -0.03em;
       line-height: 1;
       font-size: var(--text-watermark);
       color: var(--watermark-color);
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s, color 0.3s ease;
+      transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.3s, color 0.3s ease;
     }
 
     #home.ready .hero-watermark {
@@ -1032,7 +1043,7 @@
       -webkit-backdrop-filter: blur(16px);
       opacity: 0;
       transform: translateY(16px) scale(0.96);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s, background 0.3s ease, border-color 0.3s ease;
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s, background 0.2s ease, border-color 0.3s ease;
     }
 
     @media (min-width: 1024px) {
@@ -1089,7 +1100,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: background 0.3s ease;
+      transition: background 0.2s ease;
     }
 
     .card-content-slot {
@@ -1136,7 +1147,7 @@
       border-radius: 9999px;
       background: var(--subtle);
       width: 0.375rem;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
     }
 
     .card-dash.active {
@@ -1237,7 +1248,7 @@
       letter-spacing: 0.025em;
       color: var(--foreground);
       opacity: 0;
-      transition: opacity 0.8s ease 0.9s, border-color 0.3s ease;
+      transition: opacity 0.8s ease 0.9s, border-color 0.2s ease;
     }
 
     #home.ready .hero-status-bar {
@@ -1317,7 +1328,7 @@
     #about {
       background: var(--background);
       padding-block: 5rem;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     @media (min-width: 1024px) {
@@ -1362,7 +1373,7 @@
       border: 1px solid var(--line);
       box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.25);
       background: var(--surface);
-      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s ease, box-shadow 0.3s ease;
     }
 
     .about-portrait-wrapper:hover {
@@ -1478,7 +1489,7 @@
       place-items: center;
       border-radius: 9999px;
       font-size: 0.875rem;
-      transition: transform 0.3s ease;
+      transition: transform 0.2s ease;
     }
 
     .social-chip:hover {
@@ -1499,7 +1510,7 @@
     #create-band {
       background: var(--background);
       padding-block: 2.5rem;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     .band-list {
@@ -1567,7 +1578,7 @@
     #projects {
       background: var(--background);
       padding-block: 4rem 5rem;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     @media (min-width: 1024px) {
@@ -1592,7 +1603,7 @@
       padding: 0.375rem 1rem;
       font-size: 0.875rem;
       font-weight: 500;
-      color: var(--foreground);
+      color: var(--muted);
       opacity: 0.8;
       display: inline-flex;
       align-items: center;
@@ -1674,7 +1685,7 @@
       background: rgba(255, 255, 255, 0.1);
       color: #ffffff;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-      transition: transform 0.3s ease, background 0.3s ease;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
 
     .project-card:hover .card-arrow-badge {
@@ -1690,7 +1701,7 @@
       pointer-events: none;
       font-size: 4.5rem;
       color: rgba(255, 255, 255, 0.04);
-      font-weight: 700;
+      font-weight: 600; letter-spacing: -0.03em;
     }
 
     .card-bottom-block {
@@ -1825,7 +1836,7 @@
       flex-direction: column;
       justify-content: space-between;
       gap: 1rem;
-      transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+      transition: transform 0.2s ease, border-color 0.3s ease, background 0.3s ease;
     }
 
     .repo-card:hover {
@@ -1867,7 +1878,7 @@
       background: var(--background);
       padding-block: 5rem;
       border-top: 1px solid var(--line);
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     @media (min-width: 1024px) {
@@ -1894,7 +1905,7 @@
       background: var(--surface);
       border-radius: var(--radius-card-sm);
       padding: 1.75rem;
-      transition: background 0.3s ease, border-color 0.3s ease;
+      transition: background 0.2s ease, border-color 0.3s ease;
     }
 
     .skills-cat-title {
@@ -1937,7 +1948,7 @@
       background: var(--background);
       padding-block: 5rem;
       border-top: 1px solid var(--line);
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     @media (min-width: 1024px) {
@@ -1969,7 +1980,7 @@
       flex-direction: column;
       justify-content: space-between;
       gap: 1.5rem;
-      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s ease;
     }
 
     .achievement-card:hover {
@@ -1998,14 +2009,14 @@
     .ach-desc {
       font-size: 0.875rem;
       color: var(--muted);
-      line-height: 1.5;
+      line-height: 1.6; letter-spacing: -0.01em;
     }
 
     /* SERVICES SECTION */
     #services {
       background: var(--background);
       padding-block: 5rem;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     @media (min-width: 1024px) {
@@ -2022,7 +2033,7 @@
 
     .service-row {
       border-top: 1px solid var(--line);
-      transition: background 0.3s ease, padding 0.3s ease;
+      transition: background 0.2s ease, padding 0.3s ease;
       border-radius: var(--radius-card-sm);
       cursor: pointer;
     }
@@ -2033,7 +2044,7 @@
       gap: 1rem;
       padding-block: 1.5rem;
       padding-inline: 1rem;
-      transition: padding 0.3s ease;
+      transition: padding 0.2s ease;
     }
 
     @media (min-width: 640px) {
@@ -2104,7 +2115,7 @@
       background: var(--ink);
       color: #ffffff;
       flex-shrink: 0;
-      transition: transform 0.3s ease, background 0.3s ease;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
 
     @media (min-width: 640px) {
@@ -2123,7 +2134,7 @@
     #stats {
       background: var(--background);
       padding-bottom: 5rem;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     @media (min-width: 1024px) {
@@ -2322,7 +2333,7 @@
       text-align: center;
       pointer-events: none;
       user-select: none;
-      font-weight: 700;
+      font-weight: 600; letter-spacing: -0.03em;
       line-height: 1;
       font-size: var(--text-watermark);
       color: rgba(255, 255, 255, 0.03);
@@ -2488,7 +2499,7 @@
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
       border: 1px solid var(--line);
       transform: translateY(28px);
-      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s ease;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease;
     }
 
     #request-modal.active .modal-panel {
@@ -2635,7 +2646,7 @@
       background: var(--background);
       padding-block: 5rem;
       border-top: 1px solid var(--line);
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     @media (min-width: 1024px) {
@@ -2814,7 +2825,7 @@
       background: var(--background);
       padding-block: 5rem;
       border-top: 1px solid var(--line);
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     @media (min-width: 1024px) {
@@ -2888,7 +2899,7 @@
 
     .top-prediction-number {
       font-size: 3.5rem;
-      font-weight: 700;
+      font-weight: 600; letter-spacing: -0.03em;
       color: var(--accent);
       line-height: 1;
       font-variant-numeric: tabular-nums;
@@ -2942,7 +2953,7 @@
       background: var(--background);
       padding-block: 5rem;
       border-top: 1px solid var(--line);
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     @media (min-width: 1024px) {
@@ -2960,7 +2971,7 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 2.5rem;
-      transition: border-color 0.3s ease, transform 0.3s ease;
+      transition: border-color 0.2s ease, transform 0.3s ease;
     }
 
     @media (min-width: 1024px) {
@@ -3016,7 +3027,7 @@
       font-size: 0.9375rem;
       color: var(--foreground);
       opacity: 0.85;
-      line-height: 1.5;
+      line-height: 1.6; letter-spacing: -0.01em;
     }
 
     .cs-diagram-box {
@@ -3041,7 +3052,7 @@
 
     .cs-metric-num {
       font-size: 2rem;
-      font-weight: 700;
+      font-weight: 600; letter-spacing: -0.03em;
       color: var(--accent-from);
     }
 
@@ -3057,7 +3068,7 @@
       background: var(--background);
       padding-block: 5rem;
       border-top: 1px solid var(--line);
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     @media (min-width: 1024px) {
@@ -3081,7 +3092,7 @@
     .testimonial-quote {
       font-size: 1.25rem;
       font-weight: 500;
-      line-height: 1.5;
+      line-height: 1.6; letter-spacing: -0.01em;
       color: var(--foreground);
       margin-bottom: 1.5rem;
     }
@@ -3128,6 +3139,25 @@
       background: var(--ink);
       color: #ffffff;
       transform: scale(1.06);
+    }
+  
+    section { padding: var(--space-16) 0; }
+    
+    .hero-bg-mesh {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 50%), radial-gradient(circle at 10% 90%, rgba(255,255,255,0.02) 0%, transparent 40%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    html[data-theme='dark'] .hero-bg-mesh {
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.05) 0%, transparent 60%), radial-gradient(circle at 10% 90%, rgba(255,255,255,0.03) 0%, transparent 40%);
+    }
+
+    .tech-tag {
+      background: var(--surface) !important;
+      color: var(--muted) !important;
+      border: 1px solid var(--line) !important;
     }
   </style>
 </head>
@@ -3854,63 +3884,7 @@
           </div>
         </div>
       </div>
-      <!-- INTERACTIVE TERMINAL SECTION -->
-      <section id="terminal-section">
-        <div class="shell">
-          <div class="section-header" style="align-items:flex-start; text-align:left;">
-            <div class="eyebrow-pill">
-              <span class="eyebrow-dot"></span>
-              <span>Developer Sandbox &amp; Vault</span>
-            </div>
-            <h2 class="section-title">Interactive System Terminal</h2>
-          </div>
-
-          <div class="terminal-card" id="terminal-card">
-            <div class="terminal-header-bar">
-              <div class="terminal-dots">
-                <span class="dot-red"></span>
-                <span class="dot-yellow"></span>
-                <span class="dot-green"></span>
-              </div>
-              <div class="terminal-title-text">satwick@dev-terminal v2.4</div>
-              <div style="font-size:0.75rem; color:var(--accent-from); font-weight:600;">● ONLINE</div>
-            </div>
-
-            <div class="terminal-body">
-              <div class="terminal-prompt">
-                <span>satwick@iitm:~$</span>
-                <span class="typewriter-text" id="terminal-typewriter"></span><span class="typewriter-cursor"></span>
-              </div>
-
-              <div style="margin-top:1.5rem; line-height:1.8; font-size:0.9375rem; color:rgba(255,255,255,0.85);">
-                <div><strong style="color:var(--accent-from)">[CLASSIFIED SPECIFICATIONS]</strong> Tap black redacted
-                  bars to unmask:</div>
-                <div style="margin-top:0.5rem;">
-                  • Primary Stack: <span class="redacted-text"
-                    data-secret="Next.js 15, TypeScript, TailwindCSS v4">█████████████████████████</span>
-                </div>
-                <div>
-                  • Specialized AI Architecture: <span class="redacted-text"
-                    data-secret="Two-Stage LLM Classifier &amp; Supabase Vector Router">██████████████████████████████████</span>
-                </div>
-                <div>
-                  • Credentials: <span class="redacted-text"
-                    data-secret="B.S. Data Science @ IIT Madras | Chemical Engineering">██████████████████████████████████████</span>
-                </div>
-              </div>
-
-              <div class="terminal-controls-row">
-                <div style="font-size:0.75rem; color:rgba(255,255,255,0.5)">
-                  Tip: Tap glitch diagnostic to scramble text or tap redacted bars to reveal.
-                </div>
-                <button type="button" class="glitch-btn" id="terminal-glitch-btn">
-                  <span>⚡ Run Glitch Diagnostic</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- CASE STUDIES SECTION -->
+      <!-- CASE STUDIES SECTION -->
         <section id="case-studies">
           <div class="shell">
             <div class="section-header" style="align-items:flex-start; text-align:left;">
@@ -4165,7 +4139,7 @@
             <span>Satwick Shaw</span>
           </div>
           <p style="font-size:0.875rem; color:rgba(255,255,255,0.55); max-width:20rem;">
-            A student developer crafting modern web products with high aesthetic and technical standards.
+            Software Engineer. Crafting modern web applications and AI systems..
           </p>
         </div>
 
@@ -5145,7 +5119,7 @@
         });
       });
     }
-    initTerminalSystem();
+    // initTerminalSystem();
 
     // 16. INTERACTIVE ML DOODLE DIGIT CLASSIFIER
     function initMLDigitClassifier() {
@@ -5385,7 +5359,7 @@
       prevBtn?.addEventListener('click', () => updateTestimonial(currentIndex - 1));
       nextBtn?.addEventListener('click', () => updateTestimonial(currentIndex + 1));
     }
-    initTestimonialsSlider();
+    // initTestimonialsSlider();
 
     // 18. CUSTOM GLOWING CURSOR CONTROLLER
     function initCustomCursor() {
