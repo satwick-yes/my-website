@@ -4020,66 +4020,6 @@
         </section>
 
         <!-- INTERACTIVE ML DEMO (DOODLE DIGIT CLASSIFIER) -->
-        <section id="ml-demo">
-          <div class="shell">
-            <div class="section-header" style="align-items:flex-start; text-align:left;">
-              <div class="eyebrow-pill">
-                <span class="eyebrow-dot"></span>
-                <span>Interactive AI Sandbox</span>
-              </div>
-              <h2 class="section-title">Draw a Digit (0–9) to Predict</h2>
-            </div>
-
-            <div class="ml-demo-grid">
-              <!-- Drawing Canvas -->
-              <div class="ml-canvas-card">
-                <div style="font-size:0.875rem; font-weight:500; color:var(--muted); text-align:center;">Draw any single
-                  digit on the black canvas below:</div>
-
-                <canvas id="doodleCanvas" class="ml-drawing-canvas" width="260" height="260"></canvas>
-
-                <div class="ml-canvas-tools">
-                  <button type="button" class="pill-btn" id="ml-clear-btn">
-                    <span class="pill-inner pill-outline">
-                      <span>Clear Canvas</span>
-                    </span>
-                  </button>
-
-                  <button type="button" class="pill-btn" id="ml-predict-btn">
-                    <span class="pill-inner pill-dark has-arrow">
-                      <span>Run Inference</span>
-                      <span class="pill-icon-badge">&rarr;</span>
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Prediction Output Panel -->
-              <div class="ml-prediction-panel">
-                <div class="predicted-digit-box">
-                  <div>
-                    <div
-                      style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); font-weight:600;">
-                      Predicted Digit</div>
-                    <div style="font-size:0.875rem; color:var(--foreground); font-weight:500; margin-top:0.25rem;">
-                      Neural Network Output</div>
-                  </div>
-                  <div class="top-prediction-number" id="ml-top-digit">—</div>
-                </div>
-
-                <div>
-                  <div
-                    style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); font-weight:600; margin-bottom:0.75rem;">
-                    Probability Spectrum (0–9)</div>
-                  <div class="prob-bars-list" id="prob-bars-container">
-                    <!-- Dynamically generated bars for 0 to 9 -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <!-- TESTIMONIALS SLIDER -->
         <section id="testimonials">
           <div class="shell">
@@ -5307,7 +5247,7 @@
         renderProbBars(probs);
       }
     }
-    initMLDigitClassifier();
+    // initMLDigitClassifier();
 
     // 17. TESTIMONIALS SLIDER CONTROLLER
     function initTestimonialsSlider() {
