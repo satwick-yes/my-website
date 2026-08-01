@@ -946,6 +946,109 @@
     .success-state {
       display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem; padding-block: 2rem;
     }
+
+    /* ----------------------------------------------------
+       INK SPILL TOUCH RIPPLE SYSTEM
+       ---------------------------------------------------- */
+    .ink-spill-container {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 100;
+      border-radius: inherit;
+    }
+    .ink-spill-ripple {
+      position: absolute; transform: translate(-50%, -50%) scale(0.1);
+      width: 140px; height: 140px; pointer-events: none;
+      animation: inkSpillAnim 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes inkSpillAnim {
+      0% { transform: translate(-50%, -50%) scale(0.1) rotate(0deg); opacity: 0.85; }
+      70% { opacity: 0.6; }
+      100% { transform: translate(-50%, -50%) scale(2.2) rotate(45deg); opacity: 0; }
+    }
+
+    /* ----------------------------------------------------
+       SVG LIVE SKETCH PATH TRACING
+       ---------------------------------------------------- */
+    .sketch-border-svg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 5; border-radius: inherit;
+    }
+    .sketch-path {
+      stroke: var(--accent);
+      stroke-width: 2px;
+      fill: none;
+      stroke-dasharray: 1200;
+      stroke-dashoffset: 1200;
+      transition: stroke-dashoffset 1.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    .sketched .sketch-path {
+      stroke-dashoffset: 0;
+    }
+
+    /* ----------------------------------------------------
+       INTERACTIVE TERMINAL, GLITCH & REDACTED TEXT
+       ---------------------------------------------------- */
+    #terminal-section {
+      background: var(--background); padding-block: 5rem; border-top: 1px solid var(--line);
+      transition: background-color 0.3s ease;
+    }
+    @media (min-width: 1024px) { #terminal-section { padding-block: 7rem; } }
+
+    .terminal-card {
+      position: relative; border-radius: var(--radius-card);
+      background: var(--ink); color: #ffffff;
+      padding: 2rem; border: 1px solid var(--line);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+      font-family: monospace, ui-monospace, 'Courier New';
+    }
+    @media (min-width: 640px) { .terminal-card { padding: 3rem; } }
+
+    .terminal-header-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 1.5rem;
+    }
+    .terminal-dots { display: flex; gap: 0.5rem; }
+    .dot-red { width: 0.65rem; height: 0.65rem; border-radius: 9999px; background: #ff5f56; }
+    .dot-yellow { width: 0.65rem; height: 0.65rem; border-radius: 9999px; background: #ffbd2e; }
+    .dot-green { width: 0.65rem; height: 0.65rem; border-radius: 9999px; background: #27c93f; }
+    
+    .terminal-title-text { font-size: 0.8125rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .terminal-prompt { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 1rem; color: #10b981; margin-bottom: 1rem; flex-wrap: wrap; }
+    .typewriter-text { color: #ffffff; font-weight: 500; word-break: break-word; }
+    .typewriter-cursor {
+      display: inline-block; width: 0.55em; height: 1em; background: var(--accent);
+      vertical-align: middle; animation: cursorBlink 0.9s infinite; margin-left: 2px;
+    }
+    @keyframes cursorBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+    .terminal-controls-row {
+      display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;
+      margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;
+    }
+
+    .glitch-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1px solid var(--accent); border-radius: var(--radius-control);
+      padding: 0.625rem 1.25rem; background: rgba(207, 128, 71, 0.15); color: #ffffff;
+      font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .glitch-btn:hover { background: var(--accent); transform: translateY(-2px); }
+
+    /* REDACTED TEXT BAR */
+    .redacted-text {
+      display: inline-block; background: #000000; color: transparent;
+      padding-inline: 0.35em; border-radius: 0.2em; cursor: pointer; user-select: none;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.2);
+      transition: background 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), color 0.35s ease;
+    }
+    html:not([data-theme="dark"]) .redacted-text {
+      background: #111111;
+    }
+    .redacted-text.revealed {
+      background: rgba(207, 128, 71, 0.15); color: var(--accent-from);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
   </style>
 </head>
 <body>
@@ -1613,6 +1716,58 @@
           </div>
         </div>
       </div>
+    <!-- INTERACTIVE TERMINAL SECTION -->
+    <section id="terminal-section">
+      <div class="shell">
+        <div class="section-header" style="align-items:flex-start; text-align:left;">
+          <div class="eyebrow-pill">
+            <span class="eyebrow-dot"></span>
+            <span>Developer Sandbox &amp; Vault</span>
+          </div>
+          <h2 class="section-title">Interactive System Terminal</h2>
+        </div>
+
+        <div class="terminal-card" id="terminal-card">
+          <div class="terminal-header-bar">
+            <div class="terminal-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <div class="terminal-title-text">satwick@dev-terminal v2.4</div>
+            <div style="font-size:0.75rem; color:var(--accent-from); font-weight:600;">● ONLINE</div>
+          </div>
+
+          <div class="terminal-body">
+            <div class="terminal-prompt">
+              <span>satwick@iitm:~$</span>
+              <span class="typewriter-text" id="terminal-typewriter"></span><span class="typewriter-cursor"></span>
+            </div>
+
+            <div style="margin-top:1.5rem; line-height:1.8; font-size:0.9375rem; color:rgba(255,255,255,0.85);">
+              <div><strong style="color:var(--accent-from)">[CLASSIFIED SPECIFICATIONS]</strong> Tap black redacted bars to unmask:</div>
+              <div style="margin-top:0.5rem;">
+                • Primary Stack: <span class="redacted-text" data-secret="Next.js 15, TypeScript, TailwindCSS v4">█████████████████████████</span>
+              </div>
+              <div>
+                • Specialized AI Architecture: <span class="redacted-text" data-secret="Two-Stage LLM Classifier &amp; Supabase Vector Router">██████████████████████████████████</span>
+              </div>
+              <div>
+                • Credentials: <span class="redacted-text" data-secret="B.S. Data Science @ IIT Madras | Chemical Engineering">██████████████████████████████████████</span>
+              </div>
+            </div>
+
+            <div class="terminal-controls-row">
+              <div style="font-size:0.75rem; color:rgba(255,255,255,0.5)">
+                Tip: Tap glitch diagnostic to scramble text or tap redacted bars to reveal.
+              </div>
+              <button type="button" class="glitch-btn" id="terminal-glitch-btn">
+                <span>⚡ Run Glitch Diagnostic</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
   </main>
@@ -2040,13 +2195,23 @@
       const maskCtx = maskCanvas.getContext('2d');
 
       let points = [];
+      let lastX = null, lastY = null;
 
       window.addEventListener('pointermove', (e) => {
         const rect = canvas.getBoundingClientRect();
         const x = (e.clientX - rect.left) * dpr;
         const y = (e.clientY - rect.top) * dpr;
-        points.push({ x, y, radius: brushRadius * dpr, alpha: 1.0 });
-        if (points.length > 40) points.shift();
+
+        let vx = 0, vy = 0;
+        if (lastX !== null && lastY !== null) {
+          vx = (x - lastX) * 0.35;
+          vy = (y - lastY) * 0.35;
+        }
+        lastX = x;
+        lastY = y;
+
+        points.push({ x, y, vx, vy, radius: brushRadius * dpr, alpha: 1.0 });
+        if (points.length > 50) points.shift();
       });
 
       function renderLiquid() {
@@ -2056,6 +2221,11 @@
         maskCtx.clearRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i < points.length; i++) {
           const pt = points[i];
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          pt.vx *= 0.88;
+          pt.vy *= 0.88;
+
           const grad = maskCtx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, pt.radius);
           grad.addColorStop(0, `rgba(255,255,255,${pt.alpha})`);
           grad.addColorStop(0.5, `rgba(255,255,255,${pt.alpha * 0.8})`);
@@ -2401,6 +2571,139 @@
         if (requestModal.classList.contains('active')) closeModal();
       }
     });
+
+    // 13. INK SPILL TOUCH RIPPLE SYSTEM
+    document.addEventListener('pointerdown', (e) => {
+      const target = e.target.closest('.pill-btn, .project-card, .nav-item, .achievement-card, .skills-category-card, .social-chip, .menu-nav-item, .repo-card, .glitch-btn');
+      if (!target) return;
+
+      const rect = target.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      let container = target.querySelector('.ink-spill-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.className = 'ink-spill-container';
+        target.appendChild(container);
+      }
+
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const spillColor = isDark ? 'rgba(255, 255, 255, 0.35)' : 'rgba(17, 17, 17, 0.45)';
+
+      const ripple = document.createElement('div');
+      ripple.className = 'ink-spill-ripple';
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+
+      ripple.innerHTML = `
+        <svg viewBox="0 0 100 100" style="width:100%; height:100%; fill:${spillColor}">
+          <path d="M50 6 C68 4 88 18 90 38 C92 58 84 82 64 90 C44 98 16 88 8 68 C0 48 18 24 38 12 Z"/>
+        </svg>
+      `;
+
+      container.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+
+    // 14. SVG LIVE SKETCH PATH TRACING
+    function initLiveSketchTracing() {
+      const sketchTargets = document.querySelectorAll('.skills-category-card, .achievement-card, .terminal-card, .repo-card');
+      
+      sketchTargets.forEach(card => {
+        if (card.querySelector('.sketch-border-svg')) return;
+        
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'sketch-border-svg');
+        svg.setAttribute('viewBox', '0 0 100 100');
+        svg.setAttribute('preserveAspectRatio', 'none');
+        
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('class', 'sketch-path');
+        rect.setAttribute('x', '1');
+        rect.setAttribute('y', '1');
+        rect.setAttribute('width', '98');
+        rect.setAttribute('height', '98');
+        rect.setAttribute('rx', '8');
+        
+        svg.appendChild(rect);
+        card.style.position = card.style.position || 'relative';
+        card.appendChild(svg);
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('sketched');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      sketchTargets.forEach(card => observer.observe(card));
+    }
+    initLiveSketchTracing();
+
+    // 15. TERMINAL TYPEWRITER, GLITCH & REDACTED REVEAL
+    function initTerminalSystem() {
+      const typewriterEl = document.getElementById('terminal-typewriter');
+      const glitchBtn = document.getElementById('terminal-glitch-btn');
+      const redactedTexts = document.querySelectorAll('.redacted-text');
+
+      const commandText = "init --stack=nextjs,typescript,supabase --mode=high-precision --status=ready";
+      let charIdx = 0;
+
+      function typeNextChar() {
+        if (!typewriterEl) return;
+        if (charIdx < commandText.length) {
+          typewriterEl.textContent += commandText.charAt(charIdx);
+          charIdx++;
+          setTimeout(typeNextChar, 35 + Math.random() * 25);
+        }
+      }
+
+      setTimeout(typeNextChar, 800);
+
+      const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~█▓▒░';
+      function triggerGlitchScramble(targetEl, originalText, duration = 850) {
+        const startTime = performance.now();
+        
+        function scramble(now) {
+          const elapsed = now - startTime;
+          const progress = Math.min(1, elapsed / duration);
+          
+          let result = '';
+          for (let i = 0; i < originalText.length; i++) {
+            if (i < Math.floor(progress * originalText.length)) {
+              result += originalText[i];
+            } else {
+              result += glitchChars[Math.floor(Math.random() * glitchChars.length)];
+            }
+          }
+          targetEl.textContent = result;
+          
+          if (progress < 1) {
+            requestAnimationFrame(scramble);
+          }
+        }
+        requestAnimationFrame(scramble);
+      }
+
+      glitchBtn?.addEventListener('click', () => {
+        triggerGlitchScramble(typewriterEl, commandText, 950);
+      });
+
+      redactedTexts.forEach(el => {
+        el.addEventListener('click', () => {
+          const secret = el.getAttribute('data-secret');
+          if (secret && !el.classList.contains('revealed')) {
+            el.classList.add('revealed');
+            triggerGlitchScramble(el, secret, 700);
+          }
+        });
+      });
+    }
+    initTerminalSystem();
   </script>
 </body>
 </html>
