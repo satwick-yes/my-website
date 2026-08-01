@@ -2029,31 +2029,70 @@
     const ghSearch = document.getElementById('gh-search');
     const filterBtns = document.querySelectorAll('.gh-filter-btn');
 
+    const ignoredRepos = ['rishi', 'ankit'];
+
+    function getProjectDescription(repo) {
+      if (repo.description && repo.description.trim() !== '') {
+        return repo.description;
+      }
+      
+      const name = (repo.name || '').toLowerCase();
+      const lang = repo.language || '';
+
+      if (name.includes('my-website') || name.includes('portfolio')) {
+        return 'Personal portfolio and creative front-end engineering studio showcasing responsive design and bespoke micro-interactions.';
+      }
+      if (name.includes('llm') || name.includes('chat') || name.includes('gpt') || name.includes('ai')) {
+        return 'Artificial intelligence integration featuring prompt routing, LLM classification models, and database persistence.';
+      }
+      if (name.includes('brand') || name.includes('platform') || name.includes('web') || name.includes('academic')) {
+        return 'Modern web application platform designed for scalable user engagement, media rendering, and robust UI architecture.';
+      }
+      if (name.includes('cpp') || name.includes('c++') || name.includes('algorithm')) {
+        return 'High-performance C++ implementation focused on memory efficiency, data structures, and algorithmic optimization.';
+      }
+      if (name.includes('canvas') || name.includes('3d') || name.includes('three') || name.includes('maglev')) {
+        return 'Interactive 2D/3D visual canvas experiment exploring real-time graphics rendering and user motion physics.';
+      }
+      
+      if (lang === 'TypeScript' || lang === 'JavaScript') {
+        return 'Full-stack web application built with modern JavaScript/TypeScript, reactive component architecture, and responsive layouts.';
+      } else if (lang === 'Python') {
+        return 'Python project focusing on data processing, machine learning models, and backend system automation.';
+      } else if (lang === 'C++' || lang === 'C') {
+        return 'Low-level computer science software written in C/C++ for core algorithm execution and systems programming.';
+      } else if (lang === 'HTML' || lang === 'CSS') {
+        return 'Creative front-end web project built with clean semantic HTML5 structures and custom CSS design tokens.';
+      }
+      return 'Software engineering repository crafted by Satwick Shaw focusing on modular code and clean design.';
+    }
+
     async function fetchGitHubRepos() {
       try {
         const res = await fetch('https://api.github.com/users/satwick-yes/repos?sort=updated&per_page=100');
         if (!res.ok) throw new Error('Failed to load GitHub repos');
         const data = await res.json();
-        allGithubRepos = data.map(repo => ({
-          name: repo.name,
-          desc: repo.description || 'Public repository created by Satwick Shaw.',
-          language: repo.language || 'Web / Code',
-          stars: repo.stargazers_count,
-          forks: repo.forks_count,
-          url: repo.html_url,
-          updated: new Date(repo.updated_at).toLocaleDateString()
-        }));
+        allGithubRepos = data
+          .filter(repo => !ignoredRepos.includes((repo.name || '').toLowerCase()))
+          .map(repo => ({
+            name: repo.name,
+            desc: getProjectDescription(repo),
+            language: repo.language || 'Web / Code',
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            url: repo.html_url,
+            updated: new Date(repo.updated_at).toLocaleDateString()
+          }));
         renderRepos(allGithubRepos);
       } catch (err) {
         console.warn('GitHub API fetch fallback:', err);
-        // Fallback array if rate-limited
         allGithubRepos = [
-          { name: 'my-website', desc: 'Personal portfolio and studio site built with pure HTML/CSS/JS.', language: 'TypeScript', stars: 2, forks: 0, url: 'https://github.com/satwick-yes/my-website', updated: '2026' },
-          { name: 'two-stage-llm-router', desc: 'Backend classifier routing user queries across specialized LLMs.', language: 'Python', stars: 5, forks: 1, url: 'https://github.com/satwick-yes', updated: '2026' },
-          { name: 'academic-brand-platform', desc: 'Promotional platform and brand system built for academic support.', language: 'TypeScript', stars: 4, forks: 0, url: 'https://github.com/satwick-yes', updated: '2026' },
-          { name: 'ai-demographic-detector', desc: 'PyTorch and OpenCV model detecting demographic parameters.', language: 'Python', stars: 8, forks: 2, url: 'https://github.com/satwick-yes', updated: '2025' },
-          { name: 'cpp-algorithms-suite', desc: 'Optimized C++ data structures and algorithmic suites.', language: 'C++', stars: 3, forks: 0, url: 'https://github.com/satwick-yes', updated: '2025' },
-          { name: 'interactive-canvas-scripts', desc: 'Bespoke HTML5 canvas interactive effects and smooth scroll modules.', language: 'JavaScript', stars: 6, forks: 1, url: 'https://github.com/satwick-yes', updated: '2026' }
+          { name: 'my-website', desc: 'Personal portfolio and creative front-end engineering studio showcasing responsive design and bespoke micro-interactions.', language: 'TypeScript', stars: 2, forks: 0, url: 'https://github.com/satwick-yes/my-website', updated: '2026' },
+          { name: 'two-stage-llm-router', desc: 'Backend classifier routing user queries across specialized LLM models with database persistence.', language: 'Python', stars: 5, forks: 1, url: 'https://github.com/satwick-yes', updated: '2026' },
+          { name: 'academic-brand-platform', desc: 'Promotional platform and brand system built for academic support and digital outreach.', language: 'TypeScript', stars: 4, forks: 0, url: 'https://github.com/satwick-yes', updated: '2026' },
+          { name: 'ai-demographic-detector', desc: 'PyTorch and OpenCV computer vision pipeline detecting age and gender demographics.', language: 'Python', stars: 8, forks: 2, url: 'https://github.com/satwick-yes', updated: '2025' },
+          { name: 'cpp-algorithms-suite', desc: 'High-performance C++ implementation focused on memory efficiency and algorithmic optimization.', language: 'C++', stars: 3, forks: 0, url: 'https://github.com/satwick-yes', updated: '2025' },
+          { name: 'interactive-canvas-scripts', desc: 'Bespoke HTML5 canvas interactive effects, smooth scroll modules, and physics animations.', language: 'JavaScript', stars: 6, forks: 1, url: 'https://github.com/satwick-yes', updated: '2026' }
         ];
         renderRepos(allGithubRepos);
       }
