@@ -7,6 +7,3 @@ Thumbs.db
 # Local env
 .env
 .env.local
-
-# Dependencies
-node_modules/
