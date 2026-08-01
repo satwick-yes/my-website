@@ -332,6 +332,7 @@
       border-radius: 1rem;
       font-size: 0.84375rem;
       line-height: 1.45;
+      flex-shrink: 0;
     }
 
     .ai-msg.bot {
@@ -5627,6 +5628,7 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
               loadingMsg.style.opacity = "1";
               chatHistory.push({ role: "user", content: queryText });
               chatHistory.push({ role: "assistant", content: cleanReply });
+              messagesContainer.scrollTop = messagesContainer.scrollHeight;
               return;
             }
           }
@@ -5651,6 +5653,7 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
               loadingMsg.style.opacity = "1";
               chatHistory.push({ role: "user", content: queryText });
               chatHistory.push({ role: "assistant", content: cleanFallback });
+              messagesContainer.scrollTop = messagesContainer.scrollHeight;
               return;
             }
           }
@@ -5673,6 +5676,7 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
           loadingMsg.style.opacity = "1";
           chatHistory.push({ role: "user", content: queryText });
           chatHistory.push({ role: "assistant", content: fallbackReply });
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
       }
 
