@@ -4,6 +4,8 @@
   "private": true,
   "description": "Satwick Shaw — Portfolio & Engineering",
   "scripts": {
-    "dev": "npx serve ."
+    "dev": "npx serve .",
+    "build": "echo 'Static HTML build ready'",
+    "vercel-build": "echo 'Static HTML build ready'"
   }
 }
