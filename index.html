@@ -15,25 +15,25 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     
     :root {
-      --background: #ffffff;
+      --background: #faf9f6;
       --foreground: #111111;
-      --ink: #0a0a0a;
-      --muted: #8d8d8d;
-      --subtle: #b6b6b6;
-      --line: #e6e5e2;
-      --surface: #f1f0ee;
-      --surface-2: #e3e2df;
+      --ink: #111111;
+      --muted: #666666;
+      --subtle: #999999;
+      --line: #e4e2dc;
+      --surface: #f0eee9;
+      --surface-2: #e4e2dc;
       --accent: #b15f2c;
       --accent-from: #cf8047;
       --accent-to: #97501f;
-      --hero-from: #ecebe9;
-      --hero-to: #c9c9c9;
-      --nav-bg: rgba(255, 255, 255, 0.85);
-      --chip-bg: rgba(255, 255, 255, 0.75);
-      --chip-border: rgba(230, 229, 226, 0.8);
-      --hero-vignette-from: rgba(255,255,255,0.4);
-      --hero-vignette-to: rgba(255,255,255,0.45);
-      --watermark-color: rgba(255,255,255,0.45);
+      --hero-from: #faf9f6;
+      --hero-to: #f0eee9;
+      --nav-bg: rgba(250, 249, 246, 0.85);
+      --chip-bg: rgba(240, 238, 233, 0.75);
+      --chip-border: rgba(228, 226, 220, 0.8);
+      --hero-vignette-from: rgba(250, 249, 246, 0.6);
+      --hero-vignette-to: rgba(240, 238, 233, 0.8);
+      --watermark-color: rgba(0, 0, 0, 0.05);
       
       --radius-pill: 9999px;
       --radius-card: 2rem;
@@ -1991,7 +1991,7 @@
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
         // Draw Before texture
-        ctxB.fillStyle = isDark ? '#0f0f0f' : '#ecebe9';
+        ctxB.fillStyle = isDark ? '#0f0f0f' : '#f0eee9';
         ctxB.fillRect(0, 0, canvas.width, canvas.height);
         ctxB.strokeStyle = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
         ctxB.lineWidth = 1 * dpr;
