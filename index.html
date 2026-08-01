@@ -657,7 +657,7 @@
     }
     .repo-card:hover { transform: translateY(-4px); border-color: var(--accent); background: var(--background); }
     .repo-name { font-size: 1.125rem; font-weight: 600; color: var(--foreground); display: flex; align-items: center; justify-content: space-between; }
-    .repo-desc { font-size: 0.8125rem; color: var(--muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .repo-desc { font-size: 0.8125rem; color: var(--muted); line-height: 1.4; display: -webkit-box; line-clamp: 3; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .repo-meta { display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; color: var(--muted); }
 
     /* SKILLS SECTION */
@@ -951,11 +951,11 @@
         <nav class="nav-center">
           <ul class="nav-list">
             <li class="nav-item"><a href="#home" data-scroll="#home">Home</a></li>
+            <li class="nav-item"><a href="#about" data-scroll="#about">About</a></li>
             <li class="nav-item"><a href="#projects" data-scroll="#projects">Projects</a></li>
             <li class="nav-item"><a href="#skills" data-scroll="#skills">Skills</a></li>
             <li class="nav-item"><a href="#achievements" data-scroll="#achievements">Achievements</a></li>
             <li class="nav-item"><a href="#services" data-scroll="#services">Services</a></li>
-            <li class="nav-item"><a href="#about" data-scroll="#about">About</a></li>
             <li class="nav-item"><button type="button" class="open-modal-trigger">Contact</button></li>
           </ul>
         </nav>
@@ -1600,11 +1600,11 @@
           <div class="footer-col-title">Navigation</div>
           <ul class="footer-link-list">
             <li><a href="#home" data-scroll="#home">Home</a></li>
+            <li><a href="#about" data-scroll="#about">About</a></li>
             <li><a href="#projects" data-scroll="#projects">Projects</a></li>
             <li><a href="#skills" data-scroll="#skills">Skills</a></li>
             <li><a href="#achievements" data-scroll="#achievements">Achievements</a></li>
             <li><a href="#services" data-scroll="#services">Services</a></li>
-            <li><a href="#about" data-scroll="#about">About</a></li>
           </ul>
         </div>
 
@@ -1661,25 +1661,25 @@
             <span class="menu-idx">01</span>
             <span>Home</span>
           </div>
-          <div class="menu-nav-item" data-target="#projects">
+          <div class="menu-nav-item" data-target="#about">
             <span class="menu-idx">02</span>
+            <span>About</span>
+          </div>
+          <div class="menu-nav-item" data-target="#projects">
+            <span class="menu-idx">03</span>
             <span>Projects (140+)</span>
           </div>
           <div class="menu-nav-item" data-target="#skills">
-            <span class="menu-idx">03</span>
+            <span class="menu-idx">04</span>
             <span>Skills</span>
           </div>
           <div class="menu-nav-item" data-target="#achievements">
-            <span class="menu-idx">04</span>
+            <span class="menu-idx">05</span>
             <span>Achievements</span>
           </div>
           <div class="menu-nav-item" data-target="#services">
-            <span class="menu-idx">05</span>
-            <span>Services</span>
-          </div>
-          <div class="menu-nav-item" data-target="#about">
             <span class="menu-idx">06</span>
-            <span>About</span>
+            <span>Services</span>
           </div>
           <div class="menu-nav-item" id="menu-contact-item">
             <span class="menu-idx">07</span>
