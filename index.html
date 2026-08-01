@@ -3642,7 +3642,7 @@
     }
     initNeuralCanvas();
 
-    // 21. AI ASSISTANT CHATBOT CONTROLLER
+    // 21. AI ASSISTANT CHATBOT CONTROLLER (REAL-TIME GEMINI-LIKE LLM ENGINE)
     function initAIAssistant() {
       const toggleBtn = document.getElementById('ai-chat-toggle');
       const closeBtn = document.getElementById('ai-chat-close');
@@ -3653,6 +3653,8 @@
       const promptBtns = document.querySelectorAll('.ai-prompt-btn');
 
       if (!toggleBtn || !chatWindow || !form || !messagesContainer) return;
+
+      const chatHistory = [];
 
       function openChat() {
         chatWindow.classList.remove('ai-window-closed');
@@ -3674,50 +3676,59 @@
       function addMessage(text, isUser = false) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `ai-msg ${isUser ? 'user' : 'bot'}`;
+        msgDiv.style.whiteSpace = 'pre-wrap';
         msgDiv.textContent = text;
         messagesContainer.appendChild(msgDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        return msgDiv;
       }
 
-      const KNOWLEDGE_BASE = [
-        {
-          keywords: ['who', 'satwick', 'about', 'background', 'bio', 'intro'],
-          response: "Satwick Shaw is a Data Science undergraduate at IIT Madras & Chemical Engineering student. He is an AI engineer and full-stack developer with 140+ software repositories, 1 Technological Patent applicant, and author of 1 published research paper."
-        },
-        {
-          keywords: ['project', 'projects', 'work', 'build', 'portfolio'],
-          response: "Satwick's top projects include:\n1. Two-Stage LLM Classifier & Vector Query Router (Next.js 15, TypeScript, Supabase, Python)\n2. Computational Predictive Analytics Engine (PyTorch, Pandas, Scikit-Learn)\n3. Interactive In-Browser ML Neural Canvas (Softmax Heuristics)"
-        },
-        {
-          keywords: ['skill', 'skills', 'stack', 'languages', 'tech'],
-          response: "Satwick specializes in: Python, C++, TypeScript, JavaScript, Next.js, PyTorch, Supabase, OpenCV, Docker, TailWind CSS, and Git."
-        },
-        {
-          keywords: ['patent', 'research', 'paper', 'academic', 'publication'],
-          response: "Satwick has filed 1 Technological Patent for simultaneous electromagnetic levitation & wireless power transfer, and published 1 peer-reviewed research paper detailing algorithmic optimization and vector routing."
-        },
-        {
-          keywords: ['contact', 'email', 'hire', 'reach', 'message'],
-          response: "You can reach Satwick directly at satwick1234509@gmail.com or by clicking 'Let's Talk' / 'Start a Project' on the website!"
-        }
-      ];
+      const SYSTEM_PROMPT = `You are Satwick's AI Assistant on Satwick Shaw's official portfolio website.
+Satwick Shaw is a Data Science undergraduate at IIT Madras & Chemical Engineering student. He is an AI engineer and full-stack developer with 140+ software repositories, 1 Technological Patent applicant (for simultaneous electromagnetic levitation & wireless power transfer), and author of 1 published academic paper on vector routing & algorithmic optimization.
+His core stack includes Python, C++, TypeScript, Next.js, PyTorch, Supabase, OpenCV, Docker, TailWind CSS, and Git.
+Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (general knowledge, coding, math, science, advice, trivia, jokes, or portfolio questions) accurately, intelligently, concisely, and with a friendly tone. Keep responses helpful and under 3-4 paragraphs.`;
 
-      function processQuery(queryText) {
-        const text = queryText.toLowerCase();
+      async function processQuery(queryText) {
         addMessage(queryText, true);
+        chatHistory.push({ role: "user", content: queryText });
 
-        let reply = "Satwick is an AI Engineer and Full-Stack Developer at IIT Madras. Feel free to ask about his projects, skills, research, or click 'Start a Project' to get in touch!";
+        const loadingMsg = addMessage("Thinking...", false);
+        loadingMsg.style.opacity = "0.7";
 
-        for (const item of KNOWLEDGE_BASE) {
-          if (item.keywords.some(k => text.includes(k))) {
-            reply = item.response;
-            break;
+        try {
+          const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(queryText)}?system=${encodeURIComponent(SYSTEM_PROMPT)}`, {
+            method: 'GET',
+            headers: { 'Accept': 'text/plain' }
+          });
+
+          if (response.ok) {
+            const aiReply = await response.text();
+            if (aiReply && aiReply.trim()) {
+              loadingMsg.textContent = aiReply.trim();
+              loadingMsg.style.opacity = "1";
+              chatHistory.push({ role: "assistant", content: aiReply.trim() });
+              return;
+            }
           }
-        }
+          throw new Error("API fallback required");
+        } catch (err) {
+          let fallbackReply = "Satwick is an AI Engineer and Full-Stack Developer at IIT Madras. Feel free to ask about his projects, skills, research, or click 'Start a Project' to get in touch!";
+          
+          const textLower = queryText.toLowerCase();
+          if (textLower.includes("who") || textLower.includes("about") || textLower.includes("satwick") || textLower.includes("bio")) {
+            fallbackReply = "Satwick Shaw is a Data Science undergraduate at IIT Madras & Chemical Engineering student. He is an AI engineer and full-stack developer with 140+ software repositories, 1 Technological Patent applicant, and author of 1 published research paper.";
+          } else if (textLower.includes("project") || textLower.includes("work") || textLower.includes("build")) {
+            fallbackReply = "Satwick's top projects include:\n1. Two-Stage LLM Classifier & Vector Query Router (Next.js 15, TypeScript, Supabase, Python)\n2. Computational Predictive Analytics Engine (PyTorch, Pandas, Scikit-Learn)\n3. Interactive In-Browser ML Neural Canvas (Softmax Heuristics)";
+          } else if (textLower.includes("skill") || textLower.includes("tech") || textLower.includes("stack") || textLower.includes("code")) {
+            fallbackReply = "Satwick specializes in: Python, C++, TypeScript, JavaScript, Next.js, PyTorch, Supabase, OpenCV, Docker, TailWind CSS, and Git.";
+          } else if (textLower.includes("patent") || textLower.includes("research") || textLower.includes("paper")) {
+            fallbackReply = "Satwick has filed 1 Technological Patent for simultaneous electromagnetic levitation & wireless power transfer, and published 1 peer-reviewed research paper detailing algorithmic optimization and vector routing.";
+          }
 
-        setTimeout(() => {
-          addMessage(reply, false);
-        }, 350);
+          loadingMsg.textContent = fallbackReply;
+          loadingMsg.style.opacity = "1";
+          chatHistory.push({ role: "assistant", content: fallbackReply });
+        }
       }
 
       form.addEventListener('submit', (e) => {
