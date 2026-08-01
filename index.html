@@ -3159,6 +3159,33 @@
       color: var(--muted) !important;
       border: 1px solid var(--line) !important;
     }
+  
+    /* PALMER-STYLE ANIMATIONS */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .reveal-on-scroll.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* ENHANCED PROJECT CARD HOVER */
+    .project-card {
+      overflow: hidden;
+    }
+    .project-image-wrapper {
+      overflow: hidden;
+      border-radius: var(--radius-control);
+    }
+    .project-image-wrapper img {
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .project-card:hover .project-image-wrapper img {
+      transform: scale(1.05);
+    }
   </style>
 </head>
 
@@ -3495,11 +3522,11 @@
     <section id="projects">
       <div class="shell">
         <div class="section-header">
-          <div class="eyebrow-pill">
+          <div class="eyebrow-pill reveal-on-scroll">
             <span class="eyebrow-dot"></span>
             <span>Selected Projects &amp; GitHub Portfolio</span>
           </div>
-          <h2 class="section-title">Projects (140+ Shipped)</h2>
+          <h2 class="section-title reveal-on-scroll">Projects (140+ Shipped)</h2>
         </div>
 
         <!-- Featured Projects Grid -->
@@ -3620,11 +3647,11 @@
     <section id="skills">
       <div class="shell">
         <div class="section-header">
-          <div class="eyebrow-pill">
+          <div class="eyebrow-pill reveal-on-scroll">
             <span class="eyebrow-dot"></span>
             <span>Comprehensive Expertise</span>
           </div>
-          <h2 class="section-title">UI/UX Design &amp; Coding Skills</h2>
+          <h2 class="section-title reveal-on-scroll">UI/UX Design &amp; Coding Skills</h2>
         </div>
 
         <div class="skills-categories-grid">
@@ -3735,11 +3762,11 @@
     <section id="achievements">
       <div class="shell">
         <div class="section-header">
-          <div class="eyebrow-pill">
+          <div class="eyebrow-pill reveal-on-scroll">
             <span class="eyebrow-dot"></span>
             <span>Milestones &amp; Credentials</span>
           </div>
-          <h2 class="section-title">Key Achievements</h2>
+          <h2 class="section-title reveal-on-scroll">Key Achievements</h2>
         </div>
 
         <div class="achievements-grid">
@@ -3810,11 +3837,11 @@
     <section id="services">
       <div class="shell">
         <div class="section-header" style="align-items:flex-start; text-align:left;">
-          <div class="eyebrow-pill">
+          <div class="eyebrow-pill reveal-on-scroll">
             <span class="eyebrow-dot"></span>
             <span>Services &amp; Capabilities</span>
           </div>
-          <h2 class="section-title">What I Do Best</h2>
+          <h2 class="section-title reveal-on-scroll">What I Do Best</h2>
         </div>
 
         <ul class="services-list">
@@ -3862,7 +3889,7 @@
             <span class="eyebrow-dot" style="background:rgba(255,255,255,0.6)"></span>
             <span>By the Numbers</span>
           </div>
-          <h2 class="section-title" style="color:#ffffff; text-align:left;">Proof in the code, not the words.</h2>
+          <h2 class="section-title reveal-on-scroll" style="color:#ffffff; text-align:left;">Proof in the code, not the words.</h2>
 
           <div class="stats-grid">
             <div class="stat-item" data-target="140" data-suffix="+">
@@ -3888,11 +3915,11 @@
         <section id="case-studies">
           <div class="shell">
             <div class="section-header" style="align-items:flex-start; text-align:left;">
-              <div class="eyebrow-pill">
+              <div class="eyebrow-pill reveal-on-scroll">
                 <span class="eyebrow-dot"></span>
                 <span>Architectural Deep Dives</span>
               </div>
-              <h2 class="section-title">Featured Case Studies</h2>
+              <h2 class="section-title reveal-on-scroll">Featured Case Studies</h2>
             </div>
 
             <!-- Case Study 1 -->
@@ -4024,11 +4051,11 @@
         <section id="testimonials">
           <div class="shell">
             <div class="section-header">
-              <div class="eyebrow-pill">
+              <div class="eyebrow-pill reveal-on-scroll">
                 <span class="eyebrow-dot"></span>
                 <span>Social Proof &amp; Endorsements</span>
               </div>
-              <h2 class="section-title">What People Say</h2>
+              <h2 class="section-title reveal-on-scroll">What People Say</h2>
             </div>
 
             <div class="testimonial-card">
@@ -5607,6 +5634,33 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
       });
     }
     initAIAssistant();
+  
+    // PALMER-STYLE SCROLL REVEAL OBSERVER
+    function initScrollReveal() {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -50px 0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        // Group entries by container for staggered delay if they appear simultaneously
+        let delayCount = 0;
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Apply a staggered transition delay
+            entry.target.style.transitionDelay = `${delayCount * 0.1}s`;
+            entry.target.classList.add('is-visible');
+            delayCount++;
+            observer.unobserve(entry.target); // Only animate once
+          }
+        });
+      }, observerOptions);
+
+      const revealElements = document.querySelectorAll('.reveal-on-scroll');
+      revealElements.forEach(el => observer.observe(el));
+    }
+    initScrollReveal();
   </script>
 </body>
 
