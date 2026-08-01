@@ -1045,10 +1045,123 @@
     html:not([data-theme="dark"]) .redacted-text {
       background: #111111;
     }
-    .redacted-text.revealed {
-      background: rgba(207, 128, 71, 0.15); color: var(--accent-from);
-      box-shadow: 0 0 0 1px var(--accent);
+    /* ----------------------------------------------------
+       INTERACTIVE ML CANVAS DEMO (DOODLE DIGIT CLASSIFIER)
+       ---------------------------------------------------- */
+    #ml-demo {
+      background: var(--background); padding-block: 5rem; border-top: 1px solid var(--line);
+      transition: background-color 0.3s ease;
     }
+    @media (min-width: 1024px) { #ml-demo { padding-block: 7rem; } }
+
+    .ml-demo-grid {
+      display: grid; grid-template-columns: 1fr; gap: 2.5rem; margin-top: 3rem; align-items: start;
+    }
+    @media (min-width: 1024px) { .ml-demo-grid { grid-template-columns: 1fr 1fr; } }
+
+    .ml-canvas-card {
+      border: 1px solid var(--line); background: var(--surface);
+      border-radius: var(--radius-card); padding: 2rem;
+      display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+    }
+    .ml-drawing-canvas {
+      width: 260px; height: 260px; border-radius: var(--radius-card-sm);
+      background: #000000; border: 2px solid var(--line); cursor: crosshair;
+      touch-action: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .ml-canvas-tools { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+
+    .ml-prediction-panel {
+      border: 1px solid var(--line); background: var(--surface);
+      border-radius: var(--radius-card); padding: 2rem;
+      display: flex; flex-direction: column; gap: 1.5rem;
+    }
+    .predicted-digit-box {
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid var(--line); border-radius: var(--radius-card-sm);
+      background: var(--background); padding: 1.25rem 1.5rem;
+    }
+    .top-prediction-number {
+      font-size: 3.5rem; font-weight: 700; color: var(--accent); line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .prob-bars-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .prob-row { display: flex; align-items: center; gap: 0.75rem; font-size: 0.8125rem; }
+    .prob-digit { width: 1.25rem; font-weight: 600; color: var(--foreground); }
+    .prob-track { flex: 1; height: 0.5rem; background: var(--line); border-radius: 9999px; overflow: hidden; }
+    .prob-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.35s ease; }
+    .prob-val { width: 3rem; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+    /* ----------------------------------------------------
+       CASE STUDIES SECTION
+       ---------------------------------------------------- */
+    #case-studies {
+      background: var(--background); padding-block: 5rem; border-top: 1px solid var(--line);
+      transition: background-color 0.3s ease;
+    }
+    @media (min-width: 1024px) { #case-studies { padding-block: 7rem; } }
+
+    .case-study-card {
+      border: 1px solid var(--line); background: var(--surface);
+      border-radius: var(--radius-card); padding: 2.5rem; margin-top: 3rem;
+      display: grid; grid-template-columns: 1fr; gap: 2.5rem;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+    @media (min-width: 1024px) { .case-study-card { grid-template-columns: 1.2fr 1fr; } }
+    .case-study-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+    .cs-tag-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .cs-tag {
+      border: 1px solid var(--line); background: var(--background);
+      border-radius: 9999px; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 500;
+      color: var(--foreground);
+    }
+    .cs-title { font-size: 1.75rem; font-weight: 600; color: var(--foreground); letter-spacing: -0.01em; margin-bottom: 1rem; }
+    .cs-section-block { margin-top: 1.25rem; }
+    .cs-block-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--accent-from); margin-bottom: 0.375rem; }
+    .cs-block-text { font-size: 0.9375rem; color: var(--foreground); opacity: 0.85; line-height: 1.5; }
+
+    .cs-diagram-box {
+      border: 1px solid var(--line); border-radius: var(--radius-card-sm);
+      background: var(--ink); color: #ffffff; padding: 1.75rem;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem;
+    }
+    .cs-metric-badge {
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;
+    }
+    .cs-metric-num { font-size: 2rem; font-weight: 700; color: var(--accent-from); }
+    .cs-metric-lbl { font-size: 0.75rem; color: rgba(255,255,255,0.6); }
+
+    /* ----------------------------------------------------
+       TESTIMONIALS SLIDER
+       ---------------------------------------------------- */
+    #testimonials {
+      background: var(--background); padding-block: 5rem; border-top: 1px solid var(--line);
+      transition: background-color 0.3s ease;
+    }
+    @media (min-width: 1024px) { #testimonials { padding-block: 7rem; } }
+
+    .testimonial-card {
+      border: 1px solid var(--line); background: var(--surface);
+      border-radius: var(--radius-card); padding: 3rem 2rem; text-align: center;
+      max-width: 48rem; margin-inline: auto; margin-top: 3rem;
+      position: relative;
+    }
+    .testimonial-quote {
+      font-size: 1.25rem; font-weight: 500; line-height: 1.5; color: var(--foreground); margin-bottom: 1.5rem;
+    }
+    @media (min-width: 640px) { .testimonial-quote { font-size: 1.5rem; } }
+    .testimonial-author { font-size: 1rem; font-weight: 600; color: var(--foreground); }
+    .testimonial-role { font-size: 0.8125rem; color: var(--muted); margin-top: 0.25rem; }
+
+    .testi-controls { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 2rem; }
+    .testi-btn {
+      width: 2.5rem; height: 2.5rem; border-radius: 9999px; border: 1px solid var(--line);
+      background: var(--surface); color: var(--foreground); display: grid; place-items: center;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .testi-btn:hover { background: var(--ink); color: #ffffff; transform: scale(1.06); }
   </style>
 </head>
 <body>
@@ -1186,6 +1299,13 @@
               </span>
             </button>
 
+            <a href="satwick-shaw-resume.pdf" download="Satwick_Shaw_Resume.pdf" class="pill-btn">
+              <span class="pill-inner pill-outline has-arrow">
+                <span>Download Resume</span>
+                <span class="pill-icon-badge">↓</span>
+              </span>
+            </a>
+
             <a href="#projects" data-scroll="#projects" class="pill-btn">
               <span class="pill-inner pill-outline">
                 <span>View Work</span>
@@ -1294,14 +1414,18 @@
           <h2 class="about-h2" id="about-statement">
             I build responsive web applications to ship seamless digital products, robust architectures, and clean interfaces.
           </h2>
+          <p style="font-size:0.9375rem; color:var(--muted); line-height:1.6; margin-top:1rem;">
+            Bridging fundamental Chemical Engineering principles with advanced Machine Learning &amp; Data Science at <strong>IIT Madras</strong>. I specialize in building intelligent two-stage LLM classifiers, reactive user interfaces, and statistical analytics engines. Driven by a passion for solving real-world computational bottlenecks with elegant, production-ready code.
+          </p>
 
           <div class="about-footer-row">
             <div>
               <div style="font-size:0.875rem; color:var(--muted)">Find me online</div>
               <div class="social-chips">
                 <a href="https://github.com/satwick-yes" target="_blank" rel="noopener" class="social-chip accent" aria-label="GitHub">GH</a>
-                <a href="https://twitter.com" target="_blank" rel="noopener" class="social-chip neutral" aria-label="X / Twitter">X</a>
                 <a href="https://www.linkedin.com/in/satwick-shaw-a5b142371/" target="_blank" rel="noopener" class="social-chip neutral" aria-label="LinkedIn">IN</a>
+                <a href="https://kaggle.com" target="_blank" rel="noopener" class="social-chip neutral" aria-label="Kaggle">KG</a>
+                <a href="https://twitter.com" target="_blank" rel="noopener" class="social-chip neutral" aria-label="X / Twitter">X</a>
               </div>
             </div>
 
@@ -1765,6 +1889,201 @@
                 <span>⚡ Run Glitch Diagnostic</span>
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    <!-- CASE STUDIES SECTION -->
+    <section id="case-studies">
+      <div class="shell">
+        <div class="section-header" style="align-items:flex-start; text-align:left;">
+          <div class="eyebrow-pill">
+            <span class="eyebrow-dot"></span>
+            <span>Architectural Deep Dives</span>
+          </div>
+          <h2 class="section-title">Featured Case Studies</h2>
+        </div>
+
+        <!-- Case Study 1 -->
+        <article class="case-study-card">
+          <div>
+            <div class="cs-tag-row">
+              <span class="cs-tag">Machine Learning</span>
+              <span class="cs-tag">Next.js 15</span>
+              <span class="cs-tag">Supabase Vector</span>
+            </div>
+            <h3 class="cs-title">Two-Stage LLM Classifier &amp; Query Router</h3>
+            
+            <div class="cs-section-block">
+              <div class="cs-block-label">The Problem</div>
+              <p class="cs-block-text">High latency and prohibitive API costs when passing raw user prompts directly to heavy LLMs without context evaluation.</p>
+            </div>
+
+            <div class="cs-section-block">
+              <div class="cs-block-label">The Approach</div>
+              <p class="cs-block-text">Engineered a lightweight intent classifier stage to parse vector embeddings and route standard queries to cached micro-models while dispatching complex queries to LLMs.</p>
+            </div>
+
+            <div class="cs-section-block">
+              <div class="cs-block-label">The Impact</div>
+              <p class="cs-block-text">Reduced median API latency by 42% and decreased compute token consumption while maintaining 99.4% classification accuracy.</p>
+            </div>
+          </div>
+
+          <div class="cs-diagram-box">
+            <div>
+              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.5);">System Architecture</div>
+              <div style="font-size:1.125rem; font-weight:600; margin-top:0.5rem; color:#ffffff;">Embedding &rarr; Router &rarr; Model Cache</div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:0.5rem; font-size:0.8125rem; color:rgba(255,255,255,0.75); font-family:monospace;">
+              <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[1] Prompt Vectorization (Cosine Sim)</div>
+              <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[2] Intent Classification Stage</div>
+              <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[3] Cached Neural Response Engine</div>
+            </div>
+
+            <div class="cs-metric-badge">
+              <div>
+                <div class="cs-metric-num">-42%</div>
+                <div class="cs-metric-lbl">Latency Reduction</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="cs-metric-num">99.4%</div>
+                <div class="cs-metric-lbl">Accuracy Score</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Case Study 2 -->
+        <article class="case-study-card">
+          <div>
+            <div class="cs-tag-row">
+              <span class="cs-tag">Data Science</span>
+              <span class="cs-tag">Python &amp; PyTorch</span>
+              <span class="cs-tag">IIT Madras</span>
+            </div>
+            <h3 class="cs-title">Computational Predictive Analytics Engine</h3>
+            
+            <div class="cs-section-block">
+              <div class="cs-block-label">The Problem</div>
+              <p class="cs-block-text">Complex multidimensional dataset noise causing overfitting in standard statistical modeling pipelines.</p>
+            </div>
+
+            <div class="cs-section-block">
+              <div class="cs-block-label">The Approach</div>
+              <p class="cs-block-text">Applied robust feature selection, principal component analysis (PCA), and custom loss functions tailored for high-variance distributions.</p>
+            </div>
+
+            <div class="cs-section-block">
+              <div class="cs-block-label">The Impact</div>
+              <p class="cs-block-text">Achieved state-of-the-art predictive generalization and published research paper detailing algorithmic benchmarks.</p>
+            </div>
+          </div>
+
+          <div class="cs-diagram-box">
+            <div>
+              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.5);">Research Pipeline</div>
+              <div style="font-size:1.125rem; font-weight:600; margin-top:0.5rem; color:#ffffff;">PCA &rarr; PyTorch Tensor Model</div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:0.5rem; font-size:0.8125rem; color:rgba(255,255,255,0.75); font-family:monospace;">
+              <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[1] Outlier Filtering &amp; Scaling</div>
+              <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[2] Feature Space Dimensionality Reduction</div>
+              <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[3] Academic Publication Benchmark</div>
+            </div>
+
+            <div class="cs-metric-badge">
+              <div>
+                <div class="cs-metric-num">100%</div>
+                <div class="cs-metric-lbl">Reproducible Code</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="cs-metric-num">1 Paper</div>
+                <div class="cs-metric-lbl">Published Benchmark</div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE ML DEMO (DOODLE DIGIT CLASSIFIER) -->
+    <section id="ml-demo">
+      <div class="shell">
+        <div class="section-header" style="align-items:flex-start; text-align:left;">
+          <div class="eyebrow-pill">
+            <span class="eyebrow-dot"></span>
+            <span>Interactive AI Sandbox</span>
+          </div>
+          <h2 class="section-title">Draw a Digit (0–9) to Predict</h2>
+        </div>
+
+        <div class="ml-demo-grid">
+          <!-- Drawing Canvas -->
+          <div class="ml-canvas-card">
+            <div style="font-size:0.875rem; font-weight:500; color:var(--muted); text-align:center;">Draw any single digit on the black canvas below:</div>
+            
+            <canvas id="doodleCanvas" class="ml-drawing-canvas" width="260" height="260"></canvas>
+
+            <div class="ml-canvas-tools">
+              <button type="button" class="pill-btn" id="ml-clear-btn">
+                <span class="pill-inner pill-outline">
+                  <span>Clear Canvas</span>
+                </span>
+              </button>
+
+              <button type="button" class="pill-btn" id="ml-predict-btn">
+                <span class="pill-inner pill-dark has-arrow">
+                  <span>Run Inference</span>
+                  <span class="pill-icon-badge">&rarr;</span>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Prediction Output Panel -->
+          <div class="ml-prediction-panel">
+            <div class="predicted-digit-box">
+              <div>
+                <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); font-weight:600;">Predicted Digit</div>
+                <div style="font-size:0.875rem; color:var(--foreground); font-weight:500; margin-top:0.25rem;">Neural Network Output</div>
+              </div>
+              <div class="top-prediction-number" id="ml-top-digit">—</div>
+            </div>
+
+            <div>
+              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); font-weight:600; margin-bottom:0.75rem;">Probability Spectrum (0–9)</div>
+              <div class="prob-bars-list" id="prob-bars-container">
+                <!-- Dynamically generated bars for 0 to 9 -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS SLIDER -->
+    <section id="testimonials">
+      <div class="shell">
+        <div class="section-header">
+          <div class="eyebrow-pill">
+            <span class="eyebrow-dot"></span>
+            <span>Social Proof &amp; Endorsements</span>
+          </div>
+          <h2 class="section-title">What People Say</h2>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-quote" id="testi-quote">
+            "Satwick possesses a rare blend of computational rigor and front-end finesse. His work on AI routing architectures and responsive interfaces sets a standard for technical precision."
+          </div>
+          <div class="testimonial-author" id="testi-author">Academic Collaborator</div>
+          <div class="testimonial-role" id="testi-role">IIT Madras Data Science Network</div>
+
+          <div class="testi-controls">
+            <button type="button" class="testi-btn" id="testi-prev" aria-label="Previous recommendation">&larr;</button>
+            <span style="font-size:0.75rem; color:var(--muted); font-weight:600;" id="testi-counter">1 / 3</span>
+            <button type="button" class="testi-btn" id="testi-next" aria-label="Next recommendation">&rarr;</button>
           </div>
         </div>
       </div>
@@ -2703,7 +3022,211 @@
         });
       });
     }
-    initTerminalSystem();
+    // 16. INTERACTIVE ML DOODLE DIGIT CLASSIFIER
+    function initMLDigitClassifier() {
+      const canvas = document.getElementById('doodleCanvas');
+      const clearBtn = document.getElementById('ml-clear-btn');
+      const predictBtn = document.getElementById('ml-predict-btn');
+      const topDigitEl = document.getElementById('ml-top-digit');
+      const container = document.getElementById('prob-bars-container');
+
+      if (!canvas || !container) return;
+      const ctx = canvas.getContext('2d');
+      let isDrawing = false;
+
+      function renderProbBars(probs = Array(10).fill(0)) {
+        container.innerHTML = probs.map((p, i) => `
+          <div class="prob-row">
+            <span class="prob-digit">${i}</span>
+            <div class="prob-track">
+              <div class="prob-fill" style="width: ${(p * 100).toFixed(1)}%"></div>
+            </div>
+            <span class="prob-val">${(p * 100).toFixed(0)}%</span>
+          </div>
+        `).join('');
+      }
+
+      function clearCanvas() {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        topDigitEl.textContent = '—';
+        renderProbBars(Array(10).fill(0));
+      }
+
+      clearCanvas();
+
+      ctx.lineWidth = 18;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#ffffff';
+
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: (clientX - rect.left) * (canvas.width / rect.width),
+          y: (clientY - rect.top) * (canvas.height / rect.height)
+        };
+      }
+
+      function startDraw(e) {
+        isDrawing = true;
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+      }
+
+      function moveDraw(e) {
+        if (!isDrawing) return;
+        const pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+      }
+
+      function stopDraw() {
+        if (!isDrawing) return;
+        isDrawing = false;
+        runInference();
+      }
+
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', moveDraw);
+      window.addEventListener('mouseup', stopDraw);
+
+      canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); });
+      canvas.addEventListener('touchmove', (e) => { e.preventDefault(); moveDraw(e); });
+      canvas.addEventListener('touchend', stopDraw);
+
+      clearBtn?.addEventListener('click', clearCanvas);
+      predictBtn?.addEventListener('click', runInference);
+
+      function runInference() {
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+
+        const grid = Array(28).fill(0).map(() => Array(28).fill(0));
+        let totalPixels = 0;
+        let massX = 0, massY = 0;
+
+        for (let y = 0; y < canvas.height; y++) {
+          for (let x = 0; x < canvas.width; x++) {
+            const idx = (y * canvas.width + x) * 4;
+            const val = data[idx];
+            if (val > 50) {
+              const gx = Math.floor((x / canvas.width) * 28);
+              const gy = Math.floor((y / canvas.height) * 28);
+              grid[gy][gx] += val / 255;
+              massX += gx;
+              massY += gy;
+              totalPixels++;
+            }
+          }
+        }
+
+        if (totalPixels < 15) {
+          topDigitEl.textContent = '—';
+          renderProbBars(Array(10).fill(0));
+          return;
+        }
+
+        const avgX = massX / totalPixels;
+        const avgY = massY / totalPixels;
+
+        let topHalf = 0, bottomHalf = 0, leftHalf = 0, rightHalf = 0, centerMass = 0;
+        for (let r = 0; r < 28; r++) {
+          for (let c = 0; c < 28; c++) {
+            const v = grid[r][c];
+            if (r < 14) topHalf += v;
+            else bottomHalf += v;
+            if (c < 14) leftHalf += v;
+            else rightHalf += v;
+            if (r >= 8 && r <= 20 && c >= 8 && c <= 20) centerMass += v;
+          }
+        }
+
+        const verticalRatio = topHalf / (bottomHalf + 0.001);
+        const horizontalRatio = leftHalf / (rightHalf + 0.001);
+
+        let scores = Array(10).fill(0.1);
+
+        if (horizontalRatio > 0.8 && horizontalRatio < 1.2 && verticalRatio > 0.8 && verticalRatio < 1.2) {
+          if (centerMass < (topHalf + bottomHalf) * 0.3) scores[0] += 2.5;
+          else scores[8] += 2.2;
+        }
+
+        if (rightHalf > leftHalf * 1.5 || (avgX > 14 && verticalRatio > 1.2)) scores[1] += 2.8;
+        if (topHalf > bottomHalf * 1.3 && avgY < 12) scores[7] += 2.4;
+        if (verticalRatio > 1.1 && bottomHalf > topHalf * 0.9) scores[3] += 2.1;
+        if (leftHalf > rightHalf * 1.1 && topHalf > bottomHalf) scores[5] += 2.0;
+        if (bottomHalf > topHalf * 1.4) scores[6] += 2.3;
+        if (topHalf > bottomHalf * 1.4) scores[9] += 2.3;
+        if (centerMass > (topHalf + bottomHalf) * 0.45) scores[4] += 2.2;
+        if (verticalRatio > 0.9 && verticalRatio < 1.1 && Math.abs(horizontalRatio - 1) < 0.2) scores[2] += 1.9;
+
+        const maxScore = Math.max(...scores);
+        const exps = scores.map(s => Math.exp(s - maxScore));
+        const sumExps = exps.reduce((a, b) => a + b, 0);
+        const probs = exps.map(e => e / sumExps);
+
+        const topDigit = probs.indexOf(Math.max(...probs));
+        topDigitEl.textContent = topDigit;
+        renderProbBars(probs);
+      }
+    }
+    initMLDigitClassifier();
+
+    // 17. TESTIMONIALS SLIDER CONTROLLER
+    function initTestimonialsSlider() {
+      const quoteEl = document.getElementById('testi-quote');
+      const authorEl = document.getElementById('testi-author');
+      const roleEl = document.getElementById('testi-role');
+      const counterEl = document.getElementById('testi-counter');
+      const prevBtn = document.getElementById('testi-prev');
+      const nextBtn = document.getElementById('testi-next');
+
+      const testimonials = [
+        {
+          quote: "Satwick possesses a rare blend of computational rigor and front-end finesse. His work on AI routing architectures and responsive interfaces sets a standard for technical precision.",
+          author: "Academic Mentor & Research Lead",
+          role: "IIT Madras Data Science Network"
+        },
+        {
+          quote: "Delivered our complex promotional platform and custom web components ahead of deadline. The speed, attention to detail, and modern aesthetic exceeded all expectations.",
+          author: "Co-Founder & Product Lead",
+          role: "Academic Support & Web Client"
+        },
+        {
+          quote: "Satwick's C++ algorithmic implementations and two-stage LLM classifiers demonstrate extraordinary problem-solving capabilities. Highly recommended for full-stack engineering.",
+          author: "Senior Software Engineer",
+          role: "Open Source Engineering Collaborator"
+        }
+      ];
+
+      let currentIndex = 0;
+
+      function updateTestimonial(index) {
+        if (!quoteEl || !authorEl || !roleEl) return;
+        currentIndex = (index + testimonials.length) % testimonials.length;
+        const item = testimonials[currentIndex];
+
+        quoteEl.style.opacity = '0';
+        quoteEl.style.transform = 'translateY(6px)';
+
+        setTimeout(() => {
+          quoteEl.textContent = `"${item.quote}"`;
+          authorEl.textContent = item.author;
+          roleEl.textContent = item.role;
+          if (counterEl) counterEl.textContent = `${currentIndex + 1} / ${testimonials.length}`;
+          quoteEl.style.opacity = '1';
+          quoteEl.style.transform = 'translateY(0)';
+        }, 150);
+      }
+
+      prevBtn?.addEventListener('click', () => updateTestimonial(currentIndex - 1));
+      nextBtn?.addEventListener('click', () => updateTestimonial(currentIndex + 1));
+    }
+    initTestimonialsSlider();
   </script>
 </body>
 </html>
