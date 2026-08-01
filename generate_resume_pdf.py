@@ -84,7 +84,7 @@ def create_resume(filename="satwick-shaw-resume.pdf"):
     story.append(Paragraph("DATA SCIENCE &amp; AI ENGINEER | FULL-STACK DEVELOPER", subtitle_style))
     story.append(Spacer(1, 4))
 
-    contact_line = "India &nbsp;|&nbsp; GitHub: github.com/satwick-yes &nbsp;|&nbsp; LinkedIn: linkedin.com/in/satwick-shaw-a5b142371 &nbsp;|&nbsp; Kaggle: kaggle.com"
+    contact_line = "India &nbsp;|&nbsp; Email: satwick1234509@gmail.com &nbsp;|&nbsp; GitHub: github.com/satwick-yes &nbsp;|&nbsp; LinkedIn: linkedin.com/in/satwick-shaw-a5b142371"
     story.append(Paragraph(contact_line, contact_style))
     story.append(Spacer(1, 8))
     story.append(HRFlowable(width="100%", thickness=1.5, color=colors.HexColor('#b15f2c'), spaceAfter=10))
