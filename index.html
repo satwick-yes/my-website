@@ -388,7 +388,16 @@
     .card-tile-left {
       aspect-ratio: 1; width: 6.5rem; display: grid; place-items: center;
       border-radius: var(--radius-control); background: var(--ink);
-      color: #ffffff; font-size: 2rem;
+      color: #ffffff; font-size: 2rem; overflow: hidden; position: relative;
+      border: 1px solid var(--line);
+    }
+    .card-tile-video {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      border-radius: var(--radius-control);
+      transition: transform 0.4s ease;
+    }
+    .hero-card:hover .card-tile-video {
+      transform: scale(1.06);
     }
     .card-panel-right {
       flex: 1; border-radius: var(--radius-control);
@@ -1083,9 +1092,9 @@
           <div class="hero-card" id="hero-carousel-card">
             <div class="hero-card-inner">
               <div class="card-tile-left">
-                <svg width="32" height="32" viewBox="0 0 48 48" fill="var(--accent-from)">
-                  <path d="M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z"/>
-                </svg>
+                <video class="card-tile-video" autoplay loop muted playsinline preload="auto">
+                  <source src="Man_coding_on_laptop_202608011247.mp4" type="video/mp4">
+                </video>
               </div>
 
               <div class="card-panel-right">
