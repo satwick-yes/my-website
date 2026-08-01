@@ -3145,124 +3145,120 @@
           }
         }
 
-        // 3. Structural feature extraction
-        let topMass = 0, midMass = 0, botMass = 0;
-        let leftMass = 0, rightMass = 0;
-        let centerMass = 0;
-        let totalGridMass = 0;
+        // 3. Grid Quadrants & Features (28x28)
+        let Q1 = 0, Q2 = 0, Q3 = 0, Q4 = 0; // Q1: top-left, Q2: top-right, Q3: bot-left, Q4: bot-right
+        let centerMass = 0, totalGridMass = 0;
 
         for (let r = 0; r < 28; r++) {
           for (let c = 0; c < 28; c++) {
             if (grid[r][c]) {
               totalGridMass++;
-              if (r < 9) topMass++;
-              else if (r < 19) midMass++;
-              else botMass++;
-
-              if (c < 14) leftMass++;
-              else rightMass++;
+              if (r < 14 && c < 14) Q1++;
+              else if (r < 14 && c >= 14) Q2++;
+              else if (r >= 14 && c < 14) Q3++;
+              else Q4++;
 
               if (r >= 8 && r <= 19 && c >= 8 && c <= 19) centerMass++;
             }
           }
         }
 
+        // Horizontal crossing count
         function getCrossings(row) {
-          let count = 0;
-          let inStroke = false;
+          let count = 0, inStroke = false;
           for (let c = 0; c < 28; c++) {
             if (grid[row][c]) {
               if (!inStroke) { count++; inStroke = true; }
-            } else {
-              inStroke = false;
-            }
+            } else { inStroke = false; }
           }
           return count;
         }
 
-        const topCrossings = Math.max(getCrossings(5), getCrossings(6));
-        const midCrossings = Math.max(getCrossings(13), getCrossings(14));
-        const botCrossings = Math.max(getCrossings(21), getCrossings(22));
+        const topCrossings = Math.max(getCrossings(5), getCrossings(6), getCrossings(7));
+        const midCrossings = Math.max(getCrossings(13), getCrossings(14), getCrossings(15));
+        const botCrossings = Math.max(getCrossings(20), getCrossings(21), getCrossings(22));
 
-        let topBarWidth = 0;
+        // Horizontal Bar Widths
+        let topBarWidth = 0, midBarWidth = 0, botBarWidth = 0;
         for (let c = 4; c < 24; c++) {
           if (grid[3][c] || grid[4][c] || grid[5][c]) topBarWidth++;
-        }
-
-        let midBarWidth = 0;
-        for (let c = 4; c < 24; c++) {
           if (grid[13][c] || grid[14][c] || grid[15][c]) midBarWidth++;
+          if (grid[23][c] || grid[24][c] || grid[25][c]) botBarWidth++;
         }
 
+        // Diagonal stroke test (Top-Right to Bottom-Left)
+        let diagTRtoBL = 0;
+        for (let i = 0; i < 20; i++) {
+          const r = Math.floor(4 + i * 0.9);
+          const c = Math.floor(22 - i * 0.8);
+          if (r < 28 && c >= 0 && grid[r][c]) diagTRtoBL++;
+        }
+
+        // Right stem test
         let rightStemLength = 0;
         for (let r = 4; r < 24; r++) {
-          let hasPixelOnRight = false;
-          for (let c = 16; c < 26; c++) {
-            if (grid[r][c]) hasPixelOnRight = true;
-          }
-          if (hasPixelOnRight) rightStemLength++;
+          let hasPixel = false;
+          for (let c = 16; c < 26; c++) { if (grid[r][c]) hasPixel = true; }
+          if (hasPixel) rightStemLength++;
         }
 
         let scores = Array(10).fill(0.05);
 
-        // --- DIGIT 4 RECOGNITION RULES ---
-        if (midBarWidth > 7 && rightStemLength > 11) {
-          if (topBarWidth < 15) {
-            scores[4] += 6.0;
+        // --- DIGIT 2 RECOGNITION (Straight & Curly/Looped) ---
+        if (Q2 > Q1 * 1.1 && Q4 > 8 && (diagTRtoBL > 5 || botBarWidth > 8 || Q3 > 15)) {
+          if (topCrossings <= 2 && midBarWidth < 14) {
+            scores[2] += 7.5;
           }
         }
 
-        // --- DIGIT 1 RECOGNITION RULES ---
+        // --- DIGIT 4 RECOGNITION ---
+        if (midBarWidth > 7 && rightStemLength > 11 && topBarWidth < 15 && Q4 < (Q2 + Q3) * 1.2) {
+          scores[4] += 6.5;
+        }
+
+        // --- DIGIT 0 RECOGNITION ---
+        if (Math.abs(Q1 - Q2) < totalGridMass * 0.22 && Math.abs(Q3 - Q4) < totalGridMass * 0.22) {
+          if (centerMass < totalGridMass * 0.25 && topCrossings >= 2) {
+            scores[0] += 5.5;
+          }
+        }
+
+        // --- DIGIT 1 RECOGNITION ---
         if (aspect < 0.55 || (topCrossings <= 1 && midCrossings <= 1 && botCrossings <= 1 && rightStemLength > 16 && aspect < 0.7)) {
-          scores[1] += 5.0;
+          scores[1] += 6.0;
         }
 
-        // --- DIGIT 7 RECOGNITION RULES ---
-        if (topBarWidth > 12 && midBarWidth < 9 && leftMass < rightMass * 0.6) {
-          scores[7] += 5.0;
+        // --- DIGIT 7 RECOGNITION ---
+        if (topBarWidth > 12 && midBarWidth < 9 && Q1 < Q2 * 0.8 && Q3 < Q4 * 0.8) {
+          scores[7] += 5.5;
         }
 
-        // --- DIGIT 0 RECOGNITION RULES ---
-        if (topCrossings >= 2 || midCrossings >= 2) {
-          if (centerMass < totalGridMass * 0.25) {
-            scores[0] += 4.5;
-          }
-        }
-
-        // --- DIGIT 8 RECOGNITION RULES ---
+        // --- DIGIT 8 RECOGNITION ---
         if (centerMass > totalGridMass * 0.35 && (topCrossings >= 2 || midCrossings >= 2)) {
-          scores[8] += 4.5;
+          scores[8] += 5.0;
         }
 
-        // --- DIGIT 3 RECOGNITION RULES ---
-        if (rightMass > leftMass * 1.3 && topCrossings <= 2 && botCrossings <= 2 && midBarWidth < 12) {
-          scores[3] += 4.0;
+        // --- DIGIT 3 RECOGNITION ---
+        if (Q2 > Q1 * 1.2 && Q4 > Q3 * 1.2 && midBarWidth < 12 && Q1 < 25) {
+          scores[3] += 4.5;
         }
 
-        // --- DIGIT 2 RECOGNITION RULES ---
-        let botBarWidth = 0;
-        for (let c = 4; c < 24; c++) {
-          if (grid[23][c] || grid[24][c] || grid[25][c]) botBarWidth++;
-        }
-        if (botBarWidth > 12 && topMass > botMass * 0.7 && midBarWidth < 10) {
-          scores[2] += 4.2;
+        // --- DIGIT 5 RECOGNITION ---
+        if (topBarWidth > 10 && Q3 > Q4 && Q2 > Q1) {
+          scores[5] += 4.2;
         }
 
-        // --- DIGIT 5 RECOGNITION RULES ---
-        if (topBarWidth > 10 && botMass > topMass && leftMass < rightMass && midBarWidth < 12) {
-          scores[5] += 3.8;
+        // --- DIGIT 6 RECOGNITION ---
+        if (botCrossings >= 2 && Q3 + Q4 > Q1 + Q2 && Q1 < Q2) {
+          scores[6] += 4.5;
         }
 
-        // --- DIGIT 6 RECOGNITION RULES ---
-        if (botCrossings >= 2 && topMass < botMass) {
-          scores[6] += 4.2;
+        // --- DIGIT 9 RECOGNITION ---
+        if (topCrossings >= 2 && Q1 + Q2 > Q3 + Q4 && rightStemLength > 12) {
+          scores[9] += 4.5;
         }
 
-        // --- DIGIT 9 RECOGNITION RULES ---
-        if (topCrossings >= 2 && topMass > botMass && rightStemLength > 12) {
-          scores[9] += 4.2;
-        }
-
+        // Softmax
         const maxScore = Math.max(...scores);
         const exps = scores.map(s => Math.exp(s - maxScore));
         const sumExps = exps.reduce((a, b) => a + b, 0);
