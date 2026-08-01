@@ -3690,23 +3690,34 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
 
       async function processQuery(queryText) {
         addMessage(queryText, true);
-        chatHistory.push({ role: "user", content: queryText });
 
         const loadingMsg = addMessage("Thinking...", false);
         loadingMsg.style.opacity = "0.7";
 
+        const messages = [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...chatHistory.slice(-6),
+          { role: "user", content: queryText }
+        ];
+
         try {
-          const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(queryText)}?system=${encodeURIComponent(SYSTEM_PROMPT)}`, {
-            method: 'GET',
-            headers: { 'Accept': 'text/plain' }
+          const response = await fetch("https://text.pollinations.ai/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              messages: messages,
+              model: "openai"
+            })
           });
 
           if (response.ok) {
             const aiReply = await response.text();
             if (aiReply && aiReply.trim()) {
-              loadingMsg.textContent = aiReply.trim();
+              const cleanReply = aiReply.trim();
+              loadingMsg.textContent = cleanReply;
               loadingMsg.style.opacity = "1";
-              chatHistory.push({ role: "assistant", content: aiReply.trim() });
+              chatHistory.push({ role: "user", content: queryText });
+              chatHistory.push({ role: "assistant", content: cleanReply });
               return;
             }
           }
@@ -3727,6 +3738,7 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
 
           loadingMsg.textContent = fallbackReply;
           loadingMsg.style.opacity = "1";
+          chatHistory.push({ role: "user", content: queryText });
           chatHistory.push({ role: "assistant", content: fallbackReply });
         }
       }
