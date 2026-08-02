@@ -1614,21 +1614,27 @@
       }
     }
 
-    .portfolio-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
+    .portfolio-stacked-deck {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      height: 24rem;
+      perspective: 1500px;
     }
 
-    @media (min-width: 768px) {
-      .portfolio-grid {
-        grid-template-columns: 1fr 1fr;
+    @media (min-width: 640px) {
+      .portfolio-stacked-deck {
+        height: 28rem;
       }
     }
 
     .project-card {
-      position: relative;
-      min-height: 22rem;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
       border-radius: var(--radius-card);
       background: var(--ink);
@@ -1638,20 +1644,45 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+      transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.6s ease, z-index 0s;
       cursor: pointer;
     }
 
     @media (min-width: 640px) {
       .project-card {
-        min-height: 26rem;
         padding: 2rem;
       }
     }
 
-    .project-card:hover {
-      transform: translateY(-8px) scale(1.01);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 1px var(--accent);
+    .deck-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .deck-nav-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--foreground);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .deck-nav-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--accent);
+    }
+    
+    html[data-theme="light"] .deck-nav-btn {
+      border-color: rgba(0, 0, 0, 0.2);
+    }
+    
+    html[data-theme="light"] .deck-nav-btn:hover {
+      background: rgba(0, 0, 0, 0.05);
     }
 
     .card-top-meta {
@@ -1799,38 +1830,58 @@
       border-color: var(--ink);
     }
 
-    .gh-repos-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
+    .gh-repos-track {
+      height: 600vh;
+      position: relative;
     }
 
-    @media (min-width: 640px) {
-      .gh-repos-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .gh-repos-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+    .deck-sticky-container {
+      position: sticky;
+      top: 10vh;
+      height: 80vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1500px;
+      width: 100%;
+      overflow: hidden;
     }
 
     .repo-card {
+      position: absolute;
+      width: 400px;
+      aspect-ratio: 1 / 1;
       border: 1px solid var(--line);
       background: var(--surface);
       border-radius: var(--radius-card-sm);
-      padding: 1.25rem;
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       gap: 1rem;
-      transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+      transition: transform 0.1s linear;
+      will-change: transform;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .repo-img {
+      width: 100%;
+      flex-grow: 1;
+      min-height: 0;
+      object-fit: cover;
+      border-radius: var(--radius-card-sm);
+      border: 1px solid var(--line);
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+    
+    .repo-card:hover .repo-img {
+      opacity: 1;
     }
 
     .repo-card:hover {
-      transform: translateY(-4px);
       border-color: var(--accent);
       background: var(--background);
     }
@@ -1889,23 +1940,69 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
+    @keyframes zeroGravity {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
 
     .skills-category-card {
-      border: 1px solid var(--line);
-      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.015);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.01);
       border-radius: var(--radius-card-sm);
       padding: 1.75rem;
-      transition: background 0.3s ease, border-color 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      animation: zeroGravity 6s ease-in-out infinite;
+    }
+
+    .skills-category-card:nth-child(even) {
+      animation-delay: -3s;
+    }
+
+    html[data-theme="light"] .skills-category-card {
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.01), 0 4px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .skills-category-card:hover {
+      animation-play-state: paused;
+      transform: translateY(-4px);
+      border-color: rgba(207, 128, 71, 0.4);
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(207, 128, 71, 0.05);
+    }
+    
+    html[data-theme="light"] .skills-category-card:hover {
+      border-color: var(--accent);
+      background: #ffffff;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 0 20px rgba(207, 128, 71, 0.05);
+    }
+
+    .skills-categories-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+      .skills-categories-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     .skills-cat-title {
       font-size: 1.25rem;
       font-weight: 600;
-      color: var(--foreground);
-      margin-bottom: 1.25rem;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      color: var(--foreground);
     }
 
     .skills-chip-list {
@@ -1918,19 +2015,50 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      border: 1px solid var(--line);
-      background: var(--background);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.3);
       color: var(--foreground);
       border-radius: var(--radius-pill);
       padding: 0.5rem 1rem;
       font-size: 0.875rem;
       font-weight: 500;
-      transition: transform 0.25s ease, border-color 0.25s ease;
+      opacity: 0;
+      transform: translateY(15px) scale(0.9);
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .skills-chip-list.is-visible .skill-badge {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .skills-chip-list .skill-badge:nth-child(1) { transition-delay: 0.05s; }
+    .skills-chip-list .skill-badge:nth-child(2) { transition-delay: 0.1s; }
+    .skills-chip-list .skill-badge:nth-child(3) { transition-delay: 0.15s; }
+    .skills-chip-list .skill-badge:nth-child(4) { transition-delay: 0.2s; }
+    .skills-chip-list .skill-badge:nth-child(5) { transition-delay: 0.25s; }
+    .skills-chip-list .skill-badge:nth-child(6) { transition-delay: 0.3s; }
+    .skills-chip-list .skill-badge:nth-child(7) { transition-delay: 0.35s; }
+    .skills-chip-list .skill-badge:nth-child(8) { transition-delay: 0.4s; }
+    .skills-chip-list .skill-badge:nth-child(9) { transition-delay: 0.45s; }
+    .skills-chip-list .skill-badge:nth-child(10) { transition-delay: 0.5s; }
+    .skills-chip-list .skill-badge:nth-child(11) { transition-delay: 0.55s; }
+    .skills-chip-list .skill-badge:nth-child(12) { transition-delay: 0.6s; }
+
+    html[data-theme="light"] .skill-badge {
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.8);
     }
 
     .skill-badge:hover {
       transform: translateY(-3px);
-      border-color: var(--accent);
+      border-color: rgba(207, 128, 71, 0.5);
+      background: rgba(207, 128, 71, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    html[data-theme="light"] .skill-badge:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     /* ACHIEVEMENTS SECTION */
@@ -1960,33 +2088,72 @@
       }
     }
 
+    
+    /* Achievements Rise Reveal Animation */
+    @keyframes riseReveal {
+      0% { opacity: 0; transform: translateY(40px); filter: blur(10px); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+    
+    .achievement-card {
+      opacity: 0;
+    }
+    
+    .achievements-grid.is-visible .achievement-card {
+       animation: riseReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    
+    .achievements-grid.is-visible .achievement-card:nth-child(1) { animation-delay: 0.1s; }
+    .achievements-grid.is-visible .achievement-card:nth-child(2) { animation-delay: 0.3s; }
+    .achievements-grid.is-visible .achievement-card:nth-child(3) { animation-delay: 0.5s; }
+    .achievements-grid.is-visible .achievement-card:nth-child(4) { animation-delay: 0.7s; }
+
     .achievement-card {
       position: relative;
       border-radius: var(--radius-card-sm);
-      background: var(--surface);
-      border: 1px solid var(--line);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.015);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.01);
       padding: 2rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       gap: 1.5rem;
-      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease;
+      transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    
+    html[data-theme="light"] .achievement-card {
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.01), 0 4px 10px rgba(0, 0, 0, 0.02);
     }
 
     .achievement-card:hover {
       transform: translateY(-6px);
+      border-color: rgba(207, 128, 71, 0.4);
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(207, 128, 71, 0.05);
+    }
+    
+    html[data-theme="light"] .achievement-card:hover {
       border-color: var(--accent);
+      background: #ffffff;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 0 20px rgba(207, 128, 71, 0.05);
     }
 
     .ach-icon-box {
-      width: 3rem;
-      height: 3rem;
+      width: 3.5rem;
+      height: 3.5rem;
       display: grid;
       place-items: center;
       border-radius: 9999px;
-      background: var(--ink);
+      background: linear-gradient(135deg, rgba(207, 128, 71, 0.15), rgba(177, 95, 44, 0.05));
+      border: 1px solid rgba(207, 128, 71, 0.3);
+      box-shadow: 0 0 15px rgba(207, 128, 71, 0.15);
       color: #ffffff;
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
 
     .ach-title {
@@ -3343,17 +3510,18 @@
             <span>Selected Projects &amp; GitHub Portfolio</span>
           </div>
           <h2 class="section-title">Projects (140+ Shipped)</h2>
+          <p style="color:var(--muted); font-size:1.125rem; margin-top:0.75rem;">Things I can make for you</p>
         </div>
 
-        <!-- Featured Projects Grid -->
-        <div class="portfolio-grid">
+        <!-- Featured Projects Stacked Deck -->
+        <div class="portfolio-stacked-deck">
           <!-- Card 1 -->
-          <article class="project-card open-modal-trigger">
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_1.jpg'); background-size: cover; background-position: center;">
             <div class="card-top-meta">
               <span>Backend / AI — 2026</span>
               <div class="card-arrow-badge">↗</div>
             </div>
-            <div class="card-watermark">AI</div>
+            
             <div class="card-bottom-block">
               <h3 class="card-project-title">Two-Stage LLM Chatbot</h3>
               <p class="card-project-desc">A robust backend architecture utilizing a two-stage LLM classifier and router
@@ -3368,12 +3536,12 @@
           </article>
 
           <!-- Card 2 -->
-          <article class="project-card open-modal-trigger">
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_2.jpg'); background-size: cover; background-position: center;">
             <div class="card-top-meta">
               <span>Web / Promo — 2026</span>
               <div class="card-arrow-badge">↗</div>
             </div>
-            <div class="card-watermark">WEB</div>
+            
             <div class="card-bottom-block">
               <h3 class="card-project-title">Academic Brand Platform</h3>
               <p class="card-project-desc">Collaborative promotional strategies, video scripts, and digital presence
@@ -3387,12 +3555,12 @@
           </article>
 
           <!-- Card 3 -->
-          <article class="project-card open-modal-trigger">
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_3.jpg'); background-size: cover; background-position: center;">
             <div class="card-top-meta">
               <span>Front-End — 2026</span>
               <div class="card-arrow-badge">↗</div>
             </div>
-            <div class="card-watermark">UI</div>
+            
             <div class="card-bottom-block">
               <h3 class="card-project-title">Interactive Web Experiences</h3>
               <p class="card-project-desc">Custom interactive code, UI animations, and bespoke web design scripts
@@ -3407,12 +3575,12 @@
           </article>
 
           <!-- Card 4 -->
-          <article class="project-card open-modal-trigger">
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_4.jpg'); background-size: cover; background-position: center;">
             <div class="card-top-meta">
               <span>Data Science — 2025</span>
               <div class="card-arrow-badge">↗</div>
             </div>
-            <div class="card-watermark">DS</div>
+            
             <div class="card-bottom-block">
               <h3 class="card-project-title">AI Demographic Detector</h3>
               <p class="card-project-desc">Trained artificial intelligence models for gender and age detection projects
@@ -3425,6 +3593,292 @@
               </div>
             </div>
           </article>
+
+          <!-- Card 5 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_5.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Web / Retail — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">E-Commerce Platform</h3>
+              <p class="card-project-desc">A scalable retail storefront with secure payment gateways, inventory management, and a dynamic shopping cart experience.</p>
+              <div class="card-tags"><span class="tag-chip">Next.js</span><span class="tag-chip">Stripe</span><span class="tag-chip">TailwindCSS</span></div>
+            </div>
+          </article>
+
+          <!-- Card 6 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_6.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Dashboard / B2B — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">SaaS Analytics Dashboard</h3>
+              <p class="card-project-desc">Comprehensive data visualization platform tracking real-time business metrics with interactive charts.</p>
+              <div class="card-tags"><span class="tag-chip">React</span><span class="tag-chip">Recharts</span><span class="tag-chip">Node.js</span></div>
+            </div>
+          </article>
+
+          <!-- Card 7 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_7.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Web / Property — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Real Estate Portal</h3>
+              <p class="card-project-desc">Property listing engine with advanced search filters, map integration, and virtual tour capabilities.</p>
+              <div class="card-tags"><span class="tag-chip">Vue.js</span><span class="tag-chip">Mapbox</span><span class="tag-chip">Firebase</span></div>
+            </div>
+          </article>
+
+          <!-- Card 8 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_8.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Full-Stack / Social — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Social Media Application</h3>
+              <p class="card-project-desc">A feature-rich social network offering real-time messaging, feed algorithms, and media sharing.</p>
+              <div class="card-tags"><span class="tag-chip">React Native</span><span class="tag-chip">GraphQL</span><span class="tag-chip">Socket.io</span></div>
+            </div>
+          </article>
+
+          <!-- Card 9 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_9.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Web3 / Finance — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Crypto Exchange UI</h3>
+              <p class="card-project-desc">Sleek decentralized exchange interface with live candlestick charts and wallet connectivity.</p>
+              <div class="card-tags"><span class="tag-chip">Next.js</span><span class="tag-chip">Web3.js</span><span class="tag-chip">Framer Motion</span></div>
+            </div>
+          </article>
+
+          <!-- Card 10 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_10.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>AI / Tools — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">AI Image Generator</h3>
+              <p class="card-project-desc">Generative AI prompt interface connecting to cloud GPU backends for real-time art rendering.</p>
+              <div class="card-tags"><span class="tag-chip">Python</span><span class="tag-chip">FastAPI</span><span class="tag-chip">React</span></div>
+            </div>
+          </article>
+
+          <!-- Card 11 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_11.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Medical / Web — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Healthcare Patient Portal</h3>
+              <p class="card-project-desc">HIPAA-compliant medical portal for appointment scheduling, prescription tracking, and telehealth.</p>
+              <div class="card-tags"><span class="tag-chip">TypeScript</span><span class="tag-chip">PostgreSQL</span><span class="tag-chip">Docker</span></div>
+            </div>
+          </article>
+
+          <!-- Card 12 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_12.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Mobile / Logistics — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Food Delivery Service</h3>
+              <p class="card-project-desc">Multi-sided platform with rider tracking, restaurant dashboards, and consumer ordering apps.</p>
+              <div class="card-tags"><span class="tag-chip">React Native</span><span class="tag-chip">Google Maps</span><span class="tag-chip">Node.js</span></div>
+            </div>
+          </article>
+
+          <!-- Card 13 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_13.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Health / Dashboard — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Fitness Tracking Dashboard</h3>
+              <p class="card-project-desc">Wearable-integrated dashboard monitoring biometrics, workout routines, and nutritional data.</p>
+              <div class="card-tags"><span class="tag-chip">Vue 3</span><span class="tag-chip">D3.js</span><span class="tag-chip">Express</span></div>
+            </div>
+          </article>
+
+          <!-- Card 14 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_14.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Education / Web — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">EdTech LMS</h3>
+              <p class="card-project-desc">Learning Management System featuring video courses, interactive quizzes, and student progress tracking.</p>
+              <div class="card-tags"><span class="tag-chip">Next.js</span><span class="tag-chip">Prisma</span><span class="tag-chip">AWS S3</span></div>
+            </div>
+          </article>
+
+          <!-- Card 15 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_15.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Hospitality / Web — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Travel Booking System</h3>
+              <p class="card-project-desc">Flight and hotel reservation portal with complex search algorithms and dynamic pricing models.</p>
+              <div class="card-tags"><span class="tag-chip">React</span><span class="tag-chip">Redux</span><span class="tag-chip">Java Spring</span></div>
+            </div>
+          </article>
+
+          <!-- Card 16 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_16.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Web / Personal — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Modern Portfolio & CMS</h3>
+              <p class="card-project-desc">Highly customizable portfolio engine with a headless CMS for writers, designers, and creatives.</p>
+              <div class="card-tags"><span class="tag-chip">Astro</span><span class="tag-chip">Sanity CMS</span><span class="tag-chip">TailwindCSS</span></div>
+            </div>
+          </article>
+
+          <!-- Card 17 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_17.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>HR / Platform — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Job Board Portal</h3>
+              <p class="card-project-desc">Recruitment platform bridging employers and candidates with AI-driven resume parsing.</p>
+              <div class="card-tags"><span class="tag-chip">Python</span><span class="tag-chip">Django</span><span class="tag-chip">PostgreSQL</span></div>
+            </div>
+          </article>
+
+          <!-- Card 18 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_18.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Media / Full-Stack — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Video Streaming Platform</h3>
+              <p class="card-project-desc">High-bandwidth video-on-demand platform supporting HLS adaptive bitrate streaming.</p>
+              <div class="card-tags"><span class="tag-chip">Next.js</span><span class="tag-chip">FFmpeg</span><span class="tag-chip">Redis</span></div>
+            </div>
+          </article>
+
+          <!-- Card 19 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_19.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Finance / Web — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Fintech Banking UI</h3>
+              <p class="card-project-desc">Secure digital banking interface for managing accounts, transfers, and investment portfolios.</p>
+              <div class="card-tags"><span class="tag-chip">TypeScript</span><span class="tag-chip">React</span><span class="tag-chip">OAuth 2.0</span></div>
+            </div>
+          </article>
+
+          <!-- Card 20 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_20.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Tech / Dashboard — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">IoT Device Manager</h3>
+              <p class="card-project-desc">Control center for internet-connected smart home devices with MQTT real-time synchronization.</p>
+              <div class="card-tags"><span class="tag-chip">Vue.js</span><span class="tag-chip">Node.js</span><span class="tag-chip">MQTT</span></div>
+            </div>
+          </article>
+
+          <!-- Card 21 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_21.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Entertainment / Web — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Event Ticketing System</h3>
+              <p class="card-project-desc">High-concurrency ticket purchasing platform with QR code generation and seating maps.</p>
+              <div class="card-tags"><span class="tag-chip">React</span><span class="tag-chip">Stripe</span><span class="tag-chip">PostgreSQL</span></div>
+            </div>
+          </article>
+
+          <!-- Card 22 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_22.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>SaaS / Support — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Customer Support Helpdesk</h3>
+              <p class="card-project-desc">Ticket management system for support agents with AI-suggested responses and analytics.</p>
+              <div class="card-tags"><span class="tag-chip">Next.js</span><span class="tag-chip">OpenAI</span><span class="tag-chip">Supabase</span></div>
+            </div>
+          </article>
+
+          <!-- Card 23 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_23.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Platform / Web — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Freelance Marketplace</h3>
+              <p class="card-project-desc">Two-sided marketplace connecting clients with freelancers featuring escrow payments and chat.</p>
+              <div class="card-tags"><span class="tag-chip">React</span><span class="tag-chip">Socket.io</span><span class="tag-chip">MongoDB</span></div>
+            </div>
+          </article>
+
+          <!-- Card 24 -->
+          <article class="project-card open-modal-trigger" style="background-image: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 100%), url('assets/proj_bg_24.jpg'); background-size: cover; background-position: center;">
+            <div class="card-top-meta">
+              <span>Enterprise / Software — 2026</span>
+              <div class="card-arrow-badge">↗</div>
+            </div>
+            
+            <div class="card-bottom-block">
+              <h3 class="card-project-title">Custom CRM Software</h3>
+              <p class="card-project-desc">Internal customer relationship management tool built for tracking sales funnels and leads.</p>
+              <div class="card-tags"><span class="tag-chip">Angular</span><span class="tag-chip">Java</span><span class="tag-chip">MySQL</span></div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Deck Controls -->
+        <div class="deck-controls">
+          <button id="deck-prev-btn" class="deck-nav-btn">← Previous</button>
+          <button id="deck-next-btn" class="deck-nav-btn">Next →</button>
         </div>
 
         <!-- GitHub Live Repositories Explorer -->
@@ -3449,8 +3903,8 @@
             </div>
           </div>
 
-          <div class="gh-repos-grid" id="gh-repos-container">
-            <div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--muted)">
+          <div class="gh-repos-track" id="gh-repos-container">
+            <div style="text-align:center; padding:3rem; color:var(--muted)">
               Loading GitHub projects from satwick-yes...
             </div>
           </div>
@@ -4636,11 +5090,14 @@
     function renderRepos(repos) {
       if (!ghContainer) return;
       if (repos.length === 0) {
-        ghContainer.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--muted)">No repositories found matching filter.</div>`;
+        ghContainer.innerHTML = `<div style="text-align:center; padding:3rem; color:var(--muted)">No repositories found matching filter.</div>`;
         return;
       }
-      ghContainer.innerHTML = repos.map(r => `
-        <div class="repo-card" onclick="window.open('${r.url}', '_blank')">
+      
+      const topRepos = repos.slice(0, 10);
+      
+      const cardsHtml = topRepos.map((r, i) => `
+        <div class="repo-card" data-index="${i}" onclick="window.open('${r.url}', '_blank')">
           <div>
             <div class="repo-name">
               <span>${r.name}</span>
@@ -4648,12 +5105,88 @@
             </div>
             <p class="repo-desc" style="margin-top:0.5rem">${r.desc}</p>
           </div>
+          <img src="assets/repo_bg_${(i % 10) + 1}.png" alt="${r.name} image" class="repo-img" loading="lazy" />
           <div class="repo-meta">
             <span style="border:1px solid var(--line); border-radius:9999px; padding:0.2rem 0.6rem; font-size:0.7rem; background:var(--background);">${r.language}</span>
             <span>⭐ ${r.stars} • 🍴 ${r.forks}</span>
           </div>
         </div>
       `).join('');
+      
+      ghContainer.innerHTML = `
+        <div class="deck-sticky-container">
+          ${cardsHtml}
+        </div>
+      `;
+      
+      initCyclicDeck();
+    }
+
+    let ghScrollListener;
+    function initCyclicDeck() {
+      const cards = ghContainer.querySelectorAll('.repo-card');
+      if (!cards.length) return;
+      
+      if (ghScrollListener) {
+        window.removeEventListener('scroll', ghScrollListener);
+      }
+      
+      const totalCards = cards.length;
+      let ticking = false;
+      
+      ghScrollListener = function() {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const rect = ghContainer.getBoundingClientRect();
+            const scrollRange = rect.height - window.innerHeight;
+            let progress = 0;
+            if (scrollRange > 0) {
+              progress = -rect.top / scrollRange;
+            }
+            progress = Math.max(0, Math.min(1, progress));
+            
+            // Map progress exactly to the number of cards
+            const currentContinuousIndex = progress * (totalCards - 1);
+            
+            cards.forEach((card, i) => {
+              const angleOffset = (Math.PI * 2) / 10; // exactly 10 cards per revolution
+              const relIndex = i - currentContinuousIndex;
+              
+              const angle = relIndex * angleOffset;
+              const radius = 700;
+              
+              // Cylinder Math
+              const translateX = radius * Math.sin(angle);
+              const translateZ = radius * Math.cos(angle) - radius;
+              const translateY = relIndex * 280;
+              const rotateY = angle * (180 / Math.PI);
+              
+              // Fade out cards as they rotate to the back of the cylinder
+              // Because of the camera's close perspective, the back face becomes visible around 70 degrees.
+              // So we must fade the opacity to 0 by the time cos(angle) reaches 0.3 (approx 72 degrees).
+              const frontFacingFactor = Math.cos(angle);
+              const opacity = Math.max(0, Math.min(1, (frontFacingFactor - 0.3) * 2));
+              
+              if (opacity <= 0.01) {
+                card.style.pointerEvents = 'none';
+                card.style.opacity = 0;
+              } else {
+                card.style.pointerEvents = 'auto';
+                card.style.opacity = opacity;
+              }
+              
+              card.style.zIndex = Math.round(1000 + translateZ);
+              card.style.transform = `translate3d(${translateX}px, ${translateY}px, ${translateZ}px) rotateY(${rotateY}deg)`;
+            });
+            
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+      
+      window.addEventListener('scroll', ghScrollListener, { passive: true });
+      ghScrollListener(); // trigger once to set initial state
     }
 
     fetchGitHubRepos();
@@ -4863,7 +5396,7 @@
 
     // 14. SVG LIVE SKETCH PATH TRACING
     function initLiveSketchTracing() {
-      const sketchTargets = document.querySelectorAll('.skills-category-card, .achievement-card, .repo-card');
+      const sketchTargets = document.querySelectorAll('.repo-card');
 
       sketchTargets.forEach(card => {
         if (card.querySelector('.sketch-border-svg')) return;
@@ -5322,6 +5855,101 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
       });
     }
     initAIAssistant();
+    // 22. STACKED DECK CAROUSEL
+    function initStackedDeck() {
+      const deckContainer = document.querySelector('.portfolio-stacked-deck');
+      if (!deckContainer) return;
+      
+      const cards = Array.from(deckContainer.querySelectorAll('.project-card'));
+      const prevBtn = document.getElementById('deck-prev-btn');
+      const nextBtn = document.getElementById('deck-next-btn');
+      if (!cards.length || !prevBtn || !nextBtn) return;
+      
+      let currentIdx = 0;
+
+      function updateDeck() {
+        cards.forEach((card, index) => {
+          if (index === currentIdx) {
+            // Active front card
+            card.style.transform = 'translateY(0) scale(1) translateZ(0)';
+            card.style.opacity = '1';
+            card.style.zIndex = '10';
+            card.style.pointerEvents = 'auto';
+          } else if (index > currentIdx) {
+            // Cards behind
+            const offset = index - currentIdx;
+            card.style.transform = `translateY(${offset * 20}px) scale(${1 - offset * 0.05}) translateZ(-${offset * 30}px)`;
+            card.style.opacity = `${Math.max(0, 1 - offset * 0.15)}`;
+            card.style.zIndex = `${10 - offset}`;
+            card.style.pointerEvents = 'none';
+          } else {
+            // Past cards (faded out above)
+            card.style.transform = 'translateY(-120px) scale(1.05) translateZ(50px)';
+            card.style.opacity = '0';
+            card.style.zIndex = '11';
+            card.style.pointerEvents = 'none';
+          }
+        });
+        
+        // Update button states
+        prevBtn.style.opacity = currentIdx === 0 ? '0.5' : '1';
+        prevBtn.style.pointerEvents = currentIdx === 0 ? 'none' : 'auto';
+        
+        nextBtn.style.opacity = currentIdx === cards.length - 1 ? '0.5' : '1';
+        nextBtn.style.pointerEvents = currentIdx === cards.length - 1 ? 'none' : 'auto';
+      }
+
+      nextBtn.addEventListener('click', () => {
+        if (currentIdx < cards.length - 1) {
+          currentIdx++;
+          updateDeck();
+        }
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (currentIdx > 0) {
+          currentIdx--;
+          updateDeck();
+        }
+      });
+
+      updateDeck();
+    }
+    initStackedDeck();
+
+    // 23. SKILLS STAGGERED REVEAL
+    function initSkillsReveal() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.skills-chip-list').forEach(list => {
+        observer.observe(list);
+      });
+    }
+    initSkillsReveal();
+
+    // 24. ACHIEVEMENTS STAGGERED REVEAL
+    function initAchievementsReveal() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      const grid = document.querySelector('.achievements-grid');
+      if (grid) observer.observe(grid);
+    }
+    initAchievementsReveal();
+
   </script>
 </body>
 
