@@ -2145,14 +2145,13 @@
       .achievement-card { opacity: 1 !important; }
     }
     
-    .achievements-grid.is-visible .achievement-card {
+    .achievement-card.is-visible {
        animation: riseReveal 0.6s cubic-bezier(0.1, 0.9, 0.1, 1) forwards;
     }
     
-    .achievements-grid.is-visible .achievement-card:nth-child(1) { animation-delay: 0.1s; }
-    .achievements-grid.is-visible .achievement-card:nth-child(2) { animation-delay: 0.3s; }
-    .achievements-grid.is-visible .achievement-card:nth-child(3) { animation-delay: 0.5s; }
-    .achievements-grid.is-visible .achievement-card:nth-child(4) { animation-delay: 0.7s; }
+    @media (min-width: 768px) {
+      .achievement-card.is-visible:nth-child(2n) { animation-delay: 0.15s; }
+    }
 
     .achievement-card {
       position: relative;
@@ -5825,10 +5824,11 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
             entry.target.classList.remove('is-visible');
           }
         });
-      }, { threshold: 0.01 });
+      }, { threshold: 0.1 });
 
-      const grid = document.querySelector('.achievements-grid');
-      if (grid) observer.observe(grid);
+      document.querySelectorAll('.achievement-card').forEach(card => {
+        observer.observe(card);
+      });
     }
     initAchievementsReveal();
 
