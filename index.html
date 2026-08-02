@@ -85,7 +85,7 @@
       background: var(--background);
       color: var(--foreground);
       font-family: 'Onest', -apple-system, BlinkMacSystemFont, sans-serif;
-      overflow-x: hidden;
+      overflow-x: clip; /* Changed from hidden to clip to allow position: sticky to work */
       line-height: 1.5;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
@@ -816,9 +816,19 @@
       transform: scale(1.04);
     }
 
+    /* SECTION STACKING FOR SLIDE-OVER */
+    main > section:not(#home):not(#video-intro), footer {
+      position: relative;
+      z-index: 10;
+      background: var(--background);
+      transition: background-color 0.3s ease;
+    }
+
     /* HERO SECTION */
     #home {
-      position: relative;
+      position: sticky;
+      top: 0;
+      z-index: 1;
       isolation: isolate;
       overflow: hidden;
       border-radius: 0 0 var(--radius-card) var(--radius-card);
@@ -1326,9 +1336,12 @@
 
     /* SECTION ABOUT */
     #about {
+      position: relative;
+      z-index: 10;
       background: var(--background);
       padding-block: 5rem;
       transition: background-color 0.3s ease;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05); /* Added slight shadow for depth during slide-over */
     }
 
     @media (min-width: 1024px) {
@@ -2095,6 +2108,26 @@
     @media (min-width: 768px) {
       .achievements-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* SKILLS & ACHIEVEMENTS LAYOUT */
+    .skills-achievements-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+    }
+
+    @media (min-width: 1200px) {
+      .skills-achievements-layout {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+        align-items: start;
+      }
+      /* Force single column for inner grids when displayed side-by-side */
+      .skills-achievements-layout .skills-categories-grid,
+      .skills-achievements-layout .achievements-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -4045,9 +4078,12 @@
       </div>
     </section>
 
-    <!-- SKILLS SECTION -->
-    <section id="skills">
+    <!-- SKILLS & ACHIEVEMENTS SECTION -->
+    <section id="skills-achievements">
       <div class="shell">
+        <div class="skills-achievements-layout">
+          <!-- SKILLS COLUMN -->
+          <div class="skills-col" id="skills">
         <div class="section-header">
           <div class="eyebrow-pill">
             <span class="eyebrow-dot"></span>
@@ -4157,12 +4193,10 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- ACHIEVEMENTS SECTION -->
-    <section id="achievements">
-      <div class="shell">
+          </div>
+          
+          <!-- ACHIEVEMENTS COLUMN -->
+          <div class="achievements-col" id="achievements">
         <div class="section-header">
           <div class="eyebrow-pill">
             <span class="eyebrow-dot"></span>
@@ -4230,6 +4264,8 @@
               <p class="ach-desc">Designed two-stage LLM classifiers, intelligent query routing, and real-time database
                 integrations.</p>
             </div>
+          </div>
+        </div>
           </div>
         </div>
       </div>
@@ -4313,228 +4349,7 @@
           </div>
         </div>
       </div>
-      <!-- INTERACTIVE TERMINAL SECTION -->
-      <section id="terminal-section">
-        <div class="shell">
-          <div class="section-header" style="align-items:flex-start; text-align:left;">
-            <div class="eyebrow-pill">
-              <span class="eyebrow-dot"></span>
-              <span>Developer Sandbox &amp; Vault</span>
-            </div>
-            <h2 class="section-title">Interactive System Terminal</h2>
-          </div>
-
-          <div class="terminal-card" id="terminal-card">
-            <div class="terminal-header-bar">
-              <div class="terminal-dots">
-                <span class="dot-red"></span>
-                <span class="dot-yellow"></span>
-                <span class="dot-green"></span>
-              </div>
-              <div class="terminal-title-text">satwick@dev-terminal v2.4</div>
-              <div style="font-size:0.75rem; color:var(--accent-from); font-weight:600;">● ONLINE</div>
-            </div>
-
-            <div class="terminal-body">
-              <div class="terminal-prompt">
-                <span>satwick@iitm:~$</span>
-                <span class="typewriter-text" id="terminal-typewriter"></span><span class="typewriter-cursor"></span>
-              </div>
-
-              <div style="margin-top:1.5rem; line-height:1.8; font-size:0.9375rem; color:rgba(255,255,255,0.85);">
-                <div><strong style="color:var(--accent-from)">[CLASSIFIED SPECIFICATIONS]</strong> Tap black redacted
-                  bars to unmask:</div>
-                <div style="margin-top:0.5rem;">
-                  • Primary Stack: <span class="redacted-text"
-                    data-secret="Next.js 15, TypeScript, TailwindCSS v4">█████████████████████████</span>
-                </div>
-                <div>
-                  • Specialized AI Architecture: <span class="redacted-text"
-                    data-secret="Two-Stage LLM Classifier &amp; Supabase Vector Router">██████████████████████████████████</span>
-                </div>
-                <div>
-                  • Credentials: <span class="redacted-text"
-                    data-secret="B.S. Data Science @ IIT Madras | Chemical Engineering">██████████████████████████████████████</span>
-                </div>
-              </div>
-
-              <div class="terminal-controls-row">
-                <div style="font-size:0.75rem; color:rgba(255,255,255,0.5)">
-                  Tip: Tap glitch diagnostic to scramble text or tap redacted bars to reveal.
-                </div>
-                <button type="button" class="glitch-btn" id="terminal-glitch-btn">
-                  <span>⚡ Run Glitch Diagnostic</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- CASE STUDIES SECTION -->
-        <section id="case-studies">
-          <div class="shell">
-            <div class="section-header" style="align-items:flex-start; text-align:left;">
-              <div class="eyebrow-pill">
-                <span class="eyebrow-dot"></span>
-                <span>Architectural Deep Dives</span>
-              </div>
-              <h2 class="section-title">Featured Case Studies</h2>
-            </div>
-
-            <!-- Case Study 1 -->
-            <article class="case-study-card">
-              <div>
-                <div class="cs-tag-row">
-                  <span class="cs-tag">Machine Learning</span>
-                  <span class="cs-tag">Next.js 15</span>
-                  <span class="cs-tag">Supabase Vector</span>
-                </div>
-                <h3 class="cs-title">Two-Stage LLM Classifier &amp; Query Router</h3>
-
-                <div class="cs-section-block">
-                  <div class="cs-block-label">The Problem</div>
-                  <p class="cs-block-text">High latency and prohibitive API costs when passing raw user prompts directly
-                    to heavy LLMs without context evaluation.</p>
-                </div>
-
-                <div class="cs-section-block">
-                  <div class="cs-block-label">The Approach</div>
-                  <p class="cs-block-text">Engineered a lightweight intent classifier stage to parse vector embeddings
-                    and route standard queries to cached micro-models while dispatching complex queries to LLMs.</p>
-                </div>
-
-                <div class="cs-section-block">
-                  <div class="cs-block-label">The Impact</div>
-                  <p class="cs-block-text">Reduced median API latency by 42% and decreased compute token consumption
-                    while maintaining 99.4% classification accuracy.</p>
-                </div>
-              </div>
-
-              <div class="cs-diagram-box">
-                <div>
-                  <div
-                    style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.5);">
-                    System Architecture</div>
-                  <div style="font-size:1.125rem; font-weight:600; margin-top:0.5rem; color:#ffffff;">Embedding &rarr;
-                    Router &rarr; Model Cache</div>
-                </div>
-
-                <div
-                  style="display:flex; flex-direction:column; gap:0.5rem; font-size:0.8125rem; color:rgba(255,255,255,0.75); font-family:monospace;">
-                  <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[1]
-                    Prompt Vectorization (Cosine Sim)</div>
-                  <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[2]
-                    Intent Classification Stage</div>
-                  <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[3]
-                    Cached Neural Response Engine</div>
-                </div>
-
-                <div class="cs-metric-badge">
-                  <div>
-                    <div class="cs-metric-num">-42%</div>
-                    <div class="cs-metric-lbl">Latency Reduction</div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="cs-metric-num">99.4%</div>
-                    <div class="cs-metric-lbl">Accuracy Score</div>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Case Study 2 -->
-            <article class="case-study-card">
-              <div>
-                <div class="cs-tag-row">
-                  <span class="cs-tag">Data Science</span>
-                  <span class="cs-tag">Python &amp; PyTorch</span>
-                  <span class="cs-tag">IIT Madras</span>
-                </div>
-                <h3 class="cs-title">Computational Predictive Analytics Engine</h3>
-
-                <div class="cs-section-block">
-                  <div class="cs-block-label">The Problem</div>
-                  <p class="cs-block-text">Complex multidimensional dataset noise causing overfitting in standard
-                    statistical modeling pipelines.</p>
-                </div>
-
-                <div class="cs-section-block">
-                  <div class="cs-block-label">The Approach</div>
-                  <p class="cs-block-text">Applied robust feature selection, principal component analysis (PCA), and
-                    custom loss functions tailored for high-variance distributions.</p>
-                </div>
-
-                <div class="cs-section-block">
-                  <div class="cs-block-label">The Impact</div>
-                  <p class="cs-block-text">Achieved state-of-the-art predictive generalization and published research
-                    paper detailing algorithmic benchmarks.</p>
-                </div>
-              </div>
-
-              <div class="cs-diagram-box">
-                <div>
-                  <div
-                    style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.5);">
-                    Research Pipeline</div>
-                  <div style="font-size:1.125rem; font-weight:600; margin-top:0.5rem; color:#ffffff;">PCA &rarr; PyTorch
-                    Tensor Model</div>
-                </div>
-
-                <div
-                  style="display:flex; flex-direction:column; gap:0.5rem; font-size:0.8125rem; color:rgba(255,255,255,0.75); font-family:monospace;">
-                  <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[1]
-                    Outlier Filtering &amp; Scaling</div>
-                  <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[2]
-                    Feature Space Dimensionality Reduction</div>
-                  <div style="background:rgba(255,255,255,0.06); padding:0.5rem 0.75rem; border-radius:0.5rem;">[3]
-                    Academic Publication Benchmark</div>
-                </div>
-
-                <div class="cs-metric-badge">
-                  <div>
-                    <div class="cs-metric-num">100%</div>
-                    <div class="cs-metric-lbl">Reproducible Code</div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="cs-metric-num">1 Paper</div>
-                    <div class="cs-metric-lbl">Published Benchmark</div>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </section>
-
-
-        <!-- TESTIMONIALS SLIDER -->
-        <section id="testimonials">
-          <div class="shell">
-            <div class="section-header">
-              <div class="eyebrow-pill">
-                <span class="eyebrow-dot"></span>
-                <span>Social Proof &amp; Endorsements</span>
-              </div>
-              <h2 class="section-title">What People Say</h2>
-            </div>
-
-            <div class="testimonial-card">
-              <div class="testimonial-quote" id="testi-quote">
-                "Satwick possesses a rare blend of computational rigor and front-end finesse. His work on AI routing
-                architectures and responsive interfaces sets a standard for technical precision."
-              </div>
-              <div class="testimonial-author" id="testi-author">Academic Collaborator</div>
-              <div class="testimonial-role" id="testi-role">IIT Madras Data Science Network</div>
-
-              <div class="testi-controls">
-                <button type="button" class="testi-btn" id="testi-prev"
-                  aria-label="Previous recommendation">&larr;</button>
-                <span style="font-size:0.75rem; color:var(--muted); font-weight:600;" id="testi-counter">1 / 3</span>
-                <button type="button" class="testi-btn" id="testi-next" aria-label="Next recommendation">&rarr;</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-  </main>
+      </main>
 
   <!-- FOOTER -->
   <footer>
@@ -5572,118 +5387,11 @@
     initLiveSketchTracing();
 
     // 15. TERMINAL TYPEWRITER, GLITCH & REDACTED REVEAL
-    function initTerminalSystem() {
-      const typewriterEl = document.getElementById('terminal-typewriter');
-      const glitchBtn = document.getElementById('terminal-glitch-btn');
-      const redactedTexts = document.querySelectorAll('.redacted-text');
-
-      const commandText = "init --stack=nextjs,typescript,supabase --mode=high-precision --status=ready";
-      let charIdx = 0;
-
-      function typeNextChar() {
-        if (!typewriterEl) return;
-        if (charIdx < commandText.length) {
-          typewriterEl.textContent += commandText.charAt(charIdx);
-          charIdx++;
-          setTimeout(typeNextChar, 35 + Math.random() * 25);
-        }
-      }
-
-      setTimeout(typeNextChar, 800);
-
-      const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~█▓▒░';
-      function triggerGlitchScramble(targetEl, originalText, duration = 850) {
-        const startTime = performance.now();
-
-        function scramble(now) {
-          const elapsed = now - startTime;
-          const progress = Math.min(1, elapsed / duration);
-
-          let result = '';
-          for (let i = 0; i < originalText.length; i++) {
-            if (i < Math.floor(progress * originalText.length)) {
-              result += originalText[i];
-            } else {
-              result += glitchChars[Math.floor(Math.random() * glitchChars.length)];
-            }
-          }
-          targetEl.textContent = result;
-
-          if (progress < 1) {
-            requestAnimationFrame(scramble);
-          }
-        }
-        requestAnimationFrame(scramble);
-      }
-
-      glitchBtn?.addEventListener('click', () => {
-        triggerGlitchScramble(typewriterEl, commandText, 950);
-      });
-
-      redactedTexts.forEach(el => {
-        el.addEventListener('click', () => {
-          const secret = el.getAttribute('data-secret');
-          if (secret && !el.classList.contains('revealed')) {
-            el.classList.add('revealed');
-            triggerGlitchScramble(el, secret, 700);
-          }
-        });
-      });
-    }
-    initTerminalSystem();
+    
 
 
     // 17. TESTIMONIALS SLIDER CONTROLLER
-    function initTestimonialsSlider() {
-      const quoteEl = document.getElementById('testi-quote');
-      const authorEl = document.getElementById('testi-author');
-      const roleEl = document.getElementById('testi-role');
-      const counterEl = document.getElementById('testi-counter');
-      const prevBtn = document.getElementById('testi-prev');
-      const nextBtn = document.getElementById('testi-next');
-
-      const testimonials = [
-        {
-          quote: "Satwick possesses a rare blend of computational rigor and front-end finesse. His work on AI routing architectures and responsive interfaces sets a standard for technical precision.",
-          author: "Academic Mentor & Research Lead",
-          role: "IIT Madras Data Science Network"
-        },
-        {
-          quote: "Delivered our complex promotional platform and custom web components ahead of deadline. The speed, attention to detail, and modern aesthetic exceeded all expectations.",
-          author: "Co-Founder & Product Lead",
-          role: "Academic Support & Web Client"
-        },
-        {
-          quote: "Satwick's C++ algorithmic implementations and two-stage LLM classifiers demonstrate extraordinary problem-solving capabilities. Highly recommended for full-stack engineering.",
-          author: "Senior Software Engineer",
-          role: "Open Source Engineering Collaborator"
-        }
-      ];
-
-      let currentIndex = 0;
-
-      function updateTestimonial(index) {
-        if (!quoteEl || !authorEl || !roleEl) return;
-        currentIndex = (index + testimonials.length) % testimonials.length;
-        const item = testimonials[currentIndex];
-
-        quoteEl.style.opacity = '0';
-        quoteEl.style.transform = 'translateY(6px)';
-
-        setTimeout(() => {
-          quoteEl.textContent = `"${item.quote}"`;
-          authorEl.textContent = item.author;
-          roleEl.textContent = item.role;
-          if (counterEl) counterEl.textContent = `${currentIndex + 1} / ${testimonials.length}`;
-          quoteEl.style.opacity = '1';
-          quoteEl.style.transform = 'translateY(0)';
-        }, 150);
-      }
-
-      prevBtn?.addEventListener('click', () => updateTestimonial(currentIndex - 1));
-      nextBtn?.addEventListener('click', () => updateTestimonial(currentIndex + 1));
-    }
-    initTestimonialsSlider();
+    
 
     // 18. CUSTOM GLOWING CURSOR CONTROLLER
     function initCustomCursor() {
@@ -6124,6 +5832,7 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
     initHeadersReveal();
 </script>
 <script src="scripts/video_scroll.js"></script>
+<script src="scripts/hero_parallax.js"></script>
 </body>
 
 </html>
