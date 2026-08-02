@@ -5081,6 +5081,9 @@
     }
 
     let ghScrollListener;
+    let cylinderAnimId;
+    let autoAngle = 0;
+
     function initCyclicDeck() {
       const cards = ghContainer.querySelectorAll('.repo-card');
       if (!cards.length) return;
@@ -5088,63 +5091,76 @@
       if (ghScrollListener) {
         window.removeEventListener('scroll', ghScrollListener);
       }
+      if (cylinderAnimId) {
+        cancelAnimationFrame(cylinderAnimId);
+      }
       
       const totalCards = cards.length;
-      let ticking = false;
+      let targetProgress = 0;
+      let currentProgress = 0;
       
       ghScrollListener = function() {
-        if (!ticking) {
-          window.requestAnimationFrame(() => {
-            const rect = ghContainer.getBoundingClientRect();
-            const scrollRange = rect.height - window.innerHeight;
-            let progress = 0;
-            if (scrollRange > 0) {
-              progress = -rect.top / scrollRange;
-            }
-            progress = Math.max(0, Math.min(1, progress));
-            
-            // Map progress exactly to the number of cards
-            const currentContinuousIndex = progress * (totalCards - 1);
-            
-            cards.forEach((card, i) => {
-              const angleOffset = (Math.PI * 2) / 10; // exactly 10 cards per revolution
-              const relIndex = i - currentContinuousIndex;
-              
-              const angle = relIndex * angleOffset;
-              const radius = 700;
-              
-              // Cylinder Math
-              const translateX = radius * Math.sin(angle);
-              const translateZ = radius * Math.cos(angle) - radius;
-              const translateY = relIndex * 280;
-              const rotateY = angle * (180 / Math.PI);
-              
-              // Fade out cards as they rotate to the back of the cylinder
-              // Because of the camera's close perspective, the back face becomes visible around 70 degrees.
-              // So we must fade the opacity to 0 by the time cos(angle) reaches 0.3 (approx 72 degrees).
-              const frontFacingFactor = Math.cos(angle);
-              const opacity = Math.max(0, Math.min(1, (frontFacingFactor - 0.3) * 2));
-              
-              if (opacity <= 0.01) {
-                card.style.pointerEvents = 'none';
-                card.style.opacity = 0;
-              } else {
-                card.style.pointerEvents = 'auto';
-                card.style.opacity = opacity;
-              }
-              
-              card.style.zIndex = Math.round(1000 + translateZ);
-              card.style.transform = `translate3d(${translateX}px, ${translateY}px, ${translateZ}px) rotateY(${rotateY}deg)`;
-            });
-            
-            ticking = false;
-          });
-          ticking = true;
+        const rect = ghContainer.getBoundingClientRect();
+        const scrollRange = rect.height - window.innerHeight;
+        let progress = 0;
+        if (scrollRange > 0) {
+          progress = -rect.top / scrollRange;
         }
+        targetProgress = Math.max(0, Math.min(1, progress));
       };
       
       window.addEventListener('scroll', ghScrollListener, { passive: true });
-      ghScrollListener(); // trigger once to set initial state
+      ghScrollListener(); // Trigger once to set target
+      currentProgress = targetProgress; // Prevent initial jump
+
+      let isHovered = false;
+      ghContainer.addEventListener('mouseenter', () => isHovered = true);
+      ghContainer.addEventListener('mouseleave', () => isHovered = false);
+
+      function renderCylinder() {
+        if (!isHovered) {
+          autoAngle += 0.002; // Cylinder auto-rotation speed
+        }
+        
+        // Smoothly interpolate scroll progress
+        currentProgress += (targetProgress - currentProgress) * 0.08;
+        
+        // Map progress exactly to the number of cards
+        const currentContinuousIndex = currentProgress * (totalCards - 1);
+        
+        cards.forEach((card, i) => {
+          const angleOffset = (Math.PI * 2) / 10; // Exactly 10 cards per revolution
+          const relIndex = i - currentContinuousIndex;
+          
+          const angle = relIndex * angleOffset + autoAngle;
+          const radius = 700;
+          
+          // Cylinder Math
+          const translateX = radius * Math.sin(angle);
+          const translateZ = radius * Math.cos(angle) - radius;
+          const translateY = relIndex * 280;
+          const rotateY = angle * (180 / Math.PI);
+          
+          // Fade out cards as they rotate to the back of the cylinder
+          const frontFacingFactor = Math.cos(angle);
+          const opacity = Math.max(0, Math.min(1, (frontFacingFactor - 0.3) * 2));
+          
+          if (opacity <= 0.01) {
+            card.style.pointerEvents = 'none';
+            card.style.opacity = 0;
+          } else {
+            card.style.pointerEvents = 'auto';
+            card.style.opacity = opacity;
+          }
+          
+          card.style.zIndex = Math.round(1000 + translateZ);
+          card.style.transform = `translate3d(${translateX}px, ${translateY}px, ${translateZ}px) rotateY(${rotateY}deg)`;
+        });
+        
+        cylinderAnimId = requestAnimationFrame(renderCylinder);
+      }
+      
+      renderCylinder();
     }
 
     fetchGitHubRepos();
