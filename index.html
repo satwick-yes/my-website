@@ -4737,22 +4737,7 @@
     }
   }
   
-    // 25. SECTION HEADERS REVEAL
-    function initHeadersReveal() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-          } else {
-            entry.target.classList.remove('is-visible');
-          }
-        });
-      }, { threshold: 0.2 });
-
-      document.querySelectorAll('.section-header').forEach(el => observer.observe(el));
-    }
-    initHeadersReveal();
-
+    
   </script>
 
   <script type="module">
@@ -6030,6 +6015,23 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
     initAchievementsReveal();
 
   </script>
+
+    // 25. SECTION HEADERS REVEAL
+    function initHeadersReveal() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          } else {
+            entry.target.classList.remove('is-visible');
+          }
+        });
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll('.section-header').forEach(el => observer.observe(el));
+    }
+    initHeadersReveal();
+
 </body>
 
 </html>
