@@ -21,8 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     `assets/frames_2k/${index.toString().padStart(5, '0')}.webp`
   );
 
-  const preloadImages = () => {
+  const preloadImages = async () => {
     for (let i = 1; i <= frameCount; i++) {
+      if (i % 5 === 0) await new Promise(r => setTimeout(r, 30));
       const img = new Image();
       img.src = currentFrame(i);
       images[i] = img;
@@ -68,7 +69,18 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   };
 
+  let isVisible = true;
+  const observer = new IntersectionObserver((entries) => {
+    isVisible = entries[0].isIntersecting;
+  });
+  observer.observe(section);
+
   const renderLoop = () => {
+    if (!isVisible) {
+      requestAnimationFrame(renderLoop);
+      return;
+    }
+    
     // Lerp (linear interpolation) for ultra-smooth gliding animation
     currentFrameFloat += (targetFrame - currentFrameFloat) * 0.08;
     

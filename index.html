@@ -4873,7 +4873,17 @@
         if (points.length > 50) points.shift();
       });
 
+      let isVisibleLiquid = true;
+      const obsLiquid = new IntersectionObserver((entries) => {
+        isVisibleLiquid = entries[0].isIntersecting;
+      });
+      obsLiquid.observe(canvas);
+
       function renderLiquid() {
+        if (!isVisibleLiquid) {
+          requestAnimationFrame(renderLiquid);
+          return;
+        }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(offBefore, 0, 0);
 
@@ -5508,7 +5518,17 @@
         mouse.y = e.clientY;
       });
 
+      let isVisible = true;
+      const observer = new IntersectionObserver((entries) => {
+        isVisible = entries[0].isIntersecting;
+      });
+      observer.observe(canvas);
+
       function drawNeural() {
+        if (!isVisible) {
+          requestAnimationFrame(drawNeural);
+          return;
+        }
         ctx.clearRect(0, 0, width, height);
 
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
