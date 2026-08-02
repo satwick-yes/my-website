@@ -5224,7 +5224,8 @@
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             aboutStmt.classList.add('animated');
-            observer.unobserve(entry.target);
+          } else {
+            aboutStmt.classList.remove('animated');
           }
         });
       }, { threshold: 0.3 });
@@ -5256,7 +5257,10 @@
             }
           }
           requestAnimationFrame(animateStats);
-          statsObserver.unobserve(item);
+        } else {
+          const item = entry.target;
+          const suffix = item.getAttribute('data-suffix') || '';
+          item.querySelector('.stat-num').textContent = '0' + suffix;
         }
       });
     }, { threshold: 0.4 });
@@ -5423,7 +5427,8 @@
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('sketched');
-            observer.unobserve(entry.target);
+          } else {
+            entry.target.classList.remove('sketched');
           }
         });
       }, { threshold: 0.2 });
@@ -5923,7 +5928,8 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
+          } else {
+            entry.target.classList.remove('is-visible');
           }
         });
       }, { threshold: 0.1 });
@@ -5940,7 +5946,8 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
+          } else {
+            entry.target.classList.remove('is-visible');
           }
         });
       }, { threshold: 0.15 });
