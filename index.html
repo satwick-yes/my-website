@@ -5727,10 +5727,22 @@
       closeBtn?.addEventListener('click', closeChat);
 
       function formatMessageText(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        const escaped = div.innerHTML;
-        return escaped.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:underline; word-break:break-all;">$1</a>');
+        if (!text) return '';
+        let escaped = text
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+
+        // Markdown bold
+        escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Markdown italics
+        escaped = escaped.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        // Markdown links [text](url)
+        escaped = escaped.replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:underline; font-weight:600;">$1 ↗</a>');
+        // Standalone URLs (not already part of an href tag)
+        escaped = escaped.replace(/(^|[^"'>])(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:underline; word-break:break-all; font-weight:600;">$2 ↗</a>');
+
+        return escaped;
       }
 
       function addMessage(text, isUser = false) {
@@ -5747,12 +5759,172 @@
         return msgDiv;
       }
 
-      const SYSTEM_PROMPT = `You are Satwick's AI Assistant on Satwick Shaw's official portfolio website.
-Satwick Shaw is a Data Science undergraduate at IIT Madras & Chemical Engineering student. He is an AI engineer and full-stack developer with 140+ software repositories, 1 Technological Patent applicant (for simultaneous electromagnetic levitation & wireless power transfer), and author of 1 published IEEE research paper titled "Mathematical Modelling of a Dual-Use Electro-Magnetic Coil for Simultaneous Magnetic Levitation and Wireless Power Transfer in Intelligent Transportation Systems" (published in IEEE RESEM 2026, accessible on IEEE Xplore: https://ieeexplore.ieee.org/document/11721931).
-His core stack includes Python, C++, TypeScript, Next.js, PyTorch, Supabase, OpenCV, Docker, TailWind CSS, and Git.
-Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (general knowledge, coding, math, science, advice, trivia, jokes, or portfolio questions) accurately, intelligently, concisely, and with a friendly tone. Keep responses helpful and under 3-4 paragraphs.`;
+      function getPortfolioAnswer(query) {
+        const q = query.toLowerCase().trim();
 
-      const GEMINI_KEY = atob("QVEuQWI4Uk42SWJOc0kzLUxxQTNzcUdEbFo0Z1lTdWhtdVZacEF2V2hTWk9Zc1czbFRHalE=");
+        // 1. Research & Patent
+        if (
+          q.includes('research') ||
+          q.includes('paper') ||
+          q.includes('patent') ||
+          q.includes('ieee') ||
+          q.includes('publication') ||
+          q.includes('publish') ||
+          q.includes('resem') ||
+          q.includes('levitation') ||
+          q.includes('wireless power') ||
+          q.includes('maglev') ||
+          q.includes('dual-use') ||
+          q.includes('coil') ||
+          q.includes('arxiv') ||
+          q.includes('article') ||
+          q.includes('academic') ||
+          q.includes('journal') ||
+          q.includes('citation')
+        ) {
+          return `Here are the official details on Satwick's research and technological patent:
+
+📄 **Published IEEE Research Paper**:
+• **Title**: *"Mathematical Modelling of a Dual-Use Electro-Magnetic Coil for Simultaneous Magnetic Levitation and Wireless Power Transfer in Intelligent Transportation Systems"*
+• **Conference**: 2026 IEEE 2nd International Conference on Renewable Energy and Sustainable E-Mobility (RESEM)
+• **Publisher**: IEEE (DOI: 10.1109/resem70152.2026.11721931)
+• **Core Discovery**: Formulates unified coil geometry and electromagnetic equations that achieve high-stability maglev levitation concurrently with efficient wireless power transfer for intelligent transit.
+• 🔗 **Read on IEEE Xplore**: https://ieeexplore.ieee.org/document/11721931
+
+💡 **Technological Patent**:
+• **Field**: Simultaneous Electromagnetic Levitation & Wireless Power Transfer
+• **Scope**: Advanced hardware architecture and methodology enabling contactless vehicle levitation paired with continuous resonant energy induction.`;
+        }
+
+        // 2. Bio / Who is Satwick / Education
+        if (
+          q.includes('who') ||
+          q.includes('satwick') ||
+          q.includes('about') ||
+          q.includes('bio') ||
+          q.includes('background') ||
+          q.includes('education') ||
+          q.includes('degree') ||
+          q.includes('college') ||
+          q.includes('iit') ||
+          q.includes('madras') ||
+          q.includes('chemical') ||
+          q.includes('student')
+        ) {
+          return `**Satwick Shaw** is an AI Engineer and Full-Stack Developer:
+
+🎓 **Education & Background**:
+• **B.S. in Data Science & Applications** — Indian Institute of Technology Madras (IIT Madras)
+• **Chemical Engineering** background, combining rigorous mathematical modelling with modern software systems
+
+🚀 **Key Highlights**:
+• **140+ Projects Shipped** on GitHub across AI/ML routers, computer vision, and dynamic web apps
+• **1 Published IEEE Research Paper** (IEEE RESEM 2026, [IEEE Xplore Link](https://ieeexplore.ieee.org/document/11721931))
+• **1 Technological Patent** filed for simultaneous electromagnetic levitation and wireless power transfer`;
+        }
+
+        // 3. Projects
+        if (
+          q.includes('project') ||
+          q.includes('work') ||
+          q.includes('build') ||
+          q.includes('repo') ||
+          q.includes('github') ||
+          q.includes('showcase') ||
+          q.includes('classifier') ||
+          q.includes('router') ||
+          q.includes('predictive') ||
+          q.includes('demographic')
+        ) {
+          return `Satwick has shipped over **140+ projects** on GitHub. Key featured projects include:
+
+1. ⚡ **Two-Stage LLM Classifier & Vector Query Router**
+   * *Stack*: Next.js 15, TypeScript, Supabase, Python
+   * Semantic embedding classification, prompt routing, and database telemetry.
+
+2. 📈 **Computational Predictive Analytics Engine**
+   * *Stack*: PyTorch, Scikit-Learn, Pandas, NumPy
+   * High-throughput time-series forecasting, statistical outlier detection, and automated feature selection.
+
+3. 🧠 **Interactive Neural Network Canvas**
+   * *Stack*: HTML5 Canvas, Softmax Heuristics, Modern JavaScript
+   * Real-time in-browser visualization of neural node connection dynamics and weight changes.
+
+4. 👁️ **AI Demographic & Computer Vision Detector**
+   * *Stack*: Python, PyTorch, OpenCV
+   * High-accuracy demographic detection and computer vision inference pipeline.
+
+🔗 Explore all 140+ repositories on his GitHub: https://github.com/satwick-yes`;
+        }
+
+        // 4. Skills & Tech Stack
+        if (
+          q.includes('skill') ||
+          q.includes('tech') ||
+          q.includes('stack') ||
+          q.includes('language') ||
+          q.includes('framework') ||
+          q.includes('python') ||
+          q.includes('typescript') ||
+          q.includes('next') ||
+          q.includes('react') ||
+          q.includes('tool') ||
+          q.includes('database') ||
+          q.includes('docker')
+        ) {
+          return `Here is Satwick's primary technical toolkit:
+
+💻 **Languages**: Python, C++, TypeScript, JavaScript (ES6+), SQL, HTML5/CSS3
+🤖 **AI & Data Science**: PyTorch, OpenCV, Scikit-Learn, Pandas, NumPy, LLM Orchestration, Vector Search
+🌐 **Frontend**: Next.js (App Router), React, Tailwind CSS, Vite, Lenis, WebGL/Canvas
+🗄️ **Backend & Cloud**: Node.js, Express, Supabase (PostgreSQL), RESTful APIs, Docker, Git`;
+        }
+
+        // 5. Contact & Hiring & Resume
+        if (
+          q.includes('contact') ||
+          q.includes('hire') ||
+          q.includes('email') ||
+          q.includes('reach') ||
+          q.includes('resume') ||
+          q.includes('cv') ||
+          q.includes('linkedin') ||
+          q.includes('message') ||
+          q.includes('talk')
+        ) {
+          return `You can connect with Satwick directly:
+
+• 💼 **LinkedIn**: https://www.linkedin.com/in/satwick-shaw-a5b142371/
+• 🐙 **GitHub**: https://github.com/satwick-yes
+• 📄 **Resume**: Click the "Download Resume" button in the hero section to view or download his CV.
+• 💬 **Message**: Click any "Contact Me" or "Let's Talk" button on the site to send an email!`;
+        }
+
+        // 6. Greetings
+        if (
+          q === 'hi' ||
+          q === 'hello' ||
+          q === 'hey' ||
+          q === 'help' ||
+          q.startsWith('hi ') ||
+          q.startsWith('hello ') ||
+          q.startsWith('hey ')
+        ) {
+          return `Hello! I'm Satwick's AI Assistant. Feel free to ask me anything about:
+• 📜 His published IEEE research paper & technological patent
+• 🚀 Key projects from his 140+ GitHub repositories
+• 🎓 His education at IIT Madras & Chemical Engineering background
+• ⚡ His technical skills & development stack
+• 📬 How to contact him or download his resume`;
+        }
+
+        return null;
+      }
+
+      const SYSTEM_PROMPT = `You are Satwick's AI Assistant on Satwick Shaw's portfolio.
+Satwick Shaw: Data Science student at IIT Madras & Chemical Engineering. Full-stack developer (140+ repos), 1 Technological Patent (electromagnetic levitation & wireless power transfer), and 1 published IEEE research paper: "Mathematical Modelling of a Dual-Use Electro-Magnetic Coil for Simultaneous Magnetic Levitation and Wireless Power Transfer in Intelligent Transportation Systems" (IEEE RESEM 2026, https://ieeexplore.ieee.org/document/11721931).
+DO NOT invent or hallucinate any other papers, arxiv links, or conferences.
+Answer general programming, math, science, or general questions accurately, concisely, and politely.`;
 
       async function processQuery(queryText) {
         addMessage(queryText, true);
@@ -5760,83 +5932,61 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
         const loadingMsg = addMessage("Thinking...", false);
         loadingMsg.style.opacity = "0.7";
 
-        const geminiContents = [
-          ...chatHistory.slice(-6).map(msg => ({
-            role: msg.role === 'user' ? 'user' : 'model',
-            parts: [{ text: msg.content }]
-          })),
-          { role: 'user', parts: [{ text: queryText }] }
-        ];
+        // 1. Check verified portfolio knowledge base first (0% hallucination)
+        const portfolioAnswer = getPortfolioAnswer(queryText);
+        if (portfolioAnswer) {
+          setTimeout(() => {
+            loadingMsg.innerHTML = formatMessageText(portfolioAnswer);
+            loadingMsg.style.opacity = "1";
+            chatHistory.push({ role: "user", content: queryText });
+            chatHistory.push({ role: "assistant", content: portfolioAnswer });
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          }, 200);
+          return;
+        }
 
+        // 2. For general questions (coding, math, general tech), query the assistant engine
         try {
-          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_KEY}`, {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 7000);
+
+          const response = await fetch("https://text.pollinations.ai/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              system_instruction: {
-                parts: [{ text: SYSTEM_PROMPT }]
-              },
-              contents: geminiContents
-            })
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            const replyText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (replyText && replyText.trim()) {
-              const cleanReply = replyText.trim();
-              loadingMsg.innerHTML = formatMessageText(cleanReply);
-              loadingMsg.style.opacity = "1";
-              chatHistory.push({ role: "user", content: queryText });
-              chatHistory.push({ role: "assistant", content: cleanReply });
-              messagesContainer.scrollTop = messagesContainer.scrollHeight;
-              return;
-            }
-          }
-
-          // Secondary LLM fallback
-          const fallbackRes = await fetch("https://text.pollinations.ai/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+            signal: controller.signal,
             body: JSON.stringify({
               messages: [
                 { role: "system", content: SYSTEM_PROMPT },
+                ...chatHistory.slice(-4).map(msg => ({ role: msg.role === 'user' ? 'user' : 'assistant', content: msg.content })),
                 { role: "user", content: queryText }
               ]
             })
           });
+          clearTimeout(timeoutId);
 
-          if (fallbackRes.ok) {
-            const fallbackText = await fallbackRes.text();
-            if (fallbackText && fallbackText.trim()) {
-              const cleanFallback = fallbackText.trim();
-              loadingMsg.innerHTML = formatMessageText(cleanFallback);
+          if (response.ok) {
+            let replyText = await response.text();
+            if (replyText && replyText.trim()) {
+              replyText = replyText.trim();
+              // Guard against hallucinated arXiv fake papers
+              if (replyText.includes("2403.12345") || replyText.includes("Distributed Algorithms")) {
+                replyText = getPortfolioAnswer("research") || replyText;
+              }
+              loadingMsg.innerHTML = formatMessageText(replyText);
               loadingMsg.style.opacity = "1";
               chatHistory.push({ role: "user", content: queryText });
-              chatHistory.push({ role: "assistant", content: cleanFallback });
+              chatHistory.push({ role: "assistant", content: replyText });
               messagesContainer.scrollTop = messagesContainer.scrollHeight;
               return;
             }
           }
           throw new Error("Fallback required");
         } catch (err) {
-          let fallbackReply = "Satwick is an AI Engineer and Full-Stack Developer at IIT Madras. Feel free to ask about his projects, skills, research, or click 'Start a Project' to get in touch!";
-
-          const textLower = queryText.toLowerCase();
-          if (textLower.includes("who") || textLower.includes("about") || textLower.includes("satwick") || textLower.includes("bio")) {
-            fallbackReply = "Satwick Shaw is a Data Science undergraduate at IIT Madras & Chemical Engineering student. He is an AI engineer and full-stack developer with 140+ software repositories, 1 Technological Patent applicant, and author of 1 published IEEE research paper.";
-          } else if (textLower.includes("project") || textLower.includes("work") || textLower.includes("build")) {
-            fallbackReply = "Satwick's top projects include:\n1. Two-Stage LLM Classifier & Vector Query Router (Next.js 15, TypeScript, Supabase, Python)\n2. Computational Predictive Analytics Engine (PyTorch, Pandas, Scikit-Learn)\n3. Interactive In-Browser ML Neural Canvas (Softmax Heuristics)";
-          } else if (textLower.includes("skill") || textLower.includes("tech") || textLower.includes("stack") || textLower.includes("code")) {
-            fallbackReply = "Satwick specializes in: Python, C++, TypeScript, JavaScript, Next.js, PyTorch, Supabase, OpenCV, Docker, TailWind CSS, and Git.";
-          } else if (textLower.includes("patent") || textLower.includes("research") || textLower.includes("paper")) {
-            fallbackReply = "Satwick has filed 1 Technological Patent for simultaneous electromagnetic levitation & wireless power transfer, and published 1 peer-reviewed IEEE research paper: 'Mathematical Modelling of a Dual-Use Electro-Magnetic Coil for Simultaneous Magnetic Levitation and Wireless Power Transfer in Intelligent Transportation Systems' (IEEE RESEM 2026). You can read it directly on IEEE Xplore: https://ieeexplore.ieee.org/document/11721931";
-          }
-
-          loadingMsg.innerHTML = formatMessageText(fallbackReply);
+          const fallback = getPortfolioAnswer(queryText) || "Satwick is an AI Engineer and Full-Stack Developer at IIT Madras. Feel free to ask about his projects, skills, research, or click 'Contact Me' to get in touch!";
+          loadingMsg.innerHTML = formatMessageText(fallback);
           loadingMsg.style.opacity = "1";
           chatHistory.push({ role: "user", content: queryText });
-          chatHistory.push({ role: "assistant", content: fallbackReply });
+          chatHistory.push({ role: "assistant", content: fallback });
           messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
       }
