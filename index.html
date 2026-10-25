@@ -2214,6 +2214,110 @@
       line-height: 1.5;
     }
 
+    .ach-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 0.75rem;
+    }
+
+    .ach-tag {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-pill);
+      background: rgba(207, 128, 71, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(207, 128, 71, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .ach-tag::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+    }
+
+    .ach-subtag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .ach-paper-name {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--foreground);
+      line-height: 1.45;
+      margin-bottom: 0.5rem;
+    }
+
+    .ach-btn-row {
+      margin-top: 1.25rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .ach-external-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.15rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, rgba(207, 128, 71, 0.18), rgba(177, 95, 44, 0.08));
+      color: var(--foreground);
+      border: 1px solid rgba(207, 128, 71, 0.35);
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.1, 0.9, 0.1, 1);
+      width: fit-content;
+    }
+
+    .ach-external-btn svg {
+      transition: transform 0.25s ease;
+      color: var(--accent);
+    }
+
+    .ach-external-btn:hover {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(207, 128, 71, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .ach-external-btn:hover svg {
+      transform: translate(2px, -2px);
+      color: #ffffff;
+    }
+
+    html[data-theme="light"] .ach-external-btn {
+      background: rgba(177, 95, 44, 0.08);
+      color: var(--foreground);
+      border: 1px solid rgba(177, 95, 44, 0.25);
+    }
+
+    html[data-theme="light"] .ach-external-btn:hover {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
     /* SERVICES SECTION */
     #services {
       background: var(--background);
@@ -4207,12 +4311,28 @@
           </div>
 
           <!-- Card 2 -->
-          <div class="achievement-card">
-            <div class="ach-icon-box">📄</div>
+          <div class="achievement-card ach-paper-card">
+            <div class="ach-badge-row">
+              <div class="ach-icon-box">📄</div>
+              <span class="ach-tag">IEEE RESEM 2026</span>
+            </div>
             <div>
-              <h3 class="ach-title">1 Published Research Paper</h3>
-              <p class="ach-desc">Authored and published an academic research paper focusing on computational data
-                analysis and software engineering architectures.</p>
+              <div class="ach-subtag">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <span>IEEE Xplore • Published Research</span>
+              </div>
+              <h3 class="ach-title">Mathematical Modelling of Dual-Use Electro-Magnetic Coil</h3>
+              <p class="ach-paper-name">"Mathematical Modelling of a Dual-Use Electro-Magnetic Coil for Simultaneous Magnetic Levitation and Wireless Power Transfer in Intelligent Transportation Systems"</p>
+              <p class="ach-desc">Authored and published in the <em>2026 IEEE 2nd International Conference on Renewable Energy and Sustainable E-Mobility (RESEM)</em>. Formulates electromagnetic equations and coil configurations for simultaneous maglev levitation and high-efficiency wireless power transfer.</p>
+              <div class="ach-btn-row">
+                <a href="https://ieeexplore.ieee.org/document/11721931" target="_blank" rel="noopener noreferrer" class="ach-external-btn" aria-label="View research paper on IEEE Xplore">
+                  <span>Read on IEEE Xplore</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -4386,10 +4506,12 @@
         </div>
 
         <div>
-          <div class="footer-col-title">Socials</div>
+          <div class="footer-col-title">Socials &amp; Research</div>
           <ul class="footer-link-list">
             <li><a href="https://github.com/satwick-yes" target="_blank" rel="noopener">GitHub ↗</a></li>
             <li><a href="https://www.linkedin.com/in/satwick-shaw-a5b142371/" target="_blank" rel="noopener">LinkedIn
+                ↗</a></li>
+            <li><a href="https://ieeexplore.ieee.org/document/11721931" target="_blank" rel="noopener">IEEE Xplore
                 ↗</a></li>
             <li><a href="https://twitter.com" target="_blank" rel="noopener">Twitter / X ↗</a></li>
           </ul>
@@ -5604,18 +5726,29 @@
 
       closeBtn?.addEventListener('click', closeChat);
 
+      function formatMessageText(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        const escaped = div.innerHTML;
+        return escaped.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:underline; word-break:break-all;">$1</a>');
+      }
+
       function addMessage(text, isUser = false) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `ai-msg ${isUser ? 'user' : 'bot'}`;
         msgDiv.style.whiteSpace = 'pre-wrap';
-        msgDiv.textContent = text;
+        if (isUser) {
+          msgDiv.textContent = text;
+        } else {
+          msgDiv.innerHTML = formatMessageText(text);
+        }
         messagesContainer.appendChild(msgDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
         return msgDiv;
       }
 
       const SYSTEM_PROMPT = `You are Satwick's AI Assistant on Satwick Shaw's official portfolio website.
-Satwick Shaw is a Data Science undergraduate at IIT Madras & Chemical Engineering student. He is an AI engineer and full-stack developer with 140+ software repositories, 1 Technological Patent applicant (for simultaneous electromagnetic levitation & wireless power transfer), and author of 1 published academic paper on vector routing & algorithmic optimization.
+Satwick Shaw is a Data Science undergraduate at IIT Madras & Chemical Engineering student. He is an AI engineer and full-stack developer with 140+ software repositories, 1 Technological Patent applicant (for simultaneous electromagnetic levitation & wireless power transfer), and author of 1 published IEEE research paper titled "Mathematical Modelling of a Dual-Use Electro-Magnetic Coil for Simultaneous Magnetic Levitation and Wireless Power Transfer in Intelligent Transportation Systems" (published in IEEE RESEM 2026, accessible on IEEE Xplore: https://ieeexplore.ieee.org/document/11721931).
 His core stack includes Python, C++, TypeScript, Next.js, PyTorch, Supabase, OpenCV, Docker, TailWind CSS, and Git.
 Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (general knowledge, coding, math, science, advice, trivia, jokes, or portfolio questions) accurately, intelligently, concisely, and with a friendly tone. Keep responses helpful and under 3-4 paragraphs.`;
 
@@ -5652,7 +5785,7 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
             const replyText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
             if (replyText && replyText.trim()) {
               const cleanReply = replyText.trim();
-              loadingMsg.textContent = cleanReply;
+              loadingMsg.innerHTML = formatMessageText(cleanReply);
               loadingMsg.style.opacity = "1";
               chatHistory.push({ role: "user", content: queryText });
               chatHistory.push({ role: "assistant", content: cleanReply });
@@ -5677,7 +5810,7 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
             const fallbackText = await fallbackRes.text();
             if (fallbackText && fallbackText.trim()) {
               const cleanFallback = fallbackText.trim();
-              loadingMsg.textContent = cleanFallback;
+              loadingMsg.innerHTML = formatMessageText(cleanFallback);
               loadingMsg.style.opacity = "1";
               chatHistory.push({ role: "user", content: queryText });
               chatHistory.push({ role: "assistant", content: cleanFallback });
@@ -5691,16 +5824,16 @@ Your job is to act like Gemini/GPT: answer ANY question asked by the visitor (ge
 
           const textLower = queryText.toLowerCase();
           if (textLower.includes("who") || textLower.includes("about") || textLower.includes("satwick") || textLower.includes("bio")) {
-            fallbackReply = "Satwick Shaw is a Data Science undergraduate at IIT Madras & Chemical Engineering student. He is an AI engineer and full-stack developer with 140+ software repositories, 1 Technological Patent applicant, and author of 1 published research paper.";
+            fallbackReply = "Satwick Shaw is a Data Science undergraduate at IIT Madras & Chemical Engineering student. He is an AI engineer and full-stack developer with 140+ software repositories, 1 Technological Patent applicant, and author of 1 published IEEE research paper.";
           } else if (textLower.includes("project") || textLower.includes("work") || textLower.includes("build")) {
             fallbackReply = "Satwick's top projects include:\n1. Two-Stage LLM Classifier & Vector Query Router (Next.js 15, TypeScript, Supabase, Python)\n2. Computational Predictive Analytics Engine (PyTorch, Pandas, Scikit-Learn)\n3. Interactive In-Browser ML Neural Canvas (Softmax Heuristics)";
           } else if (textLower.includes("skill") || textLower.includes("tech") || textLower.includes("stack") || textLower.includes("code")) {
             fallbackReply = "Satwick specializes in: Python, C++, TypeScript, JavaScript, Next.js, PyTorch, Supabase, OpenCV, Docker, TailWind CSS, and Git.";
           } else if (textLower.includes("patent") || textLower.includes("research") || textLower.includes("paper")) {
-            fallbackReply = "Satwick has filed 1 Technological Patent for simultaneous electromagnetic levitation & wireless power transfer, and published 1 peer-reviewed research paper detailing algorithmic optimization and vector routing.";
+            fallbackReply = "Satwick has filed 1 Technological Patent for simultaneous electromagnetic levitation & wireless power transfer, and published 1 peer-reviewed IEEE research paper: 'Mathematical Modelling of a Dual-Use Electro-Magnetic Coil for Simultaneous Magnetic Levitation and Wireless Power Transfer in Intelligent Transportation Systems' (IEEE RESEM 2026). You can read it directly on IEEE Xplore: https://ieeexplore.ieee.org/document/11721931";
           }
 
-          loadingMsg.textContent = fallbackReply;
+          loadingMsg.innerHTML = formatMessageText(fallbackReply);
           loadingMsg.style.opacity = "1";
           chatHistory.push({ role: "user", content: queryText });
           chatHistory.push({ role: "assistant", content: fallbackReply });
